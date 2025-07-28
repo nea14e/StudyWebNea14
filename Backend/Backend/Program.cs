@@ -7,13 +7,12 @@ const string frontendCors = "frontendCors";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: frontendCors,
-        policy  =>
-        {
-            policy.WithOrigins("http://localhost:4200");
-        });
+        policy => { policy.WithOrigins("http://localhost:4200"); });
 });
 
-builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>();
+builder.Services
+    .AddTransient<IWeatherForecastService, WeatherForecastService>()
+    .AddTransient<ICrudExampleService, CrudExampleService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -27,6 +26,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
 app.UseCors(frontendCors);
 app.UseHttpsRedirection();
 app.MapControllers();
