@@ -4,5 +4,5 @@ namespace Backend.IServices;
 
 public interface IWeatherForecastService
 {
-    public WeatherForecast[] GetRandomList();
+    public WeatherForecastItemDto[] GetRandomList();
 }

@@ -9,11 +9,11 @@ public class WeatherForecastService : IWeatherForecastService
     [
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     ];
-    
-    public WeatherForecast[] GetRandomList()
+
+    public WeatherForecastItemDto[] GetRandomList()
     {
         var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
+                new WeatherForecastItemDto
                 (
                     DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                     Random.Shared.Next(-20, 55),
