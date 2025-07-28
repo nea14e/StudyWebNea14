@@ -1,3 +1,6 @@
+using Backend.IServices;
+using Backend.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 const string frontendCors = "frontendCors";
@@ -9,6 +12,8 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("http://localhost:4200");
         });
 });
+
+builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
