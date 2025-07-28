@@ -1,0 +1,24 @@
+<p>weather-forecast works!</p>
+<table>
+  <thead>
+  <tr>
+    <th rowspan="2">Дата</th>
+    <th rowspan="2">Общее</th>
+    <th colspan="2">Температура</th>
+  </tr>
+  <tr>
+    <th>°C</th>
+    <th>°F</th>
+  </tr>
+  </thead>
+  <tbody>
+    @for (item of data; track item.date) {
+      <tr>
+        <td>{{ item.date | date: 'dd.MM.yyyy' }}</td>
+        <td>{{ item.summary }}</td>
+        <td>{{ item.temperatureC }}</td>
+        <td>{{ item.temperatureF }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
