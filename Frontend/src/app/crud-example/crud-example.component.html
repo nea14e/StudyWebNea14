@@ -1,0 +1,67 @@
+<p>crud-example works!</p>
+<div class="container">
+  <div class="row">
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Идентификатор</th>
+        <th>Наименование</th>
+        <th>Действия</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (item of listItems; track item.id) {
+          <tr (click)="onEditClick(item)" class="clickable">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>
+              <div class="btn col-auto mr-2"
+                   title="Редактировать">
+                <img src="from-bootstrap/pencil-fill.svg" alt="Редактировать" class="btn-img"/>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (!!details) {
+    <div class="row">
+      <b>Редактирование:</b>
+    </div>
+    <div class="row details-row">
+      <div class="col-3">
+        Идентификатор:
+      </div>
+      <div class="col-9">
+        <input type="text" [(ngModel)]="details.id" class="wide-input">
+        <br/>
+        <small>формат Guid</small>
+      </div>
+    </div>
+    <div class="row details-row">
+      <div class="col-3">
+        Наименование:
+      </div>
+      <div class="col-9">
+        <input type="text" [(ngModel)]="details.name" class="wide-input">
+        <br/>
+        <small>краткое наименование</small>
+      </div>
+    </div>
+    <div class="row details-row">
+      <div class="col-3">
+        Описание:
+      </div>
+      <div class="col-9">
+        <input type="text" [(ngModel)]="details.description" class="wide-input">
+        <br/>
+        <small>подробное описание</small>
+      </div>
+    </div>
+  } @else {
+    <div class="row">
+      <b><i>Выберите элемент для редактирования</i></b>
+    </div>
+  }
+</div>

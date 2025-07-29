@@ -15,28 +15,10 @@ public class CrudExampleApiController(ICrudExampleService service) : ControllerB
         return result;
     }
 
-    [HttpPost("create")]
-    public void Create(CrudExampleDetailsDto detailsDto)
-    {
-        service.Create(detailsDto);
-    }
-
     [HttpGet("read/{id}")]
     public CrudExampleDetailsDto Read(Guid id)
     {
         var result = service.Read(id);
         return result;
-    }
-
-    [HttpPost("update")]
-    public void Update(CrudExampleDetailsDto detailsDto)
-    {
-        service.Update(detailsDto);
-    }
-
-    [HttpDelete("delete/{id}")]
-    public void Delete(Guid id)
-    {
-        service.Delete(id);
     }
 }

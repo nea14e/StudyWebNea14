@@ -1,0 +1,11 @@
+.clickable {
+  cursor: pointer;
+}
+
+.details-row {
+  margin-bottom: 12px;
+}
+
+.wide-input {
+  width: -webkit-fill-available;
+}
