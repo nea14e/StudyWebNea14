@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddTransient<IWeatherForecastService, WeatherForecastService>()
-    .AddTransient<ICrudExampleService, CrudExampleService>();
+    .AddSingleton<ICrudExampleService, CrudExampleService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
