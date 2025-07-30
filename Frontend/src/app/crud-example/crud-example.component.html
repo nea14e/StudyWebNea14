@@ -1,5 +1,12 @@
 <p>crud-example works!</p>
 <div class="container">
+  <div class="row mb-2">
+    <div class="btn col-auto mr-2"
+         (click)="onCreateClick()">
+      <img src="from-bootstrap/plus.svg" alt="Создать" class="btn-img"/>
+      Создать
+    </div>
+  </div>
   <div class="row">
     <table class="table table-bordered table-striped table-hover">
       <thead>
@@ -15,8 +22,7 @@
             <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>
-              <div class="btn col-auto mr-2"
-                   title="Редактировать">
+              <div title="Редактировать" class="btn col-auto mr-2">
                 <img src="from-bootstrap/pencil-fill.svg" alt="Редактировать" class="btn-img"/>
               </div>
             </td>
@@ -57,6 +63,13 @@
         <input type="text" [(ngModel)]="details.description" class="wide-input">
         <br/>
         <small>подробное описание</small>
+      </div>
+    </div>
+    <div class="row details-row">
+      <div class="btn col-auto mr-2"
+           (click)="onSaveClick()">
+        <img src="from-bootstrap/check-2.svg" [alt]="isNew ? 'Создать' : 'Редактировать'" class="btn-img"/>
+        {{ isNew ? 'Создать' : 'Редактировать' }}
       </div>
     </div>
   } @else {

@@ -15,6 +15,7 @@ import {FormsModule} from '@angular/forms';
 export class CrudExampleComponent implements OnInit {
   listItems: CrudExampleItemModel[] = [];
   details?: CrudExampleDetailsModel;
+  isNew = false;
   private service = inject(CrudExampleService);
 
   ngOnInit() {
@@ -27,10 +28,29 @@ export class CrudExampleComponent implements OnInit {
     });
   }
 
+  onCreateClick() {
+    this.details = {} as CrudExampleDetailsModel;
+    this.isNew = true;
+  }
+
   onEditClick(item: CrudExampleItemModel) {
     this.details = undefined;
     this.service.read(item.id).subscribe(data => {
       this.details = data;
+      this.isNew = false;
+    })
+  }
+
+  onSaveClick() {
+    let observable;
+    if (this.isNew) {
+      observable = this.service.create(this.details!);
+    } else {
+      observable = this.service.update(this.details!);
+    }
+    observable.subscribe(_ => {
+      this.details = undefined;
+      this.reloadList();
     })
   }
 }

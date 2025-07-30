@@ -15,7 +15,15 @@ export class CrudExampleService {
     return this.http.get<CrudExampleItemModel[]>(environment.backendBaseUrl + '/api/crud-example/get-list');
   }
 
+  create(detailsDto: CrudExampleDetailsModel) {
+    return this.http.post<void>(environment.backendBaseUrl + '/api/crud-example/create', detailsDto);
+  }
+
   read(id: Guid) {
     return this.http.get<CrudExampleDetailsModel>(environment.backendBaseUrl + '/api/crud-example/read/' + id);
+  }
+
+  update(detailsDto: CrudExampleDetailsModel) {
+    return this.http.post<void>(environment.backendBaseUrl + '/api/crud-example/update', detailsDto);
   }
 }

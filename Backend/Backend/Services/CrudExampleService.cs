@@ -1,4 +1,5 @@
-﻿using Backend.Dtos;
+﻿using System.Data;
+using Backend.Dtos;
 using Backend.Entities;
 using Backend.IServices;
 using Backend.Mappers;
@@ -36,6 +37,16 @@ public class CrudExampleService : ICrudExampleService
         return listDtos;
     }
 
+    public void Create(CrudExampleDetailsDto detailsDto)
+    {
+        if (_inMemoryData.Any(entity => entity.Id == detailsDto.Id))
+            throw new ConstraintException($"Сущность с первичным ключём Id = \"{detailsDto.Id}\" уже существует!");
+
+        var entity = new CrudExampleInMemory();
+        entity = detailsDto.DetailsDtoToEntity(entity);
+        _inMemoryData.Add(entity);
+    }
+
     public CrudExampleDetailsDto Read(Guid id)
     {
         if (_inMemoryData.Any(entity => entity.Id == id) == false)
@@ -44,5 +55,16 @@ public class CrudExampleService : ICrudExampleService
         var entity = _inMemoryData.Single(entity => entity.Id == id);
         var detailsDto = entity.EntityToDetailsDto();
         return detailsDto;
+    }
+
+    public void Update(CrudExampleDetailsDto detailsDto)
+    {
+        var id = detailsDto.Id;
+
+        if (_inMemoryData.Any(entity => entity.Id == id) == false)
+            throw new KeyNotFoundException($"Сущность с первичным ключём Id = \"{id}\" не найдена!");
+
+        var entity = _inMemoryData.Single(entity => entity.Id == id);
+        detailsDto.DetailsDtoToEntity(entity);
     }
 }
