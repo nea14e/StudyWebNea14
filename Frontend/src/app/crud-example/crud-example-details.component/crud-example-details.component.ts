@@ -18,6 +18,7 @@ import {generateGuid} from '../../common/guids-helper';
 export class CrudExampleDetailsComponent implements OnInit {
   private id?: Guid;
   details?: CrudExampleDetailsModel;
+  isNew = false;
   isLoading = false;
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
@@ -27,9 +28,11 @@ export class CrudExampleDetailsComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(paramMap => {
       if (paramMap.has('id') && !!paramMap.get('id')) {
         this.id = Guid.parse(paramMap.get('id')!);
+        this.isNew = false;
         this.loadById();
       } else {
         this.id = undefined;
+        this.isNew = true;
         this.createNew();
       }
     });
@@ -49,10 +52,6 @@ export class CrudExampleDetailsComponent implements OnInit {
     this.details.id = generateGuid();
     console.log('create:', this.details);
     this.isLoading = false;
-  }
-
-  get isNew() {
-    return !this.id;
   }
 
   async onSaveClick() {
