@@ -31,6 +31,7 @@ export class CrudExampleComponent implements OnInit {
   onCreateClick() {
     this.details = {} as CrudExampleDetailsModel;
     this.isNew = true;
+    this.scrollToBottom();
   }
 
   onEditClick(item: CrudExampleItemModel) {
@@ -38,6 +39,7 @@ export class CrudExampleComponent implements OnInit {
     this.service.read(item.id).subscribe(data => {
       this.details = data;
       this.isNew = false;
+      this.scrollToBottom();
     })
   }
 
@@ -65,5 +67,11 @@ export class CrudExampleComponent implements OnInit {
 
   onCancelClick() {
     this.details = undefined;
+  }
+
+  private scrollToBottom() {
+    setTimeout(() => {
+      window.scrollTo(0, 9999999);
+    }, 250);
   }
 }
