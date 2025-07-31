@@ -2,14 +2,6 @@
   cursor: pointer;
 }
 
-.details-row {
-  margin-bottom: 12px;
-}
-
-.wide-input {
-  width: -webkit-fill-available;
-}
-
 .btn {
   margin-right: 12px;
 }

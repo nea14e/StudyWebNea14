@@ -1,4 +1,3 @@
-<p>crud-example works!</p>
 <div class="container">
   <div class="row mb-2">
     <div class="btn col-auto mr-2"
@@ -27,7 +26,7 @@
                 <img src="from-bootstrap/pencil-fill.svg" alt="Редактировать" class="btn-img"/>
               </div>
               <div title="Удалить"
-                   (click)="onDeleteClick(item)"
+                   (click)="onDeleteClick(item); $event.stopPropagation()"
                    class="btn col-auto mr-2">
                 <img src="from-bootstrap/trash.svg" alt="Удалить" class="btn-img"/>
               </div>
@@ -37,59 +36,4 @@
       </tbody>
     </table>
   </div>
-  @if (!!details) {
-    <div class="row">
-      <b>Редактирование:</b>
-    </div>
-    <div class="row details-row">
-      <div class="col-3">
-        Идентификатор:
-      </div>
-      <div class="col-9">
-        @if (isNew) {
-          <input type="text" [(ngModel)]="details.id" class="wide-input">
-        } @else {
-          {{ details.id }}
-        }
-        <br/>
-        <small>формат Guid</small>
-      </div>
-    </div>
-    <div class="row details-row">
-      <div class="col-3">
-        Наименование:
-      </div>
-      <div class="col-9">
-        <input type="text" [(ngModel)]="details.name" class="wide-input">
-        <br/>
-        <small>краткое наименование</small>
-      </div>
-    </div>
-    <div class="row details-row">
-      <div class="col-3">
-        Описание:
-      </div>
-      <div class="col-9">
-        <input type="text" [(ngModel)]="details.description" class="wide-input">
-        <br/>
-        <small>подробное описание</small>
-      </div>
-    </div>
-    <div class="row details-row">
-      <div class="btn col-auto mr-2"
-           (click)="onCancelClick()">
-        <img src="from-bootstrap/arrow-left.svg" alt="Назад" class="btn-img"/>
-        Назад
-      </div>
-      <div class="btn col-auto mr-2"
-           (click)="onSaveClick()">
-        <img src="from-bootstrap/check-2.svg" [alt]="isNew ? 'Создать' : 'Редактировать'" class="btn-img"/>
-        {{ isNew ? 'Создать' : 'Редактировать' }}
-      </div>
-    </div>
-  } @else {
-    <div class="row">
-      <b><i>Выберите элемент для редактирования</i></b>
-    </div>
-  }
 </div>
