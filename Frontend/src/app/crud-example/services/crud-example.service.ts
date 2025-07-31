@@ -26,4 +26,8 @@ export class CrudExampleService {
   update(detailsDto: CrudExampleDetailsModel) {
     return this.http.post<void>(environment.backendBaseUrl + '/api/crud-example/update', detailsDto);
   }
+
+  delete(id: Guid) {
+    return this.http.delete(environment.backendBaseUrl + '/api/crud-example/delete/' + id);
+  }
 }

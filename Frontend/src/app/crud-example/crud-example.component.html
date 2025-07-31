@@ -22,8 +22,14 @@
             <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>
-              <div title="Редактировать" class="btn col-auto mr-2">
+              <div title="Редактировать"
+                   class="btn col-auto mr-2">
                 <img src="from-bootstrap/pencil-fill.svg" alt="Редактировать" class="btn-img"/>
+              </div>
+              <div title="Удалить"
+                   (click)="onDeleteClick(item)"
+                   class="btn col-auto mr-2">
+                <img src="from-bootstrap/trash.svg" alt="Удалить" class="btn-img"/>
               </div>
             </td>
           </tr>

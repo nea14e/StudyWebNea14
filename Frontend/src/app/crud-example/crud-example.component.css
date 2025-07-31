@@ -9,3 +9,7 @@
 .wide-input {
   width: -webkit-fill-available;
 }
+
+.btn {
+  margin-right: 12px;
+}

@@ -53,4 +53,13 @@ export class CrudExampleComponent implements OnInit {
       this.reloadList();
     })
   }
+
+  onDeleteClick(item: CrudExampleItemModel) {
+    this.service.delete(item.id).subscribe(_ => {
+      this.reloadList();
+      if (this.details?.id === item.id) {
+        this.details = undefined;
+      }
+    })
+  }
 }

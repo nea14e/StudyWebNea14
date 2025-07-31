@@ -11,4 +11,6 @@ public interface ICrudExampleService
     public CrudExampleDetailsDto Read(Guid id);
 
     public void Update(CrudExampleDetailsDto detailsDto);
+
+    public void Delete(Guid id);
 }

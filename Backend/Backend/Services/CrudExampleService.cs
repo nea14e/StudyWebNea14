@@ -67,4 +67,13 @@ public class CrudExampleService : ICrudExampleService
         var entity = _inMemoryData.Single(entity => entity.Id == id);
         detailsDto.DetailsDtoToEntity(entity);
     }
+
+    public void Delete(Guid id)
+    {
+        if (_inMemoryData.Any(entity => entity.Id == id) == false)
+            throw new KeyNotFoundException($"Сущность с первичным ключём Id = \"{id}\" не найдена!");
+
+        var entity = _inMemoryData.Single(entity => entity.Id == id);
+        _inMemoryData.Remove(entity);
+    }
 }

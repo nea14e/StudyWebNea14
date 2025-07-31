@@ -21,7 +21,7 @@ public class CrudExampleApiController(ICrudExampleService service) : ControllerB
         service.Create(detailsDto);
     }
 
-    [HttpGet("read/{id}")]
+    [HttpGet("read/{id:guid}")]
     public CrudExampleDetailsDto Read(Guid id)
     {
         var result = service.Read(id);
@@ -32,5 +32,11 @@ public class CrudExampleApiController(ICrudExampleService service) : ControllerB
     public void Update([FromBody] CrudExampleDetailsDto detailsDto)
     {
         service.Update(detailsDto);
+    }
+
+    [HttpDelete("delete/{id:guid}")]
+    public void Delete(Guid id)
+    {
+        service.Delete(id);
     }
 }
