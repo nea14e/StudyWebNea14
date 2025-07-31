@@ -46,7 +46,11 @@
         Идентификатор:
       </div>
       <div class="col-9">
-        <input type="text" [(ngModel)]="details.id" class="wide-input">
+        @if (isNew) {
+          <input type="text" [(ngModel)]="details.id" class="wide-input">
+        } @else {
+          {{ details.id }}
+        }
         <br/>
         <small>формат Guid</small>
       </div>
