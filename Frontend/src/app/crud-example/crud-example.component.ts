@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {CrudExampleItemModel} from './models/crud-example-item.model';
+import {CrudExampleListItemModel} from './models/crud-example-list-item.model';
 import {CrudExampleService} from './services/crud-example.service';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
@@ -16,7 +16,7 @@ import {TitleComponent} from '../common/title/title.component';
   styleUrl: './crud-example.component.css'
 })
 export class CrudExampleComponent implements OnInit {
-  listItems: CrudExampleItemModel[] = [];
+  listItems: CrudExampleListItemModel[] = [];
   private service = inject(CrudExampleService);
   private router = inject(Router);
 
@@ -32,11 +32,11 @@ export class CrudExampleComponent implements OnInit {
     await this.router.navigate(['crud-example', 'create']);
   }
 
-  async onEditClick(item: CrudExampleItemModel) {
+  async onEditClick(item: CrudExampleListItemModel) {
     await this.router.navigate(['crud-example', 'edit', item.id]);
   }
 
-  async onDeleteClick(item: CrudExampleItemModel) {
+  async onDeleteClick(item: CrudExampleListItemModel) {
     await firstValueFrom(this.service.delete(item.id));
     await this.reloadList();
   }

@@ -5,9 +5,9 @@ namespace Backend.Mappers;
 
 public static class CrudExampleMapper
 {
-    public static CrudExampleItemDto EntityToItemDto(this CrudExampleInMemory entity)
+    public static CrudExampleListItemDto EntityToItemDto(this CrudExampleInMemory entity)
     {
-        var itemDto = new CrudExampleItemDto(
+        var itemDto = new CrudExampleListItemDto(
             entity.Id,
             entity.Name
         );

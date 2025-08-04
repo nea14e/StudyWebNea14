@@ -9,7 +9,7 @@ namespace Backend.ApiControllers;
 public class WeatherForecastApiController(IWeatherForecastService service) : ControllerBase
 {
     [HttpGet("get-random-list")]
-    public WeatherForecastItemDto[] GetRandomList()
+    public WeatherForecastListItemDto[] GetRandomList()
     {
         var result = service.GetRandomList();
         return result;

@@ -1,6 +1,6 @@
 import {Guid} from 'guid-typescript';
 
-export interface CrudExampleItemModel {
+export interface CrudExampleListItemModel {
   id: Guid;
   name: string;
 }

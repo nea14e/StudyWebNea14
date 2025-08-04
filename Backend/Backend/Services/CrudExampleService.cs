@@ -30,7 +30,7 @@ public class CrudExampleService : ICrudExampleService
         }
     ];
 
-    public IList<CrudExampleItemDto> GetList()
+    public IList<CrudExampleListItemDto> GetList()
     {
         var listDtos = _inMemoryData.Select(entity => entity.EntityToItemDto())
             .ToList();

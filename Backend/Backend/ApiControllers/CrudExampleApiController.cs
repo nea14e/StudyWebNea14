@@ -9,7 +9,7 @@ namespace Backend.ApiControllers;
 public class CrudExampleApiController(ICrudExampleService service) : ControllerBase
 {
     [HttpGet("get-list")]
-    public IList<CrudExampleItemDto> GetList()
+    public IList<CrudExampleListItemDto> GetList()
     {
         var result = service.GetList();
         return result;

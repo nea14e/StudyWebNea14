@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {WeatherForecastService} from './services/weather-forecast.service';
-import {WeatherForecastItemModel} from './models/weather-forecast-item.model';
+import {WeatherForecastListItemModel} from './models/weather-forecast-list-item.model';
 import {DatePipe} from '@angular/common';
 
 @Component({
@@ -12,7 +12,7 @@ import {DatePipe} from '@angular/common';
   styleUrl: './weather-forecast.component.css'
 })
 export class WeatherForecastComponent implements OnInit {
-  data: WeatherForecastItemModel[] = [];
+  data: WeatherForecastListItemModel[] = [];
   private service = inject(WeatherForecastService);
 
   ngOnInit(): void {

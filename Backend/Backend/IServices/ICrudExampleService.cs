@@ -4,7 +4,7 @@ namespace Backend.IServices;
 
 public interface ICrudExampleService
 {
-    public IList<CrudExampleItemDto> GetList();
+    public IList<CrudExampleListItemDto> GetList();
 
     public void Create(CrudExampleDetailsDto detailsDto);
 
