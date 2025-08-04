@@ -4,11 +4,13 @@ import {CrudExampleService} from './services/crud-example.service';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {firstValueFrom} from 'rxjs';
+import {TitleComponent} from '../common/title/title.component';
 
 @Component({
   selector: 'app-crud-example',
   imports: [
-    FormsModule
+    FormsModule,
+    TitleComponent
   ],
   templateUrl: './crud-example.component.html',
   styleUrl: './crud-example.component.css'

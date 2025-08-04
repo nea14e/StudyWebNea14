@@ -6,11 +6,13 @@ import {CrudExampleDetailsModel} from './models/crud-example-details.model';
 import {FormsModule} from '@angular/forms';
 import {firstValueFrom} from 'rxjs';
 import {generateGuid} from '../../common/guids-helper';
+import {TitleComponent} from '../../common/title/title.component';
 
 @Component({
   selector: 'app-crud-example-details',
   imports: [
-    FormsModule
+    FormsModule,
+    TitleComponent
   ],
   templateUrl: './crud-example-details.component.html',
   styleUrl: './crud-example-details.component.css'
