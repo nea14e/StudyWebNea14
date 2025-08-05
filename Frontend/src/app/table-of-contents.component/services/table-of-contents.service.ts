@@ -27,12 +27,14 @@ export class TableOfContentsService {
         return item;
       }
 
-      const queryWords = query.split(/\s+/)
-        .map(queryWord => queryWord.toUpperCase());
+      const queryWords = query.split(/[^A-Za-zА-Яа-я0-9]+/)
+        .map(queryWord => queryWord.toUpperCase())
+        .filter(queryWord => !!queryWord);
       console.log('applyFilter(): queryWords:', queryWords);
 
-      const itemWords = (item.title + '\n' + item.description).split(/[\b\s]+/)
-        .map(itemWord => itemWord.toUpperCase());
+      const itemWords = (item.title + '\n' + item.description).split(/[^A-Za-zА-Яа-я0-9]+/)
+        .map(itemWord => itemWord.toUpperCase())
+        .filter(itemWord => !!itemWord);
       console.log('applyFilter(): itemWords:', itemWords);
 
       const willPass = queryWords.every(queryWord => {
