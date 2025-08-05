@@ -1,0 +1,14 @@
+.title {
+  font-size: 1.3em;
+  max-lines: 1;
+  text-overflow: ellipsis;
+}
+
+.description {
+  max-lines: 1;
+  text-overflow: ellipsis;
+}
+
+.highlighted-text {
+  background-color: yellow !important;
+}

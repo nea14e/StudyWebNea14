@@ -1,1 +1,20 @@
-<p>table-of-contents.component works!</p>
+<div class="container" [formGroup]="form">
+  <app-title title="Список страниц"></app-title>
+  <div class="row">
+    <input type="text" formControlName="query">
+  </div>
+  <div class="row">
+    <table class="table table-bordered table-striped table-hover">
+      <tbody>
+        @for (item of listItems.controls; track item.value) {
+          <tr>
+            <td>
+              <div class="title" [innerHTML]="item.value.title"></div>
+              <div class="description" [innerHTML]="item.value.description"></div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

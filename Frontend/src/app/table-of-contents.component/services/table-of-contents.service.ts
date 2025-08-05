@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {filter, map} from 'rxjs';
-import {tableOfContents} from '../data/table-of-contents';
-import {fromArrayLike} from 'rxjs/internal/observable/innerFrom';
+import {firstValueFrom, of} from 'rxjs';
+import {tableOfContents, TableOfContentsItem} from '../data/table-of-contents';
 
 @Injectable({
   providedIn: 'root'
@@ -9,43 +8,45 @@ import {fromArrayLike} from 'rxjs/internal/observable/innerFrom';
 export class TableOfContentsService {
 
   getEntireList() {
-    return fromArrayLike(tableOfContents);
+    return of(tableOfContents);
   }
 
-  applyFilter(query: string) {
-    return this.getEntireList()
-      .pipe(
-        map((item, _) => {
-          if (!query) {
-            return item;
-          }
+  async applyFilter(query: string) {
+    const entireList = await firstValueFrom(this.getEntireList());
+    const clonedList = JSON.parse(JSON.stringify(entireList)) as TableOfContentsItem[];
 
-          const queryWords = query.split(/\s+/)
-            .map(queryWord => queryWord.toUpperCase());
-          const itemWords = (item.title + '\n' + item.description).split(/[\b\s]+/)
-            .map(itemWord => itemWord.toUpperCase());
+    const searchedList = clonedList.map(item => {
+      if (!query) {
+        return item;
+      }
 
-          const willPass = itemWords.some(itemWord => {
-            return queryWords.some(queryWord => itemWord.startsWith(queryWord));
-          })
-          if (!willPass) {
-            return undefined;
-          }
+      const queryWords = query.split(/\s+/)
+        .map(queryWord => queryWord.toUpperCase());
+      const itemWords = (item.title + '\n' + item.description).split(/[\b\s]+/)
+        .map(itemWord => itemWord.toUpperCase());
 
-          const highlightWord = (text: string, queryWord: string) => {
-            return text?.replace(
-              new RegExp('\b' + queryWord, 'i'),
-              (substring) => '<span class="highlighted-text">' + substring + '</span>'
-            );
-          };
-          queryWords.forEach(queryWord => {
-            item.title = highlightWord(item.title, queryWord);
-            item.description = highlightWord(item.description, queryWord);
-          });
+      const willPass = itemWords.some(itemWord => {
+        return queryWords.some(queryWord => itemWord.startsWith(queryWord));
+      })
+      if (!willPass) {
+        return undefined;
+      }
 
-          return item;
-        }),
-        filter(item => item !== undefined)
-      )
+      const highlightWord = (text: string, queryWord: string) => {
+        return text?.replace(
+          new RegExp(queryWord, 'ig'),
+          (substring) => '<span class="highlighted-text">' + substring + '</span>'
+        );
+      };
+      for (const queryWord of queryWords) {
+        item.title = highlightWord(item.title, queryWord);
+        item.description = highlightWord(item.description, queryWord);
+      }
+
+      return item;
+    })
+      .filter(item => item !== undefined);
+
+    return searchedList;
   }
 }
