@@ -42,7 +42,7 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
     const query = this.form.get('query')!.value;
     console.log('load: query:', query);
     if (!query) {
-      this.service.getEntireList().subscribe(data => {
+      this.service.getEntireList().then(data => {
         console.log('load: entire list:', data);
         this.updateForm(data);
       });
