@@ -29,11 +29,14 @@ export class TableOfContentsService {
 
       const queryWords = query.split(/\s+/)
         .map(queryWord => queryWord.toUpperCase());
+      console.log('applyFilter(): queryWords:', queryWords);
+
       const itemWords = (item.title + '\n' + item.description).split(/[\b\s]+/)
         .map(itemWord => itemWord.toUpperCase());
+      console.log('applyFilter(): itemWords:', itemWords);
 
-      const willPass = itemWords.some(itemWord => {
-        return queryWords.some(queryWord => itemWord.startsWith(queryWord));
+      const willPass = queryWords.every(queryWord => {
+        return itemWords.some(itemWord => itemWord.startsWith(queryWord));
       })
       if (!willPass) {
         return undefined;
