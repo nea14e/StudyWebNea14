@@ -29,6 +29,7 @@
   margin-bottom: 1em;
 }
 
+/*noinspection CssInvalidPropertyValue*/
 .wide-input {
   width: -webkit-fill-available;
 }

@@ -15,6 +15,7 @@ export class TableOfContentsService {
     const entireList = await firstValueFrom(this.getEntireList());
     const clonedList = JSON.parse(JSON.stringify(entireList)) as TableOfContentsItem[];
 
+    // noinspection UnnecessaryLocalVariableJS
     const searchedList = clonedList.map(item => {
       if (!query) {
         return item;
