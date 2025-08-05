@@ -8,7 +8,3 @@
   max-lines: 1;
   text-overflow: ellipsis;
 }
-
-.highlighted-text {
-  background-color: yellow !important;
-}
