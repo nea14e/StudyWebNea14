@@ -4,6 +4,7 @@ import {TableOfContentsService} from './services/table-of-contents.service';
 import {TitleComponent} from '../common/title/title.component';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, Subscription} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-table-of-contents',
@@ -19,6 +20,7 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
   selectedItem?: TableOfContentsItem;
   private service = inject(TableOfContentsService);
   private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
   private subscriptions: Subscription[] = [];
 
   constructor() {
@@ -64,6 +66,14 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
 
   onItemClicked(item: TableOfContentsItem) {
     this.selectedItem = item;
+    if (this.isShowFullDescription) {
+      this.onGoToPage();
+    }
+  }
+
+  onGoToPage() {
+    const path = this.selectedItem!.path;
+    this.router.navigate([path]).then();
   }
 
   private buildEmptyForm() {

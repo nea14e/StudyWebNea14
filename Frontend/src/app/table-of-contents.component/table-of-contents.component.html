@@ -33,8 +33,17 @@
     @if (!isShowFullDescription) {
       <div class="col-4 details-block">
         @if (!!selectedItem) {
-          <div class="title" [innerHTML]="selectedItem.title"></div>
+          <div class="justify-content-center d-flex">
+            <div class="title" [innerHTML]="selectedItem.title"></div>
+          </div>
           <div class="description" [innerHTML]="selectedItem.description"></div>
+          <div class="justify-content-center d-flex">
+            <div class="btn col-auto m-2"
+                 (click)="onGoToPage()">
+              <img src="from-bootstrap/play-circle.svg" alt="Перейти" class="btn-img"/>
+              Перейти
+            </div>
+          </div>
         } @else {
           Выберите элемент из списка, чтобы посмотреть на подробности.
         }

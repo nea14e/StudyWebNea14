@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component, inject, signal} from '@angular/core';
+import {Router, RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +9,12 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('Frontend');
+
+  private router = inject(Router);
+
+  onToMainPage() {
+    if (confirm('Уйти с текущей страницы?')) {
+      this.router.navigate(['/table-of-contents']).then();
+    }
+  }
 }
