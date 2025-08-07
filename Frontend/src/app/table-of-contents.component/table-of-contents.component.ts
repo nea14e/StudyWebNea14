@@ -87,14 +87,14 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
   }
 
   private updateForm(data: TableOfContentsItem[]) {
-    const listForm = this.formBuilder.array(data.map(item => {
-      return {
-        id: [item.id],
-        path: [item.path],
-        title: [item.title],
-        description: [item.description]
-      };
-    }));
+    const listForm = this.formBuilder.array(
+      data.map(item => this.formBuilder.group({
+          id: [item.id],
+          path: [item.path],
+          title: [item.title],
+          description: [item.description]
+        })
+      ));
     this.form.setControl('listItems', listForm);
     console.log('updateForm: data:', data, 'form:', this.form);
 

@@ -16,7 +16,7 @@
       </div>
 
       @for (item of listItems.controls; track item.value) {
-        <div (click)="onItemClicked(item.value)"
+        <div (click)="onItemClicked(item.getRawValue())"
              class="clickable item"
              [class]="item.value.id === selectedItem?.id ? 'selected-item' : 'non-selected-item'">
           <div class="title"
