@@ -1,20 +1,44 @@
 <div class="container" [formGroup]="form">
   <app-title title="Список страниц"></app-title>
   <div class="row">
-    <input type="text" formControlName="query">
-  </div>
-  <div class="row">
-    <table class="table table-bordered table-striped table-hover">
-      <tbody>
-        @for (item of listItems.controls; track item.value) {
-          <tr>
-            <td>
-              <div class="title" [innerHTML]="item.value.title"></div>
-              <div class="description" [innerHTML]="item.value.description"></div>
-            </td>
-          </tr>
+    <div [class]="isShowFullDescription ? 'col-12' : 'col-8'">
+      <div class="row row-bottom-fix">
+        <div class="col-8">
+          <input type="text" formControlName="query" placeholder="Введите несколько отдельных слов…"
+                 class="wide-input"/>
+        </div>
+        <div class="col-4">
+          <label class="clickable">
+            <input type="checkbox" formControlName="isShowFullDescription"/>
+            Подробный вид
+          </label>
+        </div>
+      </div>
+
+      @for (item of listItems.controls; track item.value) {
+        <div (click)="onItemClicked(item.value)"
+             class="clickable item"
+             [class]="item.value.id === selectedItem?.id ? 'selected-item' : 'non-selected-item'">
+          <div class="title"
+               [innerHTML]="item.value.title">
+          </div>
+          <div class="description"
+               [class.one-lined-text]="!isShowFullDescription"
+               [innerHTML]="item.value.description">
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (!isShowFullDescription) {
+      <div class="col-4 details-block">
+        @if (!!selectedItem) {
+          <div class="title" [innerHTML]="selectedItem.title"></div>
+          <div class="description" [innerHTML]="selectedItem.description"></div>
+        } @else {
+          Выберите элемент из списка, чтобы посмотреть на подробности.
         }
-      </tbody>
-    </table>
+      </div>
+    }
   </div>
 </div>

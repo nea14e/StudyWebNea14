@@ -16,6 +16,7 @@ import {debounceTime, distinctUntilChanged, Subscription} from 'rxjs';
 })
 export class TableOfContentsComponent implements OnInit, OnDestroy {
   form: FormGroup;
+  selectedItem?: TableOfContentsItem;
   private service = inject(TableOfContentsService);
   private formBuilder = inject(FormBuilder);
   private subscriptions: Subscription[] = [];
@@ -34,6 +35,13 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
         this.load();
       });
     this.subscriptions.push(querySubscription);
+
+    const isShowFullDescriptionSubscription = this.form.get('isShowFullDescription')!.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe(_ => {
+        this.updateDetailsForm();
+      });
+    this.subscriptions.push(isShowFullDescriptionSubscription);
 
     this.load();
   }
@@ -54,9 +62,14 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
     }
   }
 
+  onItemClicked(item: TableOfContentsItem) {
+    this.selectedItem = item;
+  }
+
   private buildEmptyForm() {
     const form = this.formBuilder.group({
       query: [''],
+      isShowFullDescription: [false],
       listItems: this.formBuilder.array([])
     });
     console.log('buildEmptyForm form:', form);
@@ -64,7 +77,7 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
   }
 
   private updateForm(data: TableOfContentsItem[]) {
-    const listItems = this.formBuilder.array(data.map(item => {
+    const listForm = this.formBuilder.array(data.map(item => {
       return {
         id: [item.id],
         path: [item.path],
@@ -72,12 +85,28 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
         description: [item.description]
       };
     }));
-    this.form.setControl('listItems', listItems);
+    this.form.setControl('listItems', listForm);
     console.log('updateForm: data:', data, 'form:', this.form);
+
+    this.updateDetailsForm();
+  }
+
+  private updateDetailsForm() {
+    if (this.isShowFullDescription) {
+      this.selectedItem = undefined;
+    } else {
+      this.selectedItem = this.listItems.length > 0
+        ? this.listItems.at(0).value as TableOfContentsItem
+        : undefined;
+    }
   }
 
   get listItems() {
     return this.form.get('listItems')! as FormArray;
+  }
+
+  get isShowFullDescription() {
+    return this.form.get('isShowFullDescription')!.value as boolean;
   }
 
   ngOnDestroy() {

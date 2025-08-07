@@ -9,12 +9,7 @@ export class TableOfContentsService {
 
   async getEntireList() {
     const list = await firstValueFrom(of(tableOfContents));
-    const clonedList = JSON.parse(JSON.stringify(list)) as TableOfContentsItem[];
-    return clonedList.map(item => {
-      item.title = `<span><!--<span class="one-lined-text">-->${item.title}</span>`;
-      item.description = `<span><!--<span class="one-lined-text">-->${item.description}</span>`;
-      return item;
-    });
+    return JSON.parse(JSON.stringify(list)) as TableOfContentsItem[];
   }
 
   async applyFilter(query: string) {
