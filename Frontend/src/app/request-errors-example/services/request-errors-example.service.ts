@@ -21,4 +21,11 @@ export class RequestErrorsExampleService {
       {params: {firstNumber, secondNumber}}
     );
   }
+
+  multiplication(firstNumber: number, secondNumber: number) {
+    return this.http.get<number>(
+      environment.backendBaseUrl + '/api/request-errors-example/multiplication',
+      {params: {firstNumber, secondNumber}}
+    );
+  }
 }

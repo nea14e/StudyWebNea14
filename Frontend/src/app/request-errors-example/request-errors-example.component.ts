@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {TitleComponent} from '../common/title/title.component';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RequestErrorsExampleService} from './services/request-errors-example.service';
 
 @Component({
@@ -23,40 +23,58 @@ export class RequestErrorsExampleComponent {
 
   buildForm() {
     return this.formBuilder.group({
-      addition: this.formBuilder.group({
-        firstNumber: [3, Validators.required],
-        secondNumber: [2, Validators.required],
-        result: [{value: undefined, disabled: true}]
-      }),
-      substraction: this.formBuilder.group({
-        firstNumber: [3, Validators.required],
-        secondNumber: [2, Validators.required],
-        result: [{value: undefined, disabled: true}]
-      })
+      arithmeticActions:
+        this.formBuilder.array([
+          this.formBuilder.group({
+            firstNumber: [3, Validators.required],
+            secondNumber: [2, Validators.required],
+            buttonTitle: [{value: 'Сложить числа', disabled: true}],
+            action: [(actionForm: FormGroup) => this.onAdditionClick(actionForm, this)],
+            result: [{value: undefined, disabled: true}]
+          }),
+          this.formBuilder.group({
+            firstNumber: [3, Validators.required],
+            secondNumber: [2, Validators.required],
+            buttonTitle: [{value: 'Вычесть числа', disabled: true}],
+            action: [(actionForm: FormGroup) => this.onSubstractionClick(actionForm, this)],
+            result: [{value: undefined, disabled: true}]
+          }),
+          this.formBuilder.group({
+            firstNumber: [3, Validators.required],
+            secondNumber: [2, Validators.required],
+            buttonTitle: [{value: 'Перемножить числа', disabled: true}],
+            action: [(actionForm: FormGroup) => this.onMultiplicationClick(actionForm, this)],
+            result: [{value: undefined, disabled: true}]
+          })
+        ])
     });
   }
 
-  get additionForm() {
-    return this.form.get('addition')! as FormGroup;
+  get arithmeticActions() {
+    return (this.form.get('arithmeticActions')! as FormArray).controls as FormGroup[];
   }
 
-  get substractionForm() {
-    return this.form.get('substraction')! as FormGroup;
-  }
-
-  onAdditionClick() {
-    const firstNumber = this.additionForm.get('firstNumber')!.value as number;
-    const secondNumber = this.additionForm.get('secondNumber')!.value as number;
-    this.service.addition(firstNumber, secondNumber).subscribe(result => {
-      this.additionForm.get('result')!.setValue(result);
+  onAdditionClick(actionForm: FormGroup, this1: RequestErrorsExampleComponent) {
+    const firstNumber = actionForm.get('firstNumber')!.value as number;
+    const secondNumber = actionForm.get('secondNumber')!.value as number;
+    this1.service.addition(firstNumber, secondNumber).subscribe(result => {
+      actionForm.get('result')!.setValue(result);
     });
   }
 
-  onSubstractionClick() {
-    const firstNumber = this.substractionForm.get('firstNumber')!.value as number;
-    const secondNumber = this.substractionForm.get('secondNumber')!.value as number;
-    this.service.substraction(firstNumber, secondNumber).subscribe(result => {
-      this.substractionForm.get('result')!.setValue(result);
+  onSubstractionClick(actionForm: FormGroup, this1: RequestErrorsExampleComponent) {
+    const firstNumber = actionForm.get('firstNumber')!.value as number;
+    const secondNumber = actionForm.get('secondNumber')!.value as number;
+    this1.service.substraction(firstNumber, secondNumber).subscribe(result => {
+      actionForm.get('result')!.setValue(result);
+    })
+  }
+
+  onMultiplicationClick(actionForm: FormGroup, this1: RequestErrorsExampleComponent) {
+    const firstNumber = actionForm.get('firstNumber')!.value as number;
+    const secondNumber = actionForm.get('secondNumber')!.value as number;
+    this1.service.multiplication(firstNumber, secondNumber).subscribe(result => {
+      actionForm.get('result')!.setValue(result);
     })
   }
 }

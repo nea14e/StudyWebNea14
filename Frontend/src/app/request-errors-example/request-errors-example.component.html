@@ -21,40 +21,26 @@
       </p>
     </i>
   </div>
-  <div [formGroup]="additionForm" class="row row-bottom-fix justify-content-center">
-    <div class="col-auto">
-      <input type="number" formControlName="firstNumber"/>
-    </div>
-    <div class="col-auto">
-      <input type="number" formControlName="secondNumber"/>
-    </div>
-    <div class="col-auto">
-      <div class="btn col-auto mr-2"
-           (click)="additionForm.valid ? onAdditionClick() : $event.stopPropagation()"
-           [class.disabled]="!additionForm.valid">
-        Сложить числа
-      </div>
-    </div>
-    <div class="col-auto">
-      <input type="number" formControlName="result"/>
-    </div>
-  </div>
-  <div [formGroup]="substractionForm" class="row row-bottom-fix justify-content-center">
-    <div class="col-auto">
-      <input type="number" formControlName="firstNumber"/>
-    </div>
-    <div class="col-auto">
-      <input type="number" formControlName="secondNumber"/>
-    </div>
-    <div class="col-auto">
-      <div class="btn col-auto mr-2"
-           (click)="substractionForm.valid ? onSubstractionClick() : $event.stopPropagation()"
-           [class.disabled]="!substractionForm.valid">
-        Вычесть числа
-      </div>
-    </div>
-    <div class="col-auto">
-      <input type="number" formControlName="result"/>
-    </div>
-  </div>
+  <table [formGroup]="form">
+    @for (actionForm of arithmeticActions; track actionForm.get('buttonTitle')!.value) {
+      <tr [formGroup]="actionForm">
+        <td>
+          <input type="number" formControlName="firstNumber"/>
+        </td>
+        <td>
+          <input type="number" formControlName="secondNumber"/>
+        </td>
+        <td class="d-flex justify-content-center">
+          <div class="btn align-self-center m-2"
+               (click)="actionForm.valid ? actionForm.get('action')!.value(actionForm) : $event.stopPropagation()"
+               [class.disabled]="!actionForm.valid">
+            {{ actionForm.get('buttonTitle')!.value }}
+          </div>
+        </td>
+        <td>
+          <input type="number" formControlName="result">
+        </td>
+      </tr>
+    }
+  </table>
 </div>

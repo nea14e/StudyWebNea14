@@ -20,4 +20,11 @@ public class RequestErrorsExampleApiController(IRequestErrorsExampleService serv
         var result = service.Minus(first, second);
         return result;
     }
+
+    [HttpPost("multiplication")]
+    public int Multiplication(int firstNumber, int secondNumber)
+    {
+        var result = service.Multiplication(firstNumber, secondNumber);
+        return result;
+    }
 }
