@@ -13,4 +13,11 @@ public class RequestErrorsExampleApiController(IRequestErrorsExampleService serv
         var result = service.Plus(first, second);
         return result;
     }
+
+    [HttpGet("minus")]
+    public int Minus(int first, int second)
+    {
+        var result = service.Minus(first, second);
+        return result;
+    }
 }

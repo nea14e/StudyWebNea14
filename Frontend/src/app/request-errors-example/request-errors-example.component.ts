@@ -26,7 +26,11 @@ export class RequestErrorsExampleComponent {
       addition: this.formBuilder.group({
         firstNumber: [3, Validators.required],
         secondNumber: [2, Validators.required],
-        result: [undefined]
+        result: [{value: undefined, disabled: true}]
+      }),
+      substraction: this.formBuilder.group({
+        firstNumber: [3, Validators.required],
+        secondNumber: [2, Validators.required],
         result: [{value: undefined, disabled: true}]
       })
     });
@@ -36,11 +40,23 @@ export class RequestErrorsExampleComponent {
     return this.form.get('addition')! as FormGroup;
   }
 
+  get substractionForm() {
+    return this.form.get('substraction')! as FormGroup;
+  }
+
   onAdditionClick() {
     const firstNumber = this.additionForm.get('firstNumber')!.value as number;
     const secondNumber = this.additionForm.get('secondNumber')!.value as number;
     this.service.addition(firstNumber, secondNumber).subscribe(result => {
       this.additionForm.get('result')!.setValue(result);
     });
+  }
+
+  onSubstractionClick() {
+    const firstNumber = this.substractionForm.get('firstNumber')!.value as number;
+    const secondNumber = this.substractionForm.get('secondNumber')!.value as number;
+    this.service.substraction(firstNumber, secondNumber).subscribe(result => {
+      this.substractionForm.get('result')!.setValue(result);
+    })
   }
 }

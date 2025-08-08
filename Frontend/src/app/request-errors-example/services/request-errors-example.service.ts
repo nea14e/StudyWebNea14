@@ -14,4 +14,11 @@ export class RequestErrorsExampleService {
       {params: {firstNumber, secondNumber}}
     );
   }
+
+  substraction(firstNumber: number, secondNumber: number) {
+    return this.http.get<number>(
+      environment.backendBaseUrl + '/api/request-errors-example/substraction',
+      {params: {firstNumber, secondNumber}}
+    );
+  }
 }

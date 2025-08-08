@@ -39,4 +39,22 @@
       <input type="number" formControlName="result"/>
     </div>
   </div>
+  <div [formGroup]="substractionForm" class="row row-bottom-fix justify-content-center">
+    <div class="col-auto">
+      <input type="number" formControlName="firstNumber"/>
+    </div>
+    <div class="col-auto">
+      <input type="number" formControlName="secondNumber"/>
+    </div>
+    <div class="col-auto">
+      <div class="btn col-auto mr-2"
+           (click)="substractionForm.valid ? onSubstractionClick() : $event.stopPropagation()"
+           [class.disabled]="!substractionForm.valid">
+        Вычесть числа
+      </div>
+    </div>
+    <div class="col-auto">
+      <input type="number" formControlName="result"/>
+    </div>
+  </div>
 </div>
