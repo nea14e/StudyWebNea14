@@ -1,0 +1,42 @@
+<div class="container" xmlns="http://www.w3.org/1999/html">
+  <app-title title="Простые ошибки в запросах"></app-title>
+  <div class="row">
+    <i>
+      <p>
+        При нажатии на каждую кнопку посылается сетевой запрос.
+        Ошибки могут быть как на фронтенде, так и на бэкенде.
+        Почините все запросы.
+      </p>
+      <p>
+        Чтобы проследить сетевой запрос, откройте панель отладки в браузере (F12) и перейдите на вкладку Сеть (Network).
+        Затем повторно нажмите на кнопку, инициирующую запрос. Новый запрос добавится в конец списка.
+        Можно предварительно очистить список запросов, нажав кнопку в углу панели.
+        Чтобы открыть подробности запроса, нажмите на него.
+      </p>
+      <p>
+        На бэкенде используйте режим отладки. Для этого установите точку остановки на нужной строке,
+        щёлкнув на полях, и запустите бэкенд в режиме отладки, нажав на жучка.
+        Используйте кнопки "Шаг с заходом" ("Step Into") и "Шаг с обходом" ("Step Over").
+        Наводите мышку на разные переменные, чтобы увидеть их текущие значения.
+      </p>
+    </i>
+  </div>
+  <div [formGroup]="additionForm" class="row row-bottom-fix justify-content-center">
+    <div class="col-auto">
+      <input type="number" formControlName="firstNumber"/>
+    </div>
+    <div class="col-auto">
+      <input type="number" formControlName="secondNumber"/>
+    </div>
+    <div class="col-auto">
+      <div class="btn col-auto mr-2"
+           (click)="additionForm.valid ? onAdditionClick() : $event.stopPropagation()"
+           [class.disabled]="!additionForm.valid">
+        Сложить числа
+      </div>
+    </div>
+    <div class="col-auto">
+      <input type="number" formControlName="result"/>
+    </div>
+  </div>
+</div>

@@ -21,6 +21,10 @@
   background-color: #606060;
 }
 
+.btn.disabled, .btn:disabled {
+  opacity: .40;
+}
+
 .clickable {
   cursor: pointer;
 }

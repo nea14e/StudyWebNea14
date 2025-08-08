@@ -11,6 +11,20 @@ export const tableOfContents: TableOfContentsItem[] = [
      </ul>`
   },
   {
+    id: 'request-errors-example',
+    path: '/request-errors-example',
+    title: 'Простые ошибки в запросах',
+    description: `Пример содержит ошибки в запросах к бэкенду, такие как:
+    <ul>
+        <li>неправильный порт бекенда;</li>
+        <li>неправильный адрес запроса;</li>
+        <li>неправильный тип запроса;</li>
+        <li>неизвестный параметр запроса;</li>
+        <li>параметр запроса имеет другой тип;</li>
+        <li>параметр запроса не может распарситься.</li>
+    </ul>`
+  },
+  {
     id: 'crud-example',
     path: '/crud-example',
     title: 'Простой пример CRUD',

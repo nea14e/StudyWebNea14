@@ -18,6 +18,7 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddTransient<IWeatherForecastService, WeatherForecastService>()
+    .AddTransient<IRequestErrorsExampleService, RequestErrorsExampleService>()
     .AddSingleton<ICrudExampleService, CrudExampleService>();
 
 // Add services to the container.

@@ -5,6 +5,7 @@ import {
   CrudExampleDetailsComponent
 } from './crud-example/crud-example-details.component/crud-example-details.component';
 import {TableOfContentsComponent} from './table-of-contents.component/table-of-contents.component';
+import {RequestErrorsExampleComponent} from './request-errors-example/request-errors-example.component';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,10 @@ export const routes: Routes = [
   {
     path: 'weather-forecast',
     component: WeatherForecastComponent,
+  },
+  {
+    path: 'request-errors-example',
+    component: RequestErrorsExampleComponent,
   },
   {
     path: 'crud-example',
