@@ -6,11 +6,16 @@ import {
 } from './crud-example/crud-example-details.component/crud-example-details.component';
 import {TableOfContentsComponent} from './table-of-contents.component/table-of-contents.component';
 import {RequestErrorsExampleComponent} from './request-errors-example/request-errors-example.component';
+import {SimpleRequestComponent} from './simple-request/simple-request.component';
 
 export const routes: Routes = [
   {
     path: 'table-of-contents',
     component: TableOfContentsComponent
+  },
+  {
+    path: 'simple-request',
+    component: SimpleRequestComponent,
   },
   {
     path: 'weather-forecast',

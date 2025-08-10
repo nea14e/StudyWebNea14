@@ -1,5 +1,14 @@
 export const tableOfContents: TableOfContentsItem[] = [
   {
+    id: 'simple-request',
+    path: '/simple-request',
+    title: 'Простой запрос',
+    description: `<p>Самый простой пример запроса на бэкенд.
+    Только одна кнопка и текст, который приходит по нажатию на кнопку.</p>
+    <p>Запрос посылается из компонента на фронте и обрабатывается в API-контроллере на бэкенде.
+    Сервисы не используются.</p>`
+  },
+  {
     id: 'weather-forecast',
     path: '/weather-forecast',
     title: 'Прогноз погоды',
