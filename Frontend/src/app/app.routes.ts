@@ -7,6 +7,7 @@ import {
 import {TableOfContentsComponent} from './table-of-contents.component/table-of-contents.component';
 import {RequestErrorsExampleComponent} from './request-errors-example/request-errors-example.component';
 import {SimpleRequestComponent} from './simple-request/simple-request.component';
+import {SimpleRequest2Component} from './simple-request-2/simple-request-2.component';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,10 @@ export const routes: Routes = [
   {
     path: 'simple-request',
     component: SimpleRequestComponent,
+  },
+  {
+    path: 'simple-request-2',
+    component: SimpleRequest2Component,
   },
   {
     path: 'weather-forecast',

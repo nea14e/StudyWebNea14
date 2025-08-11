@@ -1,0 +1,33 @@
+<div class="container">
+  <app-title title="Простой запрос-2"
+             description="Кнопка и текст с сервисами и моделями">
+  </app-title>
+  <div class="row row-bottom-fix">
+    <i>
+      <p>
+        Проследите путь запроса по коду. Запрос летит сквозь все слои архитектуры:
+      </p>
+      <ul>
+        <li>HTML</li>
+        <li>Component</li>
+        <li>Service на фронте</li>
+        <li>ApiController</li>
+        <li>Service на бэкенде</li>
+      </ul>
+      <p>
+        Чтобы переходить между соседними слоями, используйте Ctrl + щелчок на вызовах методов
+        и Найти Использования/Find Usages для перехода в обратную сторону.
+      </p>
+    </i>
+  </div>
+  <div class="row row-bottom-fix">
+    <div class="btn col-auto m-2"
+         (click)="onClick()">
+      Послать запрос
+    </div>
+    <div class="result col-auto"
+         [ngClass]="(isSuccess === true ? 'success' : '') + (isSuccess === false ? 'error' : '')">
+      {{ result }}
+    </div>
+  </div>
+</div>

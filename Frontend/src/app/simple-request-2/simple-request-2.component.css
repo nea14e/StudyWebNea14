@@ -1,0 +1,17 @@
+.result {
+  align-content: center;
+  background-color: grey;
+  border-radius: 5px;
+}
+
+.result.success {
+  color: green;
+  background-color: #6ada6a;
+  font-weight: bold;
+}
+
+.result.error {
+  color: darkred;
+  background-color: #e33030;
+  font-weight: bold;
+}
