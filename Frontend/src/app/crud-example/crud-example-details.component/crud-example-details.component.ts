@@ -4,7 +4,6 @@ import {Guid} from 'guid-typescript';
 import {CrudExampleDetailsService} from './services/crud-example-details.service';
 import {CrudExampleDetailsModel} from './models/crud-example-details.model';
 import {FormsModule} from '@angular/forms';
-import {firstValueFrom} from 'rxjs';
 import {generateGuid} from '../../common/guids-helper';
 import {TitleComponent} from '../../common/title/title.component';
 
@@ -42,7 +41,7 @@ export class CrudExampleDetailsComponent implements OnInit {
 
   private loadById() {
     this.isLoading = true;
-    this.service.read(this.id!).subscribe(details => {
+    this.service.read(this.id!).then(details => {
       this.details = details;
       console.log('load:', this.details);
       this.isLoading = false;
@@ -58,14 +57,12 @@ export class CrudExampleDetailsComponent implements OnInit {
 
   async onSaveClick() {
     this.isLoading = true;
-    let observable;
     console.log('save', this.details);
     if (this.isNew) {
-      observable = this.service.create(this.details!);
+      await this.service.create(this.details!);
     } else {
-      observable = this.service.update(this.details!);
+      await this.service.update(this.details!);
     }
-    await firstValueFrom(observable);
     await this.router.navigate(['crud-example']);
     this.isLoading = false;
   }

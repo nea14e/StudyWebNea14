@@ -16,9 +16,8 @@ export class WeatherForecastComponent implements OnInit {
   private service = inject(WeatherForecastService);
 
   ngOnInit(): void {
-    this.service.getRandomList()
-      .subscribe(data => {
-        this.data = data;
-      });
+    this.service.getRandomList().then(data => {
+      this.data = data;
+    });
   }
 }

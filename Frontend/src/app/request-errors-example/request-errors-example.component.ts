@@ -57,7 +57,7 @@ export class RequestErrorsExampleComponent {
   onAdditionClick(actionForm: FormGroup, this1: RequestErrorsExampleComponent) {
     const firstNumber = actionForm.get('firstNumber')!.value as number;
     const secondNumber = actionForm.get('secondNumber')!.value as number;
-    this1.service.addition(firstNumber, secondNumber).subscribe(result => {
+    this1.service.addition(firstNumber, secondNumber).then(result => {
       actionForm.get('result')!.setValue(result);
     });
   }
@@ -65,7 +65,7 @@ export class RequestErrorsExampleComponent {
   onSubstractionClick(actionForm: FormGroup, this1: RequestErrorsExampleComponent) {
     const firstNumber = actionForm.get('firstNumber')!.value as number;
     const secondNumber = actionForm.get('secondNumber')!.value as number;
-    this1.service.substraction(firstNumber, secondNumber).subscribe(result => {
+    this1.service.substraction(firstNumber, secondNumber).then(result => {
       actionForm.get('result')!.setValue(result);
     })
   }
@@ -73,7 +73,7 @@ export class RequestErrorsExampleComponent {
   onMultiplicationClick(actionForm: FormGroup, this1: RequestErrorsExampleComponent) {
     const firstNumber = actionForm.get('firstNumber')!.value as number;
     const secondNumber = actionForm.get('secondNumber')!.value as number;
-    this1.service.multiplication(firstNumber, secondNumber).subscribe(result => {
+    this1.service.multiplication(firstNumber, secondNumber).then(result => {
       actionForm.get('result')!.setValue(result);
     })
   }

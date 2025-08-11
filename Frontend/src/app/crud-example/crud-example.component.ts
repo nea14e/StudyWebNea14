@@ -3,7 +3,6 @@ import {CrudExampleListItemModel} from './models/crud-example-list-item.model';
 import {CrudExampleService} from './services/crud-example.service';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
-import {firstValueFrom} from 'rxjs';
 import {TitleComponent} from '../common/title/title.component';
 
 @Component({
@@ -25,7 +24,7 @@ export class CrudExampleComponent implements OnInit {
   }
 
   async reloadList() {
-    this.listItems = await firstValueFrom(this.service.getList());
+    this.listItems = await this.service.getList();
   }
 
   async onCreateClick() {
@@ -37,7 +36,7 @@ export class CrudExampleComponent implements OnInit {
   }
 
   async onDeleteClick(item: CrudExampleListItemModel) {
-    await firstValueFrom(this.service.delete(item.id));
+    await this.service.delete(item.id);
     await this.reloadList();
   }
 }
