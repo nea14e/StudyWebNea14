@@ -1,0 +1,66 @@
+<div class="container">
+  <app-title title="Запросы с параметрами">
+  </app-title>
+  <div class="row row-bottom-fix">
+    <i>
+      <p>
+        Параметры позволяют отправить на бэкенд какие-либо данные вместе с запросом.
+        Когда данных много, то пользуются POST-запросами. Когда мало, то параметрами.
+        Можно пользоваться POST-запросами и параметрами одновременно: в теле POST-запроса отправить основные данные,
+        а небольшие данные отправить как параметры. Ниже вы увидете пример этого.
+      </p>
+    </i>
+  </div>
+  <div class="row row-bottom-fix">
+    <i>
+      <p>
+        У этого запроса входные параметры находятся в адресе.
+        Откройте инструменты разработчика в браузере (F12), вкладка Сеть (Network) и проследите за этим запросом:
+      </p>
+    </i>
+  </div>
+  <div [formGroup]="addressParamsForm" class="row row-bottom-fix">
+    <div class="d-flex col-auto">
+      <div class="col-3 align-self-center">
+        <input type="number" formControlName="firstParam">
+      </div>
+      <div class="col-3 align-self-center">
+        <input type="number" formControlName="secondParam">
+      </div>
+      <div class="col-3 btn align-self-center m-2"
+           (click)="addressParamsForm.valid ? onAddressParamsClick() : $event.stopPropagation()"
+           [class.disabled]="!addressParamsForm.valid">
+        Отправить запрос
+      </div>
+      <div class="col-3 align-self-center">
+        <input type="text" formControlName="result">
+      </div>
+    </div>
+  </div>
+  <div class="row row-bottom-fix">
+    <i>
+      <p>
+        У этого запроса входные параметры вставляются в адрес после "?".
+        Если раньше параметры отличались по местам в адресе, то теперь они имеют названия и различаются по названиям:
+      </p>
+    </i>
+  </div>
+  <div [formGroup]="queryParamsForm" class="row row-bottom-fix">
+    <div class="d-flex col-auto">
+      <div class="col-3 align-self-center">
+        <input type="number" formControlName="firstParam">
+      </div>
+      <div class="col-3 align-self-center">
+        <input type="number" formControlName="secondParam">
+      </div>
+      <div class="col-3 btn align-self-center m-2"
+           (click)="queryParamsForm.valid ? onQueryParamsClick() : $event.stopPropagation()"
+           [class.disabled]="!queryParamsForm.valid">
+        Отправить запрос
+      </div>
+      <div class="col-3 align-self-center">
+        <input type="text" formControlName="result">
+      </div>
+    </div>
+  </div>
+</div>

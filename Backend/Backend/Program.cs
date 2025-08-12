@@ -20,6 +20,7 @@ builder.Services
     .AddTransient<IWeatherForecastService, WeatherForecastService>()
     .AddTransient<IRequestErrorsExampleService, RequestErrorsExampleService>()
     .AddTransient<ISimpleRequest2Service, SimpleRequest2Service>()
+    .AddTransient<IRequestWithParametersService, RequestWithParametersService>()
     .AddSingleton<ICrudExampleService, CrudExampleService>();
 
 // Add services to the container.

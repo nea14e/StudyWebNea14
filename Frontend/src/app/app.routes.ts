@@ -8,6 +8,7 @@ import {TableOfContentsComponent} from './table-of-contents.component/table-of-c
 import {RequestErrorsExampleComponent} from './request-errors-example/request-errors-example.component';
 import {SimpleRequestComponent} from './simple-request/simple-request.component';
 import {SimpleRequest2Component} from './simple-request-2/simple-request-2.component';
+import {RequestWithParametersComponent} from './request-with-parameters/request-with-parameters.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'simple-request-2',
     component: SimpleRequest2Component,
+  },
+  {
+    path: 'request-with-parameters',
+    component: RequestWithParametersComponent,
   },
   {
     path: 'weather-forecast',

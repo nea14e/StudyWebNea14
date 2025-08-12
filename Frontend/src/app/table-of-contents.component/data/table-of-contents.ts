@@ -20,6 +20,18 @@ export const tableOfContents: TableOfContentsItem[] = [
     `
   },
   {
+    id: 'request-with-parameters',
+    path: '/request-with-parameters',
+    title: 'Запросы с параметрами',
+    description: `Примеры запросов с параметрами:
+     <ul>
+        <li>в адресе запроса;</li>
+        <li>в адресе запроса после "?" (query-параметры);</li>
+        <li>передача данных в теле POST-запроса;</li>
+        <li>передача и получение сложных данных в адресе и в теле POST-запроса.</li>
+     </ul>`
+  },
+  {
     id: 'weather-forecast',
     path: '/weather-forecast',
     title: 'Прогноз погоды',
