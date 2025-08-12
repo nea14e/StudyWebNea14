@@ -10,7 +10,8 @@ public class SimpleRequest2ApiController(ISimpleRequest2Service service) : Contr
     [HttpGet("get")]
     public IActionResult Get()
     {
-        var result = service.Get(); // По-хорошему любые вычисления нужно делать в сервисах
-        return new JsonResult(result);
+        // По-хорошему любые вычисления нужно делать в сервисах
+        var result = service.Get(); // Нажмите на Get() мышкой с Ctrl, чтобы перейти дальше
+        return new JsonResult(result); // А это системный класс, на него можно не переходить
     }
 }
