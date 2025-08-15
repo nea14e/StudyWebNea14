@@ -129,6 +129,11 @@
             <td></td>
           </tr>
         }
+        @if (complexParamsResult.length === 0) {
+          <tr>
+            <td colspan="4">С данным фильтром ничего не найдено.</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
