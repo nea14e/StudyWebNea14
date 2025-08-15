@@ -41,6 +41,7 @@
     <i>
       <p>
         У этого запроса входные параметры вставляются в адрес после "?".
+        Это называется query-параметры.
         Если раньше параметры отличались по местам в адресе, то теперь они имеют названия и различаются по названиям:
       </p>
     </i>
@@ -62,5 +63,59 @@
         <input type="text" formControlName="result">
       </div>
     </div>
+  </div>
+  <div class="row row-bottom-fix">
+    <i>
+      <p>
+        В query-параметрах запроса можно передавать составной объект.
+        Каждое поле этого объекта можно положить в отдельный query-параметр (если это поле не null):
+      </p>
+    </i>
+  </div>
+  <div [formGroup]="complexParamsForm" class="row row-bottom-fix">
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+      <tr>
+        <td>Id</td>
+        <td>Наименование</td>
+        <td>Дата</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <input type="text" formControlName="title">
+        </td>
+        <td>
+          <input type="date" formControlName="dateFrom">
+        </td>
+        <td>
+          <div class="btn"
+               (click)="onComplexParamsClick()">
+            <img src="from-bootstrap/filter.svg" alt="Применить фильтр" class="btn-img"/>
+            Фильтровать
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td>
+          <input type="date" formControlName="dateTo">
+        </td>
+        <td></td>
+      </tr>
+      </thead>
+      <tbody>
+        @for (control of complexParamsResult.controls; track control.value.id) {
+          <tr>
+            <td>{{ control.value.id }}</td>
+            <td>{{ control.value.title }}</td>
+            <td>{{ control.value.date }}</td>
+            <td></td>
+          </tr>
+        }
+      </tbody>
+    </table>
   </div>
 </div>

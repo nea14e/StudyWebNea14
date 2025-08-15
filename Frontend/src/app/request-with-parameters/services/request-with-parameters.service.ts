@@ -2,6 +2,8 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../environments/environment';
+import {filterToParams, RequestWithComplexParametersFilter} from '../models/request-with-complex-parameters-filter';
+import {RequestWithComplexParametersListItem} from '../models/request-with-complex-parameters-list-item';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +24,13 @@ export class RequestWithParametersService {
       this.httpClient.get<string>(environment.backendBaseUrl + `/api/request-with-parameters/query-params`,
         {params: {oneParam: firstParam, anotherParam: secondParam}}  // Они различаются по названию
       )
+    );
+  }
+
+  requestWithComplexParams(filter: RequestWithComplexParametersFilter) {
+    return firstValueFrom(
+      this.httpClient.get<RequestWithComplexParametersListItem[]>(environment.backendBaseUrl + '/api/request-with-parameters/complex-params',
+        {params: filterToParams(filter)})  // Превращаем составной объект filter в набор параметров: 1 поле в 1 параметр
     );
   }
 }

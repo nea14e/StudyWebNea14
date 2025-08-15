@@ -1,4 +1,5 @@
-﻿using Backend.IServices;
+﻿using Backend.Dtos;
+using Backend.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.ApiControllers;
@@ -23,5 +24,14 @@ public class RequestWithParametersApiController(IRequestWithParametersService se
     {
         var result = service.Plus(oneParam, anotherParam); // Мы можем использовать тот же метод сервиса
         return new JsonResult(result);
+    }
+
+    // Набор изо всех query-параметров можно рассматривать как составной объект, например, filter
+    // Каждое поле объекта filter = 1 query-параметр
+    [HttpGet("complex-params")]
+    public IActionResult ComplexParams([FromQuery] RequestWithComplexParametersFilterDto filter)
+    {
+        var result = service.GetComplexParametersList(filter);
+        return new JsonResult(result); // Результат запроса - тоже составной объект, но здесь всё как обычно
     }
 }
