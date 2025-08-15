@@ -102,6 +102,10 @@ export class RequestWithParametersComponent {
     );
   }
 
+  onClearFilterClick(paramName: string) {
+    this.complexParamsForm.get(paramName)!.setValue(undefined);
+  }
+
   onComplexParamsClick() {
     const title = this.complexParamsForm.get('title')!.value as string;
     const dateFrom = this.complexParamsForm.get('dateFrom')!.value as string;

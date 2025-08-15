@@ -25,6 +25,10 @@
   opacity: .40;
 }
 
+.btn.btn-plain {
+  border: none;
+}
+
 .clickable {
   cursor: pointer;
 }

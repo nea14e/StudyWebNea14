@@ -85,9 +85,17 @@
         <td></td>
         <td>
           <input type="text" formControlName="title">
+          <div class="btn btn-plain"
+               (click)="onClearFilterClick('title')">
+            <img src="from-bootstrap/x-lg.svg" alt="Очистить фильтр" class="btn-img"/>
+          </div>
         </td>
         <td>
           <input type="date" formControlName="dateFrom">
+          <div class="btn btn-plain"
+               (click)="onClearFilterClick('dateFrom')">
+            <img src="from-bootstrap/x-lg.svg" alt="Очистить фильтр" class="btn-img"/>
+          </div>
         </td>
         <td>
           <div class="btn"
@@ -102,6 +110,10 @@
         <td></td>
         <td>
           <input type="date" formControlName="dateTo">
+          <div class="btn btn-plain"
+               (click)="onClearFilterClick('dateTo')">
+            <img src="from-bootstrap/x-lg.svg" alt="Очистить фильтр" class="btn-img"/>
+          </div>
         </td>
         <td></td>
       </tr>
