@@ -176,8 +176,8 @@
         Добавить элемент
       </div>
       <div class="col-auto btn align-self-center m-2"
-           (click)="postParamsForm.valid ? onPostParamsClick() : $event.stopPropagation()"
-           [class.disabled]="!postParamsForm.valid">
+           (click)="postParamsForm.valid && postParamsListControls.length > 0 ? onPostParamsClick() : $event.stopPropagation()"
+           [class.disabled]="!postParamsForm.valid || postParamsListControls.length === 0">
         Отправить запрос
       </div>
     </div>
