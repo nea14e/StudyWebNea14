@@ -1,9 +1,10 @@
 import {Component, inject} from '@angular/core';
 import {TitleComponent} from '../common/title/title.component';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RequestWithParametersService} from './services/request-with-parameters.service';
 import {RequestWithComplexParametersFilter} from './models/request-with-complex-parameters-filter';
 import {RequestWithComplexParametersListItem} from './models/request-with-complex-parameters-list-item';
+import {PostRequestRequestBody} from './models/post-request-request-body';
 
 @Component({
   selector: 'app-request-with-parameters',
@@ -42,10 +43,10 @@ export class RequestWithParametersComponent {
         result: this.formBuilder.array([])
       }),
       postParams: this.formBuilder.group({
-        firstParam: [2, Validators.required],
-        secondParam: [1, Validators.required],
-        body: ['Qwerty Uiop Asdfghjkl Zxc Vbnm Qwerty Uiop Asdfghjkl Zxc Vbnm Qwerty Uiop Asdfghjkl Zxc Vbnm', Validators.required],
-        result: [{value: undefined, disabled: true}]
+        params: this.formBuilder.array([
+          new FormControl(1, Validators.required)
+        ]),
+        resultText: [{value: undefined, disabled: true}]
       }),
     })
   }
@@ -81,6 +82,14 @@ export class RequestWithParametersComponent {
     return this.form.get('postParams')! as FormGroup;
   }
 
+  get postParamsList() {
+    return this.postParamsForm.get('params')! as FormArray;
+  }
+
+  get postParamsListControls() {
+    return (this.postParamsForm.get('params')! as FormArray).controls as FormControl[];
+  }
+
   onAddressParamsClick() {
     const firstParam = this.addressParamsForm.get('firstParam')!.value as number;
     const secondParam = this.addressParamsForm.get('secondParam')!.value as number;
@@ -102,7 +111,7 @@ export class RequestWithParametersComponent {
     );
   }
 
-  onClearFilterClick(paramName: string) {
+  onComplexParamsClearFilterClick(paramName: string) {
     this.complexParamsForm.get(paramName)!.setValue(undefined);
   }
 
@@ -123,5 +132,26 @@ export class RequestWithParametersComponent {
         this.buildComplexParamsResultForm(result);
       }
     );
+  }
+
+  onPostParamsClearFilterClick(i: number) {
+    this.postParamsList.removeAt(i);
+  }
+
+  onAddPostParamClick() {
+    const newControl = new FormControl(1, Validators.required);
+    this.postParamsList.push(newControl);
+  }
+
+  onPostParamsClick() {
+    const items = this.postParamsList.getRawValue() as number[];
+    console.log('onPostParamsClick(): items:', items);
+    const requestBody = {
+      items: items
+    } as PostRequestRequestBody;
+    this.service.requestWithPostBody(requestBody).then(response => {
+      const resultText = `Количество элементов: ${response.count}, сумма: ${response.sum}, среднее значение: ${response.average}`;
+      this.postParamsForm.get('resultText')!.setValue(resultText);
+    });
   }
 }

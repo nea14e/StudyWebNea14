@@ -37,6 +37,10 @@
   margin-bottom: 1em;
 }
 
+.row.table-row {
+  display: table-row;
+}
+
 /*noinspection CssInvalidPropertyValue*/
 .wide-input {
   width: -webkit-fill-available;

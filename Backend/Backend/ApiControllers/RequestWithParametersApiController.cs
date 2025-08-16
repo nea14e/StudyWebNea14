@@ -34,4 +34,12 @@ public class RequestWithParametersApiController(IRequestWithParametersService se
         var result = service.GetComplexParametersList(filter);
         return new JsonResult(result); // Результат запроса - тоже составной объект, но здесь всё как обычно
     }
+
+    // POST-запрос получает сложные данные из тела запроса
+    [HttpPost("post-request")]
+    public IActionResult PostRequest([FromBody] PostRequestRequestBody requestBody)
+    {
+        var result = service.PostRequest(requestBody);
+        return new JsonResult(result);
+    }
 }

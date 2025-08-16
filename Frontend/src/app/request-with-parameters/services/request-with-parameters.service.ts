@@ -4,6 +4,8 @@ import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {filterToParams, RequestWithComplexParametersFilter} from '../models/request-with-complex-parameters-filter';
 import {RequestWithComplexParametersListItem} from '../models/request-with-complex-parameters-list-item';
+import {PostRequestRequestBody} from '../models/post-request-request-body';
+import {PostRequestResponseBody} from '../models/post-request-response-body';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +34,11 @@ export class RequestWithParametersService {
       this.httpClient.get<RequestWithComplexParametersListItem[]>(environment.backendBaseUrl + '/api/request-with-parameters/complex-params',
         {params: filterToParams(filter)})  // Превращаем составной объект filter в набор параметров: 1 поле в 1 параметр
     );
+  }
+
+  requestWithPostBody(body: PostRequestRequestBody) {
+    return firstValueFrom(
+      this.httpClient.post<PostRequestResponseBody>(environment.backendBaseUrl + `/api/request-with-parameters/post-request`, body)
+    )
   }
 }

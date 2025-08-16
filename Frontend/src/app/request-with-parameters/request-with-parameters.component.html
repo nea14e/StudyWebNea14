@@ -88,14 +88,14 @@
         <td>
           <input type="text" formControlName="title">
           <div class="btn btn-plain"
-               (click)="onClearFilterClick('title')">
+               (click)="onComplexParamsClearFilterClick('title')">
             <img src="from-bootstrap/x-lg.svg" alt="Очистить фильтр" class="btn-img"/>
           </div>
         </td>
         <td>
           <input type="date" formControlName="dateFrom">
           <div class="btn btn-plain"
-               (click)="onClearFilterClick('dateFrom')">
+               (click)="onComplexParamsClearFilterClick('dateFrom')">
             <img src="from-bootstrap/x-lg.svg" alt="Очистить фильтр" class="btn-img"/>
           </div>
         </td>
@@ -113,7 +113,7 @@
         <td>
           <input type="date" formControlName="dateTo">
           <div class="btn btn-plain"
-               (click)="onClearFilterClick('dateTo')">
+               (click)="onComplexParamsClearFilterClick('dateTo')">
             <img src="from-bootstrap/x-lg.svg" alt="Очистить фильтр" class="btn-img"/>
           </div>
         </td>
@@ -136,5 +136,53 @@
         }
       </tbody>
     </table>
+  </div>
+  <div [formGroup]="postParamsForm" class="row row-bottom-fix">
+    <div class="row row-bottom-fix">
+      <i>
+        <p>
+          Также, чтобы отправить и получить сложные данные, можно использовать POST-запрос.
+          Он отличается от GET-запросов, которые мы прежде использовали, тем, что в отправляемом запросе есть тело
+          запроса,
+          куда и кладутся данные.
+        </p>
+        <p>
+          Важно, что данные в GET-запросах видны всем промежуточным узлам компьютерной сети,
+          потому что они являются частью адреса запроса.
+          А в POST-запросе данные высылаются в теле запроса, которое шифруется при использовании https.
+          Поэтому на практике важные данные всегда отправляют в теле POST-запроса.
+        </p>
+      </i>
+    </div>
+    <table>
+      @for (control of postParamsListControls; let i = $index; track i) {
+        <tr class="row table-row">
+          <td class="col-auto">
+            <input type="number" [formControl]="control">
+          </td>
+          <td>
+            <div class="btn btn-plain"
+                 (click)="onPostParamsClearFilterClick(i)">
+              <img src="from-bootstrap/x-lg.svg" alt="Удалить элемент" class="btn-img"/>
+            </div>
+          </td>
+        </tr>
+      }
+    </table>
+    <div class="row row-bottom-fix">
+      <div class="btn col-auto m-2"
+           (click)="onAddPostParamClick()">
+        <img src="from-bootstrap/plus-circle.svg" alt="Добавить элемент" class="btn-img"/>
+        Добавить элемент
+      </div>
+      <div class="col-auto btn align-self-center m-2"
+           (click)="postParamsForm.valid ? onPostParamsClick() : $event.stopPropagation()"
+           [class.disabled]="!postParamsForm.valid">
+        Отправить запрос
+      </div>
+    </div>
+    <div class="row row-bottom-fix">
+      <input type="text" formControlName="resultText">
+    </div>
   </div>
 </div>

@@ -8,4 +8,6 @@ public interface IRequestWithParametersService
 
     List<RequestWithComplexParametersListItemDto> GetComplexParametersList(
         RequestWithComplexParametersFilterDto? filter);
+
+    PostRequestResponseBody PostRequest(PostRequestRequestBody requestBody);
 }

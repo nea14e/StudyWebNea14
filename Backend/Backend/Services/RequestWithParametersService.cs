@@ -52,4 +52,16 @@ public class RequestWithParametersService : IRequestWithParametersService
         var result = query.ToList();
         return result;
     }
+
+    public PostRequestResponseBody PostRequest(PostRequestRequestBody requestBody)
+    {
+        var items = requestBody.Items;
+
+        var count = items.Count;
+        var sum = items.Sum();
+        var average = items.Average();
+
+        var result = new PostRequestResponseBody(count, sum, average);
+        return result;
+    }
 }
