@@ -62,6 +62,13 @@ export const tableOfContents: TableOfContentsItem[] = [
     title: 'Простой пример CRUD',
     description: `Простой пример CRUD (Create/Read/Update/Delete - Создать/Считать/Обновить/Удалить).
     Данные хранятся на бэкенде, пока он не завершится. Перезапуск бэкенда сбрасывает все изменения в данных.`
+  },
+  {
+    id: 'json-constructor',
+    path: '/json-constructor',
+    title: 'Конструктор JSON',
+    description: `Разберите, что представляет собой формат JSON, на этом примере.
+    <br/>Также здесь вы найдёте рекурсивное использование компонента внутри самого себя.`
   }
 ];
 

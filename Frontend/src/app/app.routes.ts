@@ -9,6 +9,7 @@ import {RequestErrorsExampleComponent} from './request-errors-example/request-er
 import {SimpleRequestComponent} from './simple-request/simple-request.component';
 import {SimpleRequest2Component} from './simple-request-2/simple-request-2.component';
 import {RequestWithParametersComponent} from './request-with-parameters/request-with-parameters.component';
+import {JsonConstructorComponent} from './json-constructor/json-constructor.component';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,10 @@ export const routes: Routes = [
         component: CrudExampleDetailsComponent,
       }
     ]
+  },
+  {
+    path: 'json-constructor',
+    component: JsonConstructorComponent,
   },
   {
     path: '**',

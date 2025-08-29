@@ -1,4 +1,6 @@
+using Backend.Entities;
 using Backend.IServices;
+using Backend.Other;
 using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,12 +23,14 @@ builder.Services
     .AddTransient<IRequestErrorsExampleService, RequestErrorsExampleService>()
     .AddTransient<ISimpleRequest2Service, SimpleRequest2Service>()
     .AddTransient<IRequestWithParametersService, RequestWithParametersService>()
-    .AddSingleton<ICrudExampleService, CrudExampleService>();
+    .AddSingleton<ICrudExampleService, CrudExampleService>()
+    .AddSingleton<IJsonConstructorService, JsonConstructorService>()
+    .AddTransient<BackendDbContext>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddControllers();
+builder.Services.AddControllers(mvcOptions => { mvcOptions.InputFormatters.Add(new PlainTextFormatter()); });
 
 var app = builder.Build();
 
