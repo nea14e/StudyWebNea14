@@ -1,0 +1,11 @@
+<div class="row row-bottom-fix" [formGroup]="form">
+  <div class="col-4">
+    @if (!isRoot()) {
+      <span [innerHTML]="tabs"></span>
+      <input type="text" formControlName="fieldName">
+    }
+  </div>
+  <div class="col-8">
+
+  </div>
+</div>
