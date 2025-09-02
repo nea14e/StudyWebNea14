@@ -3,12 +3,12 @@
     <div class="col-12">
       @if (!isRoot()) {
         <span [innerHTML]="tabs"></span>
-        <mat-form-field>
+        <mat-form-field class="mat-field">
           <mat-label>Название поля</mat-label>
           <input matInput type="text" formControlName="fieldName">
         </mat-form-field>
       }
-      <mat-form-field>
+      <mat-form-field class="mat-field">
         <mat-label>Тип поля</mat-label>
         <mat-select formControlName="fieldType">
           <mat-option [value]="FieldType.boolean">boolean</mat-option>
@@ -20,7 +20,7 @@
         </mat-select>
       </mat-form-field>
       @if (fieldType === FieldType.boolean) {
-        <mat-form-field>
+        <mat-form-field class="mat-field">
           <mat-label>Значение поля</mat-label>
           <mat-select formControlName="fieldValue" class="wide-input">
             <mat-option [value]="true">true</mat-option>
@@ -28,17 +28,17 @@
           </mat-select>
         </mat-form-field>
       } @else if (fieldType === FieldType.number) {
-        <mat-form-field>
+        <mat-form-field class="mat-field">
           <mat-label>Значение поля</mat-label>
           <input matInput type="number" formControlName="fieldValue" class="wide-input">
         </mat-form-field>
       } @else if (fieldType === FieldType.string) {
-        <mat-form-field>
+        <mat-form-field class="mat-field">
           <mat-label>Значение поля</mat-label>
           <input matInput type="text" formControlName="fieldValue" class="wide-input">
         </mat-form-field>
       } @else if (fieldType === FieldType.null) {
-        <mat-form-field>
+        <mat-form-field class="mat-field">
           <mat-label>Значение поля</mat-label>
           <input matInput type="text" [value]="'null'" disabled class="wide-input">
         </mat-form-field>
