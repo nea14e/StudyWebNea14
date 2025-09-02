@@ -4,5 +4,5 @@ export enum FieldType {
   string,
   null,
   object,
-  array
+  list
 }
