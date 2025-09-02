@@ -45,4 +45,16 @@
       }
     </div>
   </div>
+  <div class="row">
+    <div class="col-12">
+      @if (fieldType === FieldType.object) {
+        @for (fieldKey of Object.keys(objectInnerFields); track fieldKey) {
+          <app-json-field [isRoot]="false"
+                          [nestingLevel]="nestingLevel() + 1"
+                          [form]="getObjectInnerField(fieldKey)">
+          </app-json-field>
+        }
+      }
+    </div>
+  </div>
 </div>

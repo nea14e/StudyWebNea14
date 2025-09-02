@@ -74,4 +74,18 @@ export class JsonFieldComponent {
   get fieldType() {
     return this.form().get('fieldType')?.value as FieldType;
   }
+
+  get objectInnerFields() {
+    const objectFormGroup = this.form().get('fieldValue')! as FormGroup;
+    console.log('objectFormGroup:', objectFormGroup);
+    console.log('objectFormGroup.controls:', objectFormGroup.controls);
+    console.log('objectFormGroup.controls.keys():', Object.keys(objectFormGroup.controls));
+    return objectFormGroup.controls;
+  }
+
+  getObjectInnerField(fieldName: string) {
+    const fieldFormGroup = this.objectInnerFields[fieldName] as FormGroup;
+    console.log(`objectFormGroup.controls.keys(${fieldName}):`, fieldFormGroup);
+    return fieldFormGroup;
+  }
 }
