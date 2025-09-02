@@ -43,15 +43,20 @@
           <input matInput type="text" [value]="'null'" disabled class="wide-input">
         </mat-form-field>
       }
+      <div class="btn col-auto mr-2"
+           (click)="onEyeClick()"
+           title="Просмотреть значение JSON">
+        <img src="from-bootstrap/eye-fill.svg" alt="Просмотреть значение JSON" class="btn-img"/>
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
       @if (fieldType === FieldType.object) {
-        @for (fieldKey of Object.keys(objectInnerFields); track fieldKey) {
+        @for (objectInnerField of objectInnerFields; track objectInnerField) {
           <app-json-field [isRoot]="false"
                           [nestingLevel]="nestingLevel() + 1"
-                          [form]="getObjectInnerField(fieldKey)">
+                          [form]="objectInnerField">
           </app-json-field>
         }
       }
