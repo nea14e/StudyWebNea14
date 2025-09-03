@@ -48,16 +48,24 @@
            title="Просмотреть значение JSON">
         <img src="from-bootstrap/eye-fill.svg" alt="Просмотреть значение JSON" class="btn-img"/>
       </div>
+      @if (!isRoot()) {
+        <div class="btn col-auto mr-2"
+             (click)="onDeleteFieldClick()"
+             title="Удалить поле">
+          <img src="from-bootstrap/x-lg.svg" alt="Удалить поле" class="btn-img"/>
+        </div>
+      }
     </div>
   </div>
   <div class="row">
     <div class="col-12">
       @if (fieldType === FieldType.object || fieldType === FieldType.list) {
-        @for (innerField of innerFields; track innerField) {
+        @for (innerField of innerFields; let i = $index; track innerField) {
           <app-json-field [isRoot]="false"
                           [nestingLevel]="nestingLevel() + 1"
                           [form]="innerField"
-                          [hasName]="fieldType === FieldType.object">
+                          [hasName]="fieldType === FieldType.object"
+                          (onDeleteField)="deleteInnerField(i)">
           </app-json-field>
         }
       }

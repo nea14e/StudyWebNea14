@@ -1,4 +1,4 @@
-import {Component, inject, input} from '@angular/core';
+import {Component, inject, input, output} from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -32,6 +32,8 @@ export class JsonFieldComponent {
   form = input<FormGroup>(this.buildForm());
   hasName = input<boolean>(true);
   private service = inject(JsonConstructorService);
+
+  onDeleteField = output<void>();
 
   readonly FieldType = FieldType;
   readonly Object = Object;
@@ -125,5 +127,15 @@ export class JsonFieldComponent {
       return null;
     }
     return valueControl.value;
+  }
+
+  onDeleteFieldClick() {
+    this.onDeleteField.emit();
+  }
+
+  deleteInnerField(i: number) {
+    const outerControl = this.form().get('fieldValue')! as FormArray;
+    outerControl.controls = outerControl.controls
+      .filter((_value, index) => index !== i);
   }
 }
