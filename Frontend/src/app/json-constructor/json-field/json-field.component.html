@@ -1,8 +1,8 @@
 <div [formGroup]="form()">
   <div class="row">
     <div class="col-12">
-      @if (!isRoot()) {
-        <span [innerHTML]="tabs"></span>
+      <span [innerHTML]="tabs"></span>
+      @if (hasName()) {
         <mat-form-field class="mat-field">
           <mat-label>Название поля</mat-label>
           <input matInput type="text" formControlName="fieldName">
@@ -52,11 +52,12 @@
   </div>
   <div class="row">
     <div class="col-12">
-      @if (fieldType === FieldType.object) {
-        @for (objectInnerField of objectInnerFields; track objectInnerField) {
+      @if (fieldType === FieldType.object || fieldType === FieldType.list) {
+        @for (innerField of innerFields; track innerField) {
           <app-json-field [isRoot]="false"
                           [nestingLevel]="nestingLevel() + 1"
-                          [form]="objectInnerField">
+                          [form]="innerField"
+                          [hasName]="fieldType === FieldType.object">
           </app-json-field>
         }
       }

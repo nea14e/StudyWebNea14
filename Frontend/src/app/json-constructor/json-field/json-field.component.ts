@@ -30,6 +30,7 @@ export class JsonFieldComponent {
 
   private formBuilder = inject(FormBuilder);  // До вызова buildForm()
   form = input<FormGroup>(this.buildForm());
+  hasName = input<boolean>(true);
   private service = inject(JsonConstructorService);
 
   readonly FieldType = FieldType;
@@ -64,9 +65,9 @@ export class JsonFieldComponent {
           break;
         case FieldType.list:
           newControl = this.formBuilder.array([
-            this.buildForm('index', FieldType.number, 1),
-            this.buildForm('index', FieldType.number, 2),
-            this.buildForm('index', FieldType.number, 3),
+            this.buildForm('', FieldType.number, 1),
+            this.buildForm('', FieldType.number, 2),
+            this.buildForm('', FieldType.number, 3),
           ]);
           break;
         default:
@@ -86,7 +87,7 @@ export class JsonFieldComponent {
     return this.form().get('fieldType')?.value as FieldType;
   }
 
-  get objectInnerFields() {
+  get innerFields() {
     const innerForm = this.form().get('fieldValue')! as FormArray;
     console.log('innerForm:', innerForm);
     console.log('innerForm.controls:', innerForm.controls);
@@ -114,7 +115,12 @@ export class JsonFieldComponent {
       }
       return value;
     } else if (type === FieldType.list) {
-      // TODO
+      let listValue: any[] = [];
+      const listControls = (valueControl as FormArray).controls as FormGroup[];
+      for (let listControl of listControls) {
+        listValue.push(this.getTotalValue(listControl));
+      }
+      return listValue;
     } else if (type === FieldType.null) {
       return null;
     }
