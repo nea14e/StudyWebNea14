@@ -95,8 +95,6 @@ export class JsonFieldComponent {
 
   get innerFields() {
     const innerForm = this.form().get('fieldValue')! as FormArray;
-    console.log('innerForm:', innerForm);
-    console.log('innerForm.controls:', innerForm.controls);
     return innerForm.controls as FormGroup[];
   }
 
