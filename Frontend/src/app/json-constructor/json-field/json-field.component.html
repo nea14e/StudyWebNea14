@@ -71,4 +71,16 @@
       }
     </div>
   </div>
+  @if (fieldType === FieldType.object || fieldType === FieldType.list) {
+    <div class="row row-bottom-fix">
+      <div class="col-12">
+        <span [innerHTML]="tabs"></span>
+        <div class="btn col-auto mr-2"
+             (click)="onAddFieldClick()"
+             title="Добавить поле">
+          <img src="from-bootstrap/plus.svg" alt="Добавить поле" class="btn-img"/>
+        </div>
+      </div>
+    </div>
+  }
 </div>

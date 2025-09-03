@@ -25,6 +25,10 @@ import {JsonConstructorService} from '../services/json-constructor.service';
   styleUrl: './json-field.component.css'
 })
 export class JsonFieldComponent {
+  private readonly NEW_FIELD_NAME_PATTERN = 'field _';
+  private readonly NEW_FIELD_TYPE = FieldType.string;
+  private readonly NEW_FIELD_VALUE_PATTERN = 'value _';
+
   isRoot = input<boolean>(false);
   nestingLevel = input<number>(0);
 
@@ -137,5 +141,28 @@ export class JsonFieldComponent {
     const outerControl = this.form().get('fieldValue')! as FormArray;
     outerControl.controls = outerControl.controls
       .filter((_value, index) => index !== i);
+  }
+
+  onAddFieldClick() {
+    let hasName: boolean;
+    let newFieldName: string;
+    let newFieldValue: any;
+
+    if (this.fieldType === FieldType.object) {
+      const newFieldNumber = this.innerFields.length + 1;
+      hasName = true;
+      newFieldName = this.NEW_FIELD_NAME_PATTERN.replace('_', newFieldNumber.toString());
+      newFieldValue = this.NEW_FIELD_VALUE_PATTERN.replace('_', newFieldNumber.toString());
+    } else if (this.fieldType === FieldType.list) {
+      const newFieldNumber = this.innerFields.length + 1;
+      hasName = false;
+      newFieldName = '';
+      newFieldValue = this.NEW_FIELD_VALUE_PATTERN.replace('_', newFieldNumber.toString());
+    } else {
+      throw new Error('Другой тип вложенных полей не предусмотрен.')
+    }
+
+    const formArray = this.form().get('fieldValue')! as FormArray;
+    formArray.controls.push(this.buildForm(newFieldName, this.NEW_FIELD_TYPE, newFieldValue))
   }
 }
