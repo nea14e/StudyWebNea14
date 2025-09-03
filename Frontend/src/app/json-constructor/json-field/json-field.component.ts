@@ -144,18 +144,15 @@ export class JsonFieldComponent {
   }
 
   onAddFieldClick() {
-    let hasName: boolean;
     let newFieldName: string;
     let newFieldValue: any;
 
     if (this.fieldType === FieldType.object) {
       const newFieldNumber = this.innerFields.length + 1;
-      hasName = true;
       newFieldName = this.NEW_FIELD_NAME_PATTERN.replace('_', newFieldNumber.toString());
       newFieldValue = this.NEW_FIELD_VALUE_PATTERN.replace('_', newFieldNumber.toString());
     } else if (this.fieldType === FieldType.list) {
       const newFieldNumber = this.innerFields.length + 1;
-      hasName = false;
       newFieldName = '';
       newFieldValue = this.NEW_FIELD_VALUE_PATTERN.replace('_', newFieldNumber.toString());
     } else {
