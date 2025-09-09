@@ -15,38 +15,41 @@
         </div>
       </div>
 
-      @for (item of listItems.controls; track item.value) {
-        <div (click)="onItemClicked(item.getRawValue())"
-             class="clickable item"
-             [class]="item.value.id === selectedItem?.id ? 'selected-item' : 'non-selected-item'">
-          <div class="title"
-               [innerHTML]="item.value.title">
-          </div>
-          <div class="description"
-               [class.one-lined-text]="!isShowFullDescription"
-               [innerHTML]="item.value.description">
-          </div>
-        </div>
-      }
+      <app-table-of-contents-list
+        [listItems]="listItems"
+        [selectedItem]="selectedItem"
+        [isShowFullDescription]="isShowFullDescription"
+        [nestingLevel]="0"
+        (selectItem)="selectItem($event)"
+        (goToPage)="goToPage($event)"
+      >
+      </app-table-of-contents-list>
+
     </div>
 
     @if (!isShowFullDescription) {
-      <div class="col-4 details-block">
-        @if (!!selectedItem) {
-          <div class="justify-content-center d-flex">
-            <div class="title" [innerHTML]="selectedItem.title"></div>
+      <div class="col-4">
+        <div class="row">
+          <div class="col-auto details-block">
+            @if (!!selectedItem) {
+              <div class="justify-content-center d-flex">
+                <div class="title" [innerHTML]="selectedItem.title"></div>
+              </div>
+              <div class="description" [innerHTML]="selectedItem.description"></div>
+              @if (!!selectedItem.path) {
+                <div class="justify-content-center d-flex">
+                  <div class="btn col-auto m-2"
+                       (click)="goToPage(selectedItem)">
+                    <img src="from-bootstrap/play-circle.svg" alt="Перейти" class="btn-img"/>
+                    Перейти
+                  </div>
+                </div>
+              }
+            } @else {
+              Выберите элемент из списка, чтобы посмотреть на подробности.
+            }
           </div>
-          <div class="description" [innerHTML]="selectedItem.description"></div>
-          <div class="justify-content-center d-flex">
-            <div class="btn col-auto m-2"
-                 (click)="onGoToPage()">
-              <img src="from-bootstrap/play-circle.svg" alt="Перейти" class="btn-img"/>
-              Перейти
-            </div>
-          </div>
-        } @else {
-          Выберите элемент из списка, чтобы посмотреть на подробности.
-        }
+        </div>
       </div>
     }
   </div>

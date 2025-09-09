@@ -5,12 +5,14 @@ import {TitleComponent} from '../common/title/title.component';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
+import {TableOfContentsListComponent} from './table-of-contents-list/table-of-contents-list.component';
 
 @Component({
   selector: 'app-table-of-contents',
   imports: [
     TitleComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TableOfContentsListComponent
   ],
   templateUrl: './table-of-contents.component.html',
   styleUrl: './table-of-contents.component.css'
@@ -64,15 +66,14 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onItemClicked(item: TableOfContentsItem) {
+  selectItem(item: TableOfContentsItem | undefined) {
     this.selectedItem = item;
-    if (this.isShowFullDescription) {
-      this.onGoToPage();
-    }
   }
 
-  onGoToPage() {
-    const path = this.selectedItem!.path;
+  goToPage(item: TableOfContentsItem) {
+    const path = item.path;
+    if (!path)
+      return;
     this.router.navigate([path]).then();
   }
 
@@ -86,15 +87,21 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
     return form;
   }
 
-  private updateForm(data: TableOfContentsItem[]) {
-    const listForm = this.formBuilder.array(
+  private getListForm(data: TableOfContentsItem[]): FormArray {
+    return this.formBuilder.array(
       data.map(item => this.formBuilder.group({
           id: [item.id],
           path: [item.path],
           title: [item.title],
-          description: [item.description]
+          description: [item.description],
+        childes: this.getListForm(!!item.childes ? item.childes : []),
+          isExpanded: [item.isExpanded]
         })
       ));
+  }
+
+  private updateForm(data: TableOfContentsItem[]) {
+    const listForm = this.getListForm(data);
     this.form.setControl('listItems', listForm);
     console.log('updateForm: data:', data, 'form:', this.form);
 

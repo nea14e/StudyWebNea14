@@ -1,5 +1,52 @@
 export const tableOfContents: TableOfContentsItem[] = [
   {
+    id: 'test-group-1',
+    title: 'Тестовая группа №1',
+    description: `<p>Эта группа предназначена для тестирования вложенных групп.
+        Нажмите на стрелку, чтобы раскрыть/свернуть её.</p>`,
+    childes: [
+      {
+        id: 'test-subgroup-1-1',
+        title: 'Тестовая подгруппа №1-1',
+        description: `<p>Это подгруппа, предназначенная для тестирования вложенных групп.
+            Она вложена в первую тестовую группу.</p>`,
+        childes: [
+          {
+            id: 'test-subsubgroup-1-1-1',
+            title: 'Тестовая подподгруппа №1-1-1',
+            description: `<p>Это первая подподгруппа, предназначенная для тестирования вложенных групп.
+            Она вложена в тестовую подгруппу 1-1.</p>`
+          },
+          {
+            id: 'test-subsubgroup-1-1-2',
+            title: 'Тестовая подподгруппа №1-1-2',
+            description: `<p>Это вторая подподгруппа, предназначенная для тестирования вложенных групп.
+            Она вложена в тестовую подгруппу 1-1.</p>`
+          }
+        ]
+      },
+      {
+        id: 'test-subgroup-1-2',
+        title: 'Тестовая подгруппа №1-2',
+        description: `<p>Это ещё одна подгруппа, предназначенная для тестирования вложенных групп.
+            Она вложена в первую тестовую группу.</p>`
+      }
+    ]
+  },
+  {
+    id: 'test-group-2',
+    title: 'Тестовая группа №2',
+    description: `<p>Это вторая группа, предназначенная для тестирования вложенных групп.
+        Нажмите на стрелку, чтобы раскрыть/свернуть её.</p>`,
+    childes: [
+      {
+        id: 'test-subgroup-2-1',
+        title: 'Тестовая подгруппа №2-1',
+        description: `<p>Это подгруппа второй группы, предназначенная для тестирования вложенных групп.</p>`
+      }
+    ]
+  },
+  {
     id: 'simple-request',
     path: '/simple-request',
     title: 'Простой запрос',
@@ -74,7 +121,9 @@ export const tableOfContents: TableOfContentsItem[] = [
 
 export interface TableOfContentsItem {
   id: string;
-  path: string;
+  path?: string;
   title: string;
   description: string;
+  childes?: TableOfContentsItem[];
+  isExpanded?: boolean;
 }

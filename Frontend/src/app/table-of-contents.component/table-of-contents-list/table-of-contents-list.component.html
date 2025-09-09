@@ -1,0 +1,46 @@
+@for (item of listItems().controls; track item.value) {
+  <div class="clickable item"
+       [class]="item.value.id === selectedItem()?.id ? 'selected-item' : 'non-selected-item'">
+    <div class="row">
+      <div class="col-auto">
+        <span class="tab" [innerHTML]="getTabs()"></span>
+        @if (getItemChildes(item).length > 0) {
+          @if (!!item.value.isExpanded) {
+            <img (click)="onExpandedClick(item); $event.stopPropagation()"
+                 alt="Свернуть список"
+                 src="from-bootstrap/caret-down.svg"
+                 class="item-arrow"/>
+          } @else {
+            <img (click)="onExpandedClick(item); $event.stopPropagation()"
+                 alt="Раскрыть список"
+                 src="from-bootstrap/caret-right.svg"
+                 class="item-arrow"/>
+          }
+        } @else {
+          <img alt=""
+               src="from-bootstrap/empty-image.svg"
+               class="item-arrow"/>
+        }
+      </div>
+      <div (click)="onItemClicked(item.getRawValue())" class="col">
+        <div class="title"
+             [innerHTML]="item.value.title">
+        </div>
+        <div class="description"
+             [class.one-lined-text]="!isShowFullDescription()"
+             [innerHTML]="item.value.description">
+        </div>
+      </div>
+    </div>
+    @if (getItemChildes(item).length > 0 && item.value.isExpanded) {
+      <app-table-of-contents-list
+        [listItems]="getItemChildes(item)"
+        [selectedItem]="selectedItem()"
+        [isShowFullDescription]="isShowFullDescription()"
+        [nestingLevel]="nestingLevel() + 1"
+        (selectItem)="onSelectItem($event)"
+        (goToPage)="onGoToPage($event)">
+      </app-table-of-contents-list>
+    }
+  </div>
+}

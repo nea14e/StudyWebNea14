@@ -1,0 +1,34 @@
+
+.item {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.non-selected-item {
+}
+
+.non-selected-item:hover {
+  background-color: lightgray;
+}
+
+.selected-item {
+  background-color: darkgray;
+}
+
+.tab {
+  font-size: 1em;
+}
+
+.item-arrow {
+  width: 3em;
+  height: 3em;
+}
+
+.title {
+  font-size: 1.3em;
+}
+
+.description {
+}
