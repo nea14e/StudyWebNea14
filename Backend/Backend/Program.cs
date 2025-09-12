@@ -1,7 +1,14 @@
+using Backend.Dtos;
 using Backend.Entities;
 using Backend.IServices;
 using Backend.Other;
 using Backend.Services;
+
+var obj1 = new TestRecord(Guid.Empty, "First");
+Console.WriteLine(obj1);
+var obj2 = new TestRecord(Guid.Empty, "First");
+Console.WriteLine(obj2);
+Console.WriteLine(obj1 == obj2); // Объекты имеют разное значение private-поля
 
 var builder = WebApplication.CreateBuilder(args);
 
