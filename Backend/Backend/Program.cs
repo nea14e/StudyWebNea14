@@ -1,8 +1,10 @@
 using Backend.Dtos;
 using Backend.Entities;
 using Backend.IServices;
+using Backend.IServices.DbTaskRunner;
 using Backend.Other;
 using Backend.Services;
+using Backend.Services.DbTaskRunner;
 
 var obj1 = new TestRecord(Guid.Empty, "First");
 Console.WriteLine(obj1);
@@ -32,7 +34,8 @@ builder.Services
     .AddTransient<IRequestWithParametersService, RequestWithParametersService>()
     .AddSingleton<ICrudExampleService, CrudExampleService>()
     .AddSingleton<IJsonConstructorService, JsonConstructorService>()
-    .AddTransient<BackendDbContext>();
+    .AddTransient<BackendDbContext>()
+    .AddSingleton<IDbTaskRunnerService, DbTaskRunnerService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

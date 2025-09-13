@@ -1,0 +1,11 @@
+<div class="container-fluid">
+  <div class="row">
+    <mat-form-field class="align-self-center mat-field">
+      <mat-label>Пример:</mat-label>
+      <mat-select (selectionChange)="onExampleChanged($event)">
+        <mat-option value="concurrent_update">Параллельный UPDATE</mat-option>
+        <mat-option value="ttest">Что-то ещё</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

@@ -10,6 +10,7 @@ import {SimpleRequestComponent} from './simple-request/simple-request.component'
 import {SimpleRequest2Component} from './simple-request-2/simple-request-2.component';
 import {RequestWithParametersComponent} from './request-with-parameters/request-with-parameters.component';
 import {JsonConstructorComponent} from './json-constructor/json-constructor.component';
+import {DbTaskRunnerComponent} from './db-task-runner/db-task-runner.component';
 
 export const routes: Routes = [
   {
@@ -56,6 +57,10 @@ export const routes: Routes = [
   {
     path: 'json-constructor',
     component: JsonConstructorComponent,
+  },
+  {
+    path: 'db-task-runner',
+    component: DbTaskRunnerComponent,
   },
   {
     path: '**',
