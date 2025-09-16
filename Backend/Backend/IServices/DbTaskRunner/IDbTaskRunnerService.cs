@@ -6,5 +6,5 @@ public interface IDbTaskRunnerService
 {
     Task LoadExample(Guid instanceId, string exampleKey);
 
-    List<List<DbTaskItemDto>> GetProgress(Guid instanceId);
+    DbTaskExampleDto GetProgress(Guid instanceId);
 }

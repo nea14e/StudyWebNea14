@@ -1,21 +1,30 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Entities.DbTaskRunner;
 
-[Table("tasks", Schema = "db_task_runner")]
+[Table("db_task_items", Schema = "db_task_runner")]
+[PrimaryKey("Id")]
 public class DbTaskItem
 {
-    [Column("id")] public Guid Id { get; set; } // TODO
+    [Column("id")]
+    public Guid Id { get; set; } // TODO
 
-    [Column("example_key")] public string ExampleKey { get; set; }
+    [Column("process_id")]
+    public Guid ProcessId { get; set; }
 
-    [Column("process_number")] public int ProcessNumber { get; set; }
+    [ForeignKey("ProcessId")]
+    public DbTaskProcess Process { get; set; }
 
-    [Column("order")] public int Order { get; set; }
+    [Column("order")]
+    public int Order { get; set; }
 
-    [Column("sql")] public string Sql { get; set; }
+    [Column("sql")]
+    public string Sql { get; set; }
 
-    [Column("frontend_html")] public string FrontendHtml { get; set; }
+    [Column("frontend_html")]
+    public string FrontendHtml { get; set; }
 
-    [NotMapped] public DbTaskItemState State = DbTaskItemState.NotStarted;
+    [Column("is_deleted")]
+    public bool IsDeleted { get; set; }
 };

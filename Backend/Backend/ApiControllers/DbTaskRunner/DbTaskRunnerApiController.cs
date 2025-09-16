@@ -16,7 +16,7 @@ public class DbTaskRunnerApiController(IDbTaskRunnerService service) : Controlle
     }
 
     [HttpGet("get-progress")]
-    public List<List<DbTaskItemDto>> GetProgress(Guid instanceId)
+    public DbTaskExampleDto GetProgress(Guid instanceId)
     {
         var result = service.GetProgress(instanceId);
         return result;

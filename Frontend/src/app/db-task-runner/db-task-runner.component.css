@@ -1,0 +1,12 @@
+.in-progress {
+  color: yellow;
+}
+
+.success {
+  color: darkgreen;
+}
+
+.error {
+  color: darkred;
+}
+

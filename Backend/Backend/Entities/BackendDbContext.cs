@@ -5,6 +5,10 @@ namespace Backend.Entities;
 
 public class BackendDbContext : DbContext
 {
+    public DbSet<DbTaskExample> DbTaskExamples { get; set; }
+
+    public DbSet<DbTaskProcess> DbTaskProcesses { get; set; }
+
     public DbSet<DbTaskItem> DbTaskItems { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

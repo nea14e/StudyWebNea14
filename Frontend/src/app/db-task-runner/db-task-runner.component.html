@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row">
+  <div class="row row-bottom-fix">
     <mat-form-field class="align-self-center mat-field">
       <mat-label>Пример:</mat-label>
       <mat-select (selectionChange)="onExampleChanged($event)">
@@ -8,4 +8,56 @@
       </mat-select>
     </mat-form-field>
   </div>
+  @if (!!example) {
+    @if (!!example.descriptionHtml) {
+      <div class="row row-bottom-fix" [innerHTML]="example.descriptionHtml">
+      </div>
+    }
+    <div class="row row-bottom-fix">
+      <table>
+        <thead>
+        <tr>
+          @for (processIndex of getProcessIndices(); track processIndex) {
+            <th><h3>{{ getProcessByIndex(processIndex).processNumber }}</h3></th>
+          }
+        </tr>
+        </thead>
+        <tbody>
+          @for (taskIndex of getTaskIndices(); track taskIndex) {
+            <tr>
+              @for (processIndex of getProcessIndices(); track processIndex) {
+                <td>
+                  @let task = getTaskByIndices(processIndex, taskIndex);
+                  <div class="d-flex">
+                    @if (task.state === DbTaskItemState.NotStarted) {
+                      <img src="from-bootstrap/empty-image.svg"
+                           alt="В процессе"
+                           title="В процессе"
+                           class="btn-img"/>
+                    } @else if (task.state === DbTaskItemState.Running) {
+                      <img src="from-bootstrap/stopwatch.svg"
+                           alt="В процессе"
+                           title="В процессе"
+                           class="btn-img in-progress"/>
+                    } @else if (task.state === DbTaskItemState.Completed) {
+                      <img src="from-bootstrap/check-2.svg"
+                           alt="Успешно завершено"
+                           title="Успешно завершено"
+                           class="btn-img success"/>
+                    } @else if (task.state === DbTaskItemState.Error) {
+                      <img src="from-bootstrap/x-octagon-fill.svg"
+                           alt="Ошибка"
+                           title="Ошибка"
+                           class="btn-img error"/>
+                    }
+                    <div [innerHTML]="task.frontendHtml"></div>
+                  </div>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
 </div>

@@ -1,16 +1,31 @@
 ﻿using Backend.Dtos.DbTaskRunner;
 using Backend.Entities.DbTaskRunner;
+using Backend.LogicEntities.DbTaskRunner;
 
 namespace Backend.Mappers.DbTaskRunner;
 
 public static class DbTaskItemMapper
 {
-    public static DbTaskItemDto EntityToDto(this DbTaskItem entity)
+    public static DbTaskItemLe EntityToLe(this DbTaskItem entity)
+    {
+        var le = new DbTaskItemLe
+        {
+            Id = entity.Id,
+            ProcessId = entity.ProcessId,
+            Order = entity.Order,
+            Sql = entity.Sql,
+            FrontendHtml = entity.FrontendHtml,
+            State = DbTaskItemStateLe.NotStarted
+        };
+        return le;
+    }
+
+    public static DbTaskItemDto LeToDto(this DbTaskItemLe le)
     {
         var dto = new DbTaskItemDto(
-            entity.Sql,
-            entity.FrontendHtml,
-            entity.State.EntityToDto()
+            le.Sql,
+            le.FrontendHtml,
+            le.State.LeToDto()
         );
         return dto;
     }

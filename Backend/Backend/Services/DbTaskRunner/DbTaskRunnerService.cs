@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using Backend.Dtos.DbTaskRunner;
 using Backend.Entities;
-using Backend.Entities.DbTaskRunner;
 using Backend.IServices.DbTaskRunner;
+using Backend.LogicEntities.DbTaskRunner;
 using Backend.Mappers.DbTaskRunner;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,40 +10,47 @@ namespace Backend.Services.DbTaskRunner;
 
 public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerService
 {
-    private readonly Dictionary<Guid, List<List<DbTaskItem>>> _tasks = new();
+    private readonly Dictionary<Guid, DbTaskExampleLe> _examples = new();
 
     public async Task LoadExample(Guid instanceId, string exampleKey)
     {
-        if (_tasks.ContainsKey(instanceId))
+        if (_examples.ContainsKey(instanceId))
         {
-            _tasks.Remove(instanceId);
+            _examples.Remove(instanceId);
         }
 
-        var tasks = await dbContext.DbTaskItems
-            .Where(item => item.ExampleKey == exampleKey)
-            .GroupBy(item => item.ProcessNumber)
-            .OrderBy(group => group.Key)
-            .Select(group => group.OrderBy(item => item.Order).ToList())
-            .ToListAsync();
+        var example = await dbContext.DbTaskExamples
+            .Where(ex => ex.Key == exampleKey)
+            .Include(ex => ex.Processes)
+            .ThenInclude(proc => proc.TaskItems)
+            .FirstOrDefaultAsync();
 
-        if (!tasks.Any())
+        if (example == null)
         {
             throw new ArgumentOutOfRangeException(nameof(exampleKey), exampleKey, "В БД нет примера с данным ключом.");
         }
 
-        _tasks[instanceId] = tasks;
+        // TODO переделать на уровне настроек БД
+        example.Processes = example.Processes
+            .Where(proc => proc.IsDeleted == false)
+            .ToList();
+        example.Processes.ForEach(proc =>
+        {
+            proc.TaskItems = proc.TaskItems.Where(item => item.IsDeleted == false).ToList();
+        });
+
+        var exampleLe = example.EntityToLe();
+        _examples[instanceId] = exampleLe;
     }
 
-    public List<List<DbTaskItemDto>> GetProgress(Guid instanceId)
+    public DbTaskExampleDto GetProgress(Guid instanceId)
     {
-        if (!_tasks.ContainsKey(instanceId))
+        if (!_examples.TryGetValue(instanceId, out var example))
         {
             throw new InvalidAsynchronousStateException("Сначала приготовьте задачи с помощью LoadExample().");
         }
 
-        var dtos = _tasks[instanceId]
-            .Select(processTasksList => processTasksList.Select(task => task.EntityToDto()).ToList())
-            .ToList();
-        return dtos;
+        var dto = example.LeToDto();
+        return dto;
     }
 }

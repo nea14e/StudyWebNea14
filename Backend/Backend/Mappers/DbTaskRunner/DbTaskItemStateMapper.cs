@@ -1,19 +1,20 @@
 ﻿using Backend.Dtos.DbTaskRunner;
-using Backend.Entities.DbTaskRunner;
+using Backend.LogicEntities.DbTaskRunner;
 
 namespace Backend.Mappers.DbTaskRunner;
 
 public static class DbTaskItemStateMapper
 {
-    public static string EntityToDto(this DbTaskItemState entity)
+    public static string LeToDto(this DbTaskItemStateLe le)
     {
-        return entity switch
+        var dto = le switch
         {
-            DbTaskItemState.NotStarted => DbTaskItemStateDto.NotStarted,
-            DbTaskItemState.Running => DbTaskItemStateDto.Running,
-            DbTaskItemState.Completed => DbTaskItemStateDto.Completed,
-            DbTaskItemState.Error => DbTaskItemStateDto.Error,
-            _ => throw new ArgumentOutOfRangeException(nameof(entity), entity, "Это значение entity не предусмотрено!")
+            DbTaskItemStateLe.NotStarted => DbTaskItemStateDto.NotStarted,
+            DbTaskItemStateLe.Running => DbTaskItemStateDto.Running,
+            DbTaskItemStateLe.Completed => DbTaskItemStateDto.Completed,
+            DbTaskItemStateLe.Error => DbTaskItemStateDto.Error,
+            _ => throw new ArgumentOutOfRangeException(nameof(le), le, null)
         };
+        return dto;
     }
 }

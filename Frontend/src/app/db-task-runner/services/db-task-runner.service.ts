@@ -2,8 +2,8 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {firstValueFrom} from 'rxjs';
-import {DbTaskItem} from '../models/db-task-item';
 import {Guid} from 'guid-typescript';
+import {DbTaskExample} from '../models/db-task-example';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class DbTaskRunnerService {
 
   getProgress(instanceId: Guid) {
     return firstValueFrom(
-      this.http.get<DbTaskItem[][]>(
+      this.http.get<DbTaskExample>(
         environment.backendBaseUrl + `/api/db-task-runner/get-progress`,
         {
           params: {
