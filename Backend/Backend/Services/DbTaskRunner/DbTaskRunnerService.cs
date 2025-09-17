@@ -33,10 +33,14 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         // TODO переделать на уровне настроек БД
         example.Processes = example.Processes
             .Where(proc => proc.IsDeleted == false)
+            .OrderBy(proc => proc.ProcessNumber)
             .ToList();
         example.Processes.ForEach(proc =>
         {
-            proc.TaskItems = proc.TaskItems.Where(item => item.IsDeleted == false).ToList();
+            proc.TaskItems = proc.TaskItems
+                .Where(item => item.IsDeleted == false)
+                .OrderBy(item => item.Order)
+                .ToList();
         });
 
         var exampleLe = example.EntityToLe();
