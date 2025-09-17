@@ -84,22 +84,30 @@ body {
   background: #262626;
 }
 
-.s0 {
+.sql-keyword {
   color: #6c95eb;
 }
 
-.s1 {
-  color: #d0d0d0;
+.sql-identifier {
+  color: #c191ff;
 }
 
-.s2 {
-  color: #bdbdbd;
+.sql-function {
+  color: #39cc9b;
 }
 
-.s3 {
+.sql-string {
   color: #c9a26d;
 }
 
-.s4 {
+.sql-number {
   color: #ed94c0;
+}
+
+.sql-sign {
+  color: #d0d0d0;
+}
+
+.sql-other {
+  color: #d0d0d0;
 }
