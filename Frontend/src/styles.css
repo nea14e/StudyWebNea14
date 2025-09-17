@@ -68,3 +68,38 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+/* Стили для HTML, загружаемого из БД */
+.sql-example-table > thead > tr > th {
+  padding: 0.3em 1em;
+  border: 1px dashed grey;
+}
+
+.sql-example-table > tbody > tr > td {
+  padding: 0.3em 1em;
+  border: 1px dashed grey;
+}
+
+.sql-background {
+  background: #262626;
+}
+
+.s0 {
+  color: #6c95eb;
+}
+
+.s1 {
+  color: #d0d0d0;
+}
+
+.s2 {
+  color: #bdbdbd;
+}
+
+.s3 {
+  color: #c9a26d;
+}
+
+.s4 {
+  color: #ed94c0;
+}

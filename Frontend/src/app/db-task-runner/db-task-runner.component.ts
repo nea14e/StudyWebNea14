@@ -29,6 +29,7 @@ export class DbTaskRunnerComponent {
     const exampleKey = $event.value;
     await this.service.loadExample(this.instanceId, exampleKey);
     this.example = await this.service.getProgress(this.instanceId);
+    console.log('new example:', this.example);  // TODO
   }
 
   getProcessIndices() {
