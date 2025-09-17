@@ -7,6 +7,8 @@ import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {DbTaskExample} from './models/db-task-example';
 import {getIndicesList, maxInList} from '../common/list-helper';
 import {DbTaskItemState} from './models/db-task-item-state';
+import {getPlainTextFromHtml} from '../common/text-helper';
+import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-db-task-runner',
@@ -16,6 +18,7 @@ import {DbTaskItemState} from './models/db-task-item-state';
     MatLabel,
     ReactiveFormsModule,
     MatSelectModule,
+    CdkCopyToClipboard,
   ],
   templateUrl: './db-task-runner.component.html',
   styleUrl: './db-task-runner.component.css'
@@ -51,4 +54,11 @@ export class DbTaskRunnerComponent {
   }
 
   protected readonly DbTaskItemState = DbTaskItemState;
+
+  getCodeToCopy(processIndex: number) {
+    const process = this.example!.processes[processIndex];
+    return process.taskItems.map(item => item.frontendHtml)
+      .map(html => getPlainTextFromHtml(html))
+      .join('\n\n');
+  }
 }

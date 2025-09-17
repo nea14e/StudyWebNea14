@@ -18,7 +18,15 @@
         <thead>
         <tr>
           @for (processIndex of getProcessIndices(); track processIndex) {
-            <th><h3 class="s2">Процесс {{ getProcessByIndex(processIndex).processNumber }}</h3></th>
+            <th>
+              <div class="row">
+                <h3 class="col s2">Процесс {{ getProcessByIndex(processIndex).processNumber }}</h3>
+                <div class="btn col-auto mr-2"
+                     [cdkCopyToClipboard]="getCodeToCopy(processIndex)">
+                  <img src="from-bootstrap/copy.svg" alt="Скопировать код" title="Скопировать код" class="btn-img"/>
+                </div>
+              </div>
+            </th>
           }
         </tr>
         </thead>
