@@ -13,60 +13,67 @@
       <div class="row row-bottom-fix" [innerHTML]="example.descriptionHtml">
       </div>
     }
-    <div class="row row-bottom-fix">
-      <table class="sql-example-table sql-background">
-        <thead>
-        <tr>
-          @for (processIndex of getProcessIndices(); track processIndex) {
-            <th>
-              <div class="row">
-                <h3 class="col sql-other">Процесс {{ getProcessByIndex(processIndex).processNumber }}</h3>
-                <div class="btn col-auto mr-2"
-                     [cdkCopyToClipboard]="getCodeToCopy(processIndex)">
-                  <img src="from-bootstrap/copy.svg" alt="Скопировать код" title="Скопировать код" class="btn-img"/>
-                </div>
-              </div>
-            </th>
-          }
-        </tr>
-        </thead>
-        <tbody>
-          @for (taskIndex of getTaskIndices(); track taskIndex) {
-            <tr>
-              @for (processIndex of getProcessIndices(); track processIndex) {
-                <td>
-                  @let task = getTaskByIndices(processIndex, taskIndex);
-                  <div class="d-flex">
-                    @if (task.state === DbTaskItemState.NotStarted) {
-                      <img src="from-bootstrap/empty-image.svg"
-                           alt="Ещё не начато"
-                           title="Ещё не начато"
-                           class="btn-img"/>
-                    } @else if (task.state === DbTaskItemState.Running) {
-                      <img src="from-bootstrap/stopwatch.svg"
-                           alt="В процессе"
-                           title="В процессе"
-                           class="btn-img in-progress"/>
-                    } @else if (task.state === DbTaskItemState.Completed) {
-                      <img src="from-bootstrap/check-2.svg"
-                           alt="Успешно завершено"
-                           title="Успешно завершено"
-                           class="btn-img success"/>
-                    } @else if (task.state === DbTaskItemState.Error) {
-                      <img src="from-bootstrap/x-octagon-fill.svg"
-                           alt="Ошибка"
-                           title="Ошибка"
-                           class="btn-img error"/>
-                    }
-                    <div [innerHtml]="task.frontendHtml"></div>
+    @for (snippet of example.snippets; let snippetIndex = $index; track snippet.key) {
+      @if (!!snippet.descriptionHtml) {
+        <div class="row row-bottom-fix" [innerHTML]="snippet.descriptionHtml">
+        </div>
+      }
+      <div class="row row-bottom-fix">
+        <table class="sql-example-table sql-background">
+          <thead>
+          <tr>
+            @for (processIndex of getProcessIndices(snippetIndex); track processIndex) {
+              <th>
+                <div class="row">
+                  <h3 class="col sql-other">
+                    Процесс {{ getProcessByIndex(snippetIndex, processIndex).processNumber }}</h3>
+                  <div class="btn col-auto mr-2"
+                       [cdkCopyToClipboard]="getCodeToCopy(snippetIndex, processIndex)">
+                    <img src="from-bootstrap/copy.svg" alt="Скопировать код" title="Скопировать код" class="btn-img"/>
                   </div>
-                </td>
-              }
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+                </div>
+              </th>
+            }
+          </tr>
+          </thead>
+          <tbody>
+            @for (taskIndex of getTaskIndices(snippetIndex); track taskIndex) {
+              <tr>
+                @for (processIndex of getProcessIndices(snippetIndex); track processIndex) {
+                  <td>
+                    @let task = getTaskByIndices(snippetIndex, processIndex, taskIndex);
+                    <div class="d-flex">
+                      @if (task.state === DbTaskItemState.NotStarted) {
+                        <img src="from-bootstrap/empty-image.svg"
+                             alt="Ещё не начато"
+                             title="Ещё не начато"
+                             class="btn-img"/>
+                      } @else if (task.state === DbTaskItemState.Running) {
+                        <img src="from-bootstrap/stopwatch.svg"
+                             alt="В процессе"
+                             title="В процессе"
+                             class="btn-img in-progress"/>
+                      } @else if (task.state === DbTaskItemState.Completed) {
+                        <img src="from-bootstrap/check-2.svg"
+                             alt="Успешно завершено"
+                             title="Успешно завершено"
+                             class="btn-img success"/>
+                      } @else if (task.state === DbTaskItemState.Error) {
+                        <img src="from-bootstrap/x-octagon-fill.svg"
+                             alt="Ошибка"
+                             title="Ошибка"
+                             class="btn-img error"/>
+                      }
+                      <div [innerHtml]="task.frontendHtml"></div>
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   } @else {
     Сначала выберите пример
   }

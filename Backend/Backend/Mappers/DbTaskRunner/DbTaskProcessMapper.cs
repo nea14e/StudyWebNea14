@@ -11,7 +11,6 @@ public static class DbTaskProcessMapper
         var le = new DbTaskProcessLe
         {
             Id = entity.Id,
-            ExampleKey = entity.ExampleKey,
             ProcessNumber = entity.ProcessNumber,
             IsDeleted = entity.IsDeleted,
             TaskItems = entity.TaskItems.Select(item => item.EntityToLe())

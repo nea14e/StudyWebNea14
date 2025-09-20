@@ -4,8 +4,6 @@ public class DbTaskProcessLe
 {
     public Guid Id { get; set; }
 
-    public string ExampleKey { get; set; }
-
     public int ProcessNumber { get; set; }
 
     public bool IsDeleted { get; set; }

@@ -1,26 +1,49 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Backend.Entities.DbTaskRunner;
 
-[Table("db_task_processes", Schema = "db_task_runner")]
-[PrimaryKey("Id")]
 public class DbTaskProcess
 {
-    [Column("id")]
     public Guid Id { get; set; }
 
-    [Column("example_key")]
     public string ExampleKey { get; set; }
+    public string SnippetKey { get; set; }
+    public DbTaskSnippet Snippet { get; set; }
 
-    [ForeignKey("ExampleKey")]
-    public DbTaskExample Example { get; set; }
-
-    [Column("process_number")]
     public int ProcessNumber { get; set; }
 
-    [Column("is_deleted")]
     public bool IsDeleted { get; set; }
 
     public List<DbTaskItem> TaskItems { get; set; }
+
+    public class DbTaskProcessConfiguration : IEntityTypeConfiguration<DbTaskProcess>
+    {
+        public void Configure(EntityTypeBuilder<DbTaskProcess> builder)
+        {
+            builder.ToTable("db_task_processes", "db_task_runner");
+            builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Id)
+                .HasColumnName("id");
+            builder.Property(x => x.ExampleKey)
+                .HasMaxLength(20)
+                .IsRequired()
+                .HasColumnName("example_key");
+            builder.Property(x => x.SnippetKey)
+                .HasMaxLength(20)
+                .IsRequired()
+                .HasColumnName("snippet_key");
+            builder.Property(x => x.ProcessNumber)
+                .IsRequired()
+                .HasColumnName("process_number");
+            builder.Property(x => x.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
+
+            builder.HasMany(x => x.TaskItems)
+                .WithOne(y => y.Process)
+                .HasForeignKey(y => y.ProcessId);
+        }
+    }
 }

@@ -12,7 +12,7 @@ public static class DbTaskExampleMapper
         {
             Key = entity.Key,
             DescriptionHtml = entity.DescriptionHtml,
-            Processes = entity.Processes.Select(proc => proc.EntityToLe())
+            Snippets = entity.Snippets.Select(sn => sn.EntityToLe())
                 .ToList()
         };
         return le;
@@ -23,7 +23,7 @@ public static class DbTaskExampleMapper
         var dto = new DbTaskExampleDto(
             le.Key,
             le.DescriptionHtml,
-            le.Processes.Select(proc => proc.LeToDto()).ToList()
+            le.Snippets.Select(sn => sn.LeToDto()).ToList()
         );
         return dto;
     }

@@ -6,9 +6,9 @@ import {Guid} from 'guid-typescript';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {DbTaskExample} from './models/db-task-example';
 import {getIndicesList, maxInList} from '../common/list-helper';
-import {DbTaskItemState} from './models/db-task-item-state';
 import {getPlainTextFromHtml} from '../common/text-helper';
 import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
+import {DbTaskItemState} from './models/db-task-item-state';
 
 @Component({
   selector: 'app-db-task-runner',
@@ -28,6 +28,8 @@ export class DbTaskRunnerComponent {
   protected service = inject(DbTaskRunnerService);
   protected instanceId = Guid.create();
 
+  protected readonly DbTaskItemState = DbTaskItemState;
+
   async onExampleChanged($event: MatSelectChange<string>) {
     const exampleKey = $event.value;
     await this.service.loadExample(this.instanceId, exampleKey);
@@ -35,28 +37,31 @@ export class DbTaskRunnerComponent {
     console.log('new example:', this.example);  // TODO
   }
 
-  getProcessIndices() {
-    const count = this.example!.processes.length;
+  getProcessIndices(snippetIndex: number) {
+    const snippet = this.example!.snippets[snippetIndex];
+    const count = snippet.processes.length;
     return getIndicesList(count)
   }
 
-  getProcessByIndex(processIndex: number) {
-    return this.example!.processes[processIndex];
+  getProcessByIndex(snippetIndex: number, processIndex: number) {
+    const snippet = this.example!.snippets[snippetIndex];
+    return snippet.processes[processIndex];
   }
 
-  getTaskIndices() {
-    const maxLength = maxInList(this.example!.processes.map(proc => proc.taskItems.length));
+  getTaskIndices(snippetIndex: number) {
+    const snippet = this.example!.snippets[snippetIndex];
+    const maxLength = maxInList(snippet.processes.map(proc => proc.taskItems.length));
     return getIndicesList(maxLength);
   }
 
-  getTaskByIndices(processIndex: number, taskIndex: number) {
-    return this.example!.processes[processIndex].taskItems[taskIndex];
+  getTaskByIndices(snippetIndex: number, processIndex: number, taskIndex: number) {
+    const snippet = this.example!.snippets[snippetIndex];
+    return snippet.processes[processIndex].taskItems[taskIndex];
   }
 
-  protected readonly DbTaskItemState = DbTaskItemState;
-
-  getCodeToCopy(processIndex: number) {
-    const process = this.example!.processes[processIndex];
+  getCodeToCopy(snippetIndex: number, processIndex: number) {
+    const snippet = this.example!.snippets[snippetIndex];
+    const process = snippet.processes[processIndex];
     return process.taskItems.map(item => item.frontendHtml)
       .map(html => getPlainTextFromHtml(html))
       .join('\n\n');

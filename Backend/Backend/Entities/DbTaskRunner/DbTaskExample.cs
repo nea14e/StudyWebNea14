@@ -11,7 +11,7 @@ public class DbTaskExample
     public string Key { get; set; }
 
     [Column("description_html")]
-    public string DescriptionHtml { get; set; }
+    public string? DescriptionHtml { get; set; }
 
-    public List<DbTaskProcess> Processes { get; set; }
+    public List<DbTaskSnippet> Snippets { get; set; }
 }

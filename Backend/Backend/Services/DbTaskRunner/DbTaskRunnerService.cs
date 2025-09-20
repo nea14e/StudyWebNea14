@@ -21,7 +21,8 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
 
         var example = await dbContext.DbTaskExamples
             .Where(ex => ex.Key == exampleKey)
-            .Include(ex => ex.Processes)
+            .Include(ex => ex.Snippets)
+            .ThenInclude(sn => sn.Processes)
             .ThenInclude(proc => proc.TaskItems)
             .FirstOrDefaultAsync();
 
@@ -31,17 +32,24 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         }
 
         // TODO переделать на уровне настроек БД
-        example.Processes = example.Processes
-            .Where(proc => proc.IsDeleted == false)
-            .OrderBy(proc => proc.ProcessNumber)
+        example.Snippets = example.Snippets
+            .Where(sn => sn.IsDeleted == false)
+            .OrderBy(sn => sn.Order)
             .ToList();
-        example.Processes.ForEach(proc =>
+        foreach (var snippet in example.Snippets)
         {
-            proc.TaskItems = proc.TaskItems
-                .Where(item => item.IsDeleted == false)
-                .OrderBy(item => item.Order)
+            snippet.Processes = snippet.Processes
+                .Where(proc => proc.IsDeleted == false)
+                .OrderBy(proc => proc.ProcessNumber)
                 .ToList();
-        });
+            foreach (var process in snippet.Processes)
+            {
+                process.TaskItems = process.TaskItems
+                    .Where(item => item.IsDeleted == false)
+                    .OrderBy(item => item.Order)
+                    .ToList();
+            }
+        }
 
         var exampleLe = example.EntityToLe();
         _examples[instanceId] = exampleLe;

@@ -1,7 +1,7 @@
-import {DbTaskProcess} from './db-task-process';
+import {DbTaskSnippet} from './db-task-snippet';
 
 export interface DbTaskExample {
   key: string;
   descriptionHtml: string;
-  processes: DbTaskProcess[];
+  snippets: DbTaskSnippet[];
 }
