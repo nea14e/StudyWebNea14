@@ -189,7 +189,14 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         process.RunningTask = null;
         if (process.IsInTransaction && process.DbContext != null)
         {
-            await process.DbContext.Database.CommitTransactionAsync();
+            try
+            {
+                await process.DbContext.Database.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                await process.DbContext.Database.RollbackTransactionAsync();
+            }
         }
 
         if (snippet.Processes.All(proc => !proc.TaskItems.Any() || proc.RunningTaskItem == null))
