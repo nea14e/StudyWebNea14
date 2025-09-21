@@ -158,7 +158,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 taskItem.Exception = task.Exception;
                 await _completeProcess(example, snippet, process);
             }, null, TaskContinuationOptions.OnlyOnFaulted)
-            .ContinueWith(async (task, obj) =>
+            .ContinueWith(async (_, _) =>
             {
                 taskItem.State = DbTaskItemStateLe.Completed;
                 taskItem.Exception = null;
@@ -187,13 +187,13 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
     {
         process.RunningTaskItem = null;
         process.RunningTask = null;
-        if (process.IsInTransaction && process.DbContext != null)
+        if (process is { IsInTransaction: true, DbContext: not null })
         {
             try
             {
                 await process.DbContext.Database.CommitTransactionAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await process.DbContext.Database.RollbackTransactionAsync();
             }
