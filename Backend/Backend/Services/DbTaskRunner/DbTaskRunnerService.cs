@@ -55,7 +55,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         _examples[instanceId] = exampleLe;
     }
 
-    public void RunSnippet(Guid instanceId, string snippetKey)
+    public async Task RunSnippet(Guid instanceId, string snippetKey)
     {
         if (!_examples.TryGetValue(instanceId, out var example))
         {
@@ -77,7 +77,8 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         example.RunningSnippet = snippet;
         foreach (var process in snippet.Processes)
         {
-            process.RunningTaskItem = null; // Очищаем старые, т.к. новые могут и не запуститься
+            process.IsInTransaction = false; // Очищаем старые, т.к. новые могут и не запуститься
+            process.RunningTaskItem = null;
             process.RunningTask = null;
             process.TaskItems.ForEach(taskItem =>
             {
@@ -87,69 +88,110 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
 
             var firstItem = process.TaskItems
                 .OrderBy(item => item.Order)
-                .FirstOrDefault(item => item.Sql != null);
+                .FirstOrDefault();
             if (firstItem == null)
             {
                 continue;
             }
 
-            _runTaskItem(example, snippet, process, firstItem);
+            await _runTaskItem(example, snippet, process, firstItem);
         }
 
+        // Если запускать было нечего, то сразу считаем сниппет завершённым
         if (snippet.Processes.All(proc => !proc.TaskItems.Any() || proc.RunningTaskItem == null))
         {
             example.RunningSnippet = null;
         }
     }
 
-    private void _runTaskItem(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
+    private async Task _runTaskItem(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
         DbTaskItemLe taskItem)
     {
-        if (taskItem.Sql == null)
+        process.DbContext ??= new BackendDbContext();
+
+        switch (taskItem.Type)
         {
-            _goToNextTaskItem(example, snippet, process, taskItem);
-            return;
+            case DbTaskItemTypeLe.BeginTransaction:
+                if (process.IsInTransaction)
+                    throw new InvalidAsynchronousStateException(
+                        $"Процесс {process.Id} уже внутри транзакции! Команда {taskItem.Id}.");
+                await process.DbContext.Database.BeginTransactionAsync();
+                process.IsInTransaction = true;
+                taskItem.State = DbTaskItemStateLe.Completed;
+                taskItem.Exception = null;
+                await _goToNextTaskItem(example, snippet, process, taskItem);
+                return;
+            case DbTaskItemTypeLe.CommitTransaction:
+                if (!process.IsInTransaction)
+                    throw new InvalidAsynchronousStateException(
+                        $"Процесс {process.Id} уже вне транзакции! Команда {taskItem.Id}.");
+                await process.DbContext.Database.CommitTransactionAsync();
+                process.IsInTransaction = false;
+                taskItem.State = DbTaskItemStateLe.Completed;
+                taskItem.Exception = null;
+                await _goToNextTaskItem(example, snippet, process, taskItem);
+                return;
+            case DbTaskItemTypeLe.RollbackTransaction:
+                if (!process.IsInTransaction)
+                    throw new InvalidAsynchronousStateException(
+                        $"Процесс {process.Id} уже вне транзакции! Команда {taskItem.Id}.");
+                await process.DbContext.Database.RollbackTransactionAsync();
+                process.IsInTransaction = false;
+                taskItem.State = DbTaskItemStateLe.Completed;
+                taskItem.Exception = null;
+                await _goToNextTaskItem(example, snippet, process, taskItem);
+                return;
         }
+
+        // Иначе DbTaskItemTypeLe.Regular:
+        if (taskItem.Sql == null)
+            throw new InvalidOperationException($"Задача Id = {taskItem.Id}, Type = {taskItem.Type}" +
+                                                $" содержит Sql = null (несовместимая комбинация)!");
 
         taskItem.State = DbTaskItemStateLe.Running;
         taskItem.Exception = null;
         process.RunningTaskItem = taskItem; // Важен порядок строк в коде!
-        process.DbContext ??= new BackendDbContext();
         process.RunningTask = process.DbContext.Database.ExecuteSqlRawAsync(taskItem.Sql)
-            .ContinueWith((task, _) =>
+            .ContinueWith(async (task, _) =>
             {
                 taskItem.State = DbTaskItemStateLe.Error;
                 taskItem.Exception = task.Exception;
-                _completeProcess(example, snippet, process);
+                await _completeProcess(example, snippet, process);
             }, null, TaskContinuationOptions.OnlyOnFaulted)
-            .ContinueWith((task, obj) =>
+            .ContinueWith(async (task, obj) =>
             {
                 taskItem.State = DbTaskItemStateLe.Completed;
                 taskItem.Exception = null;
-                _goToNextTaskItem(example, snippet, process, taskItem);
+                await _goToNextTaskItem(example, snippet, process, taskItem);
             }, null, TaskContinuationOptions.NotOnFaulted);
     }
 
-    private void _goToNextTaskItem(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
+    private async Task _goToNextTaskItem(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
         DbTaskItemLe taskItem)
     {
         var nextTaskItem = process.TaskItems
             .OrderBy(item => item.Order)
-            .FirstOrDefault(item => item.Order > taskItem.Order && taskItem.Sql != null);
+            .FirstOrDefault(item => item.Order > taskItem.Order);
         if (nextTaskItem != null)
         {
-            _runTaskItem(example, snippet, process, nextTaskItem);
+            await _runTaskItem(example, snippet, process, nextTaskItem);
         }
         else
         {
-            _completeProcess(example, snippet, process);
+            await _completeProcess(example, snippet, process);
         }
     }
 
-    private static void _completeProcess(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process)
+    private static async Task _completeProcess(DbTaskExampleLe example, DbTaskSnippetLe snippet,
+        DbTaskProcessLe process)
     {
         process.RunningTaskItem = null;
         process.RunningTask = null;
+        if (process.IsInTransaction && process.DbContext != null)
+        {
+            await process.DbContext.Database.CommitTransactionAsync();
+        }
+
         if (snippet.Processes.All(proc => !proc.TaskItems.Any() || proc.RunningTaskItem == null))
         {
             example.RunningSnippet = null;

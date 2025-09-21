@@ -8,7 +8,7 @@ public class DbTaskItemLe
 
     public int Order { get; set; }
 
-    public DbTaskItemTypeLe TaskItemType { get; set; }
+    public DbTaskItemTypeLe Type { get; set; }
 
     public string? Sql { get; set; }
 

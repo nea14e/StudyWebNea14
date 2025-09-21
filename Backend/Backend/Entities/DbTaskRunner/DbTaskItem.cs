@@ -19,6 +19,9 @@ public class DbTaskItem
     [Column("order")]
     public int Order { get; set; }
 
+    [Column("type")]
+    public string Type { get; set; }
+
     [Column("sql")]
     public string? Sql { get; set; }
 

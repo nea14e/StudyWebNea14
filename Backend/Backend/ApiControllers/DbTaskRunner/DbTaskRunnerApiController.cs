@@ -16,9 +16,9 @@ public class DbTaskRunnerApiController(IDbTaskRunnerService service) : Controlle
     }
 
     [HttpGet("run-snippet")]
-    public IActionResult RunSnippet(Guid instanceId, string snippetKey)
+    public async Task<IActionResult> RunSnippet(Guid instanceId, string snippetKey)
     {
-        service.RunSnippet(instanceId, snippetKey);
+        await service.RunSnippet(instanceId, snippetKey);
         return Ok();
     }
 

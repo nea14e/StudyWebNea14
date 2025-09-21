@@ -13,6 +13,7 @@ public static class DbTaskItemMapper
             Id = entity.Id,
             ProcessId = entity.ProcessId,
             Order = entity.Order,
+            Type = DbTaskItemTypeMapper.EntityToLe(entity.Type),
             Sql = entity.Sql,
             FrontendHtml = entity.FrontendHtml,
             State = DbTaskItemStateLe.NotStarted

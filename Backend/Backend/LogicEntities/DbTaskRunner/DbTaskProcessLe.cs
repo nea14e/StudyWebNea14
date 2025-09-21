@@ -16,4 +16,5 @@ public class DbTaskProcessLe
 
     public DbTaskItemLe? RunningTaskItem { get; set; }
     public Task? RunningTask { get; set; }
+    public bool IsInTransaction { get; set; }
 }
