@@ -23,7 +23,8 @@ public static class DbTaskExampleMapper
         var dto = new DbTaskExampleDto(
             le.Key,
             le.DescriptionHtml,
-            le.Snippets.Select(sn => sn.LeToDto()).ToList()
+            le.Snippets.Select(sn => sn.LeToDto()).ToList(),
+            le.RunningSnippet?.LeToDto()
         );
         return dto;
     }

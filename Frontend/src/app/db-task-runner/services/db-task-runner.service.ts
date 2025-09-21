@@ -25,6 +25,20 @@ export class DbTaskRunnerService {
     );
   }
 
+  runSnippet(instanceId: Guid, snippetKey: string) {
+    return firstValueFrom(
+      this.http.get<void>(
+        environment.backendBaseUrl + `/api/db-task-runner/run-snippet`,
+        {
+          params: {
+            instanceId: instanceId.toString(),
+            snippetKey
+          }
+        }
+      )
+    );
+  }
+
   getProgress(instanceId: Guid) {
     return firstValueFrom(
       this.http.get<DbTaskExample>(

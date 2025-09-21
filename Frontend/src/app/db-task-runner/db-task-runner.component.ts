@@ -1,6 +1,6 @@
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormField, MatLabel} from '@angular/material/input';
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy} from '@angular/core';
 import {DbTaskRunnerService} from './services/db-task-runner.service';
 import {Guid} from 'guid-typescript';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
@@ -9,6 +9,7 @@ import {getIndicesList, maxInList} from '../common/list-helper';
 import {getPlainTextFromHtml} from '../common/text-helper';
 import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
 import {DbTaskItemState} from './models/db-task-item-state';
+import {Subscription, switchMap, timer} from 'rxjs';
 
 @Component({
   selector: 'app-db-task-runner',
@@ -23,10 +24,11 @@ import {DbTaskItemState} from './models/db-task-item-state';
   templateUrl: './db-task-runner.component.html',
   styleUrl: './db-task-runner.component.css'
 })
-export class DbTaskRunnerComponent {
+export class DbTaskRunnerComponent implements OnDestroy {
   example?: DbTaskExample;
   protected service = inject(DbTaskRunnerService);
   protected instanceId = Guid.create();
+  protected updateProgressSubscription?: Subscription;
 
   protected readonly DbTaskItemState = DbTaskItemState;
 
@@ -65,5 +67,30 @@ export class DbTaskRunnerComponent {
     return process.taskItems.map(item => item.frontendHtml)
       .map(html => getPlainTextFromHtml(html))
       .join('\n\n');
+  }
+
+  async runSnippet(snippetIndex: number) {
+    const snippet = this.example!.snippets[snippetIndex];
+    await this.service.runSnippet(this.instanceId, snippet.key);
+    if (!!this.updateProgressSubscription) {
+      this.updateProgressSubscription.unsubscribe();
+    }
+    this.updateProgressSubscription = timer(1000, 1000)
+      .pipe(
+        switchMap(_ => this.service.getProgress(this.instanceId)),
+      )
+      .subscribe(data => {
+        this.example = data;
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (!!this.updateProgressSubscription) {
+      this.updateProgressSubscription.unsubscribe();
+    }
+  }
+
+  isRunning() {
+    return this.example?.runningSnippet !== null;
   }
 }

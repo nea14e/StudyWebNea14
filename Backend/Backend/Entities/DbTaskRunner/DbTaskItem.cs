@@ -20,7 +20,7 @@ public class DbTaskItem
     public int Order { get; set; }
 
     [Column("sql")]
-    public string Sql { get; set; }
+    public string? Sql { get; set; }
 
     [Column("frontend_html")]
     public string FrontendHtml { get; set; }

@@ -8,9 +8,13 @@ public class DbTaskItemLe
 
     public int Order { get; set; }
 
-    public string Sql { get; set; }
+    public DbTaskItemTypeLe TaskItemType { get; set; }
+
+    public string? Sql { get; set; }
 
     public string FrontendHtml { get; set; }
 
     public DbTaskItemStateLe State { get; set; } = DbTaskItemStateLe.NotStarted;
+
+    public Exception? Exception { get; set; }
 };

@@ -7,4 +7,6 @@ public class DbTaskExampleLe
     public string? DescriptionHtml { get; set; }
 
     public List<DbTaskSnippetLe> Snippets { get; set; }
+
+    public DbTaskSnippetLe? RunningSnippet { get; set; }
 }

@@ -4,4 +4,5 @@ export interface DbTaskExample {
   key: string;
   descriptionHtml: string;
   snippets: DbTaskSnippet[];
+  runningSnippet: DbTaskSnippet | null;
 }

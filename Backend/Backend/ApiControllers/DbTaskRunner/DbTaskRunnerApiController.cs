@@ -15,6 +15,13 @@ public class DbTaskRunnerApiController(IDbTaskRunnerService service) : Controlle
         return Ok();
     }
 
+    [HttpGet("run-snippet")]
+    public IActionResult RunSnippet(Guid instanceId, string snippetKey)
+    {
+        service.RunSnippet(instanceId, snippetKey);
+        return Ok();
+    }
+
     [HttpGet("get-progress")]
     public DbTaskExampleDto GetProgress(Guid instanceId)
     {
