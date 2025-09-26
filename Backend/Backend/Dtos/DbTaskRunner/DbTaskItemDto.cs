@@ -3,6 +3,7 @@
 public record DbTaskItemDto(
     string? Sql,
     string FrontendHtml,
+    string Type,
     string State,
     string? ExceptionMessage,
     List<List<object?>>? Result);

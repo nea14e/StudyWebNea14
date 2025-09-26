@@ -11,4 +11,10 @@ public static class DbTaskItemTypeMapper
                 "Неправильное значение типа задачи.");
         return result;
     }
+
+    public static string LeToDto(this DbTaskItemTypeLe le)
+    {
+        var dto = le.ToString();
+        return dto;
+    }
 }

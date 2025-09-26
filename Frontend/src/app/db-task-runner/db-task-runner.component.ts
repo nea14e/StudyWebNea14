@@ -10,6 +10,9 @@ import {getPlainTextFromHtml} from '../common/text-helper';
 import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
 import {DbTaskItemState} from './models/db-task-item-state';
 import {Subscription, switchMap, timer} from 'rxjs';
+import {TooltipDirective} from '../common/tooltip-directive';
+import {DbTaskItem} from './models/db-task-item';
+import {DbTaskItemType} from './models/db-task-item-type';
 
 @Component({
   selector: 'app-db-task-runner',
@@ -20,6 +23,7 @@ import {Subscription, switchMap, timer} from 'rxjs';
     ReactiveFormsModule,
     MatSelectModule,
     CdkCopyToClipboard,
+    TooltipDirective,
 
   ],
   templateUrl: './db-task-runner.component.html',
@@ -60,6 +64,36 @@ export class DbTaskRunnerComponent implements OnDestroy {
   getTaskByIndices(snippetIndex: number, processIndex: number, taskIndex: number) {
     const snippet = this.example!.snippets[snippetIndex];
     return snippet.processes[processIndex].taskItems[taskIndex];
+  }
+
+  getTaskTooltip(task: DbTaskItem) {
+    let tooltip = '';
+    switch (task.state) {
+      case DbTaskItemState.NotStarted:
+        tooltip = 'Ещё не начато\n';
+        break;
+      case DbTaskItemState.Running:
+        tooltip = 'Выполняется\n';
+        break;
+      case DbTaskItemState.Completed:
+        tooltip = 'Успешно завершено\n';
+
+        if (task.type === DbTaskItemType.Table) {
+          tooltip += 'Пример табличных данных';
+        } else if (task.type === DbTaskItemType.Scalar) {
+          if (task.result !== null) {
+            tooltip += task.result[0][0]?.toString();
+          }
+        } else {
+          tooltip += 'Запрос не возвращает значение';
+        }
+        break;
+      case DbTaskItemState.Error:
+        tooltip = 'Ошибка:\n' + task.exceptionMessage;
+        break;
+    }
+
+    return tooltip;
   }
 
   getCodeToCopy(snippetIndex: number, processIndex: number) {

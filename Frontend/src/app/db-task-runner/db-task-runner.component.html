@@ -76,7 +76,8 @@
                              [title]="task.exceptionMessage"
                              class="state-img"/>
                       }
-                      <div [innerHtml]="task.frontendHtml"></div>
+                      <div [innerHtml]="task.frontendHtml" [tooltip]="getTaskTooltip(task)" placement="top"
+                           delay="200"></div>
                     </div>
                   </td>
                 }
