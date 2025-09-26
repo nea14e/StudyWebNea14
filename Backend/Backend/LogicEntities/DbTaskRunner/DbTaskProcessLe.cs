@@ -1,4 +1,5 @@
-﻿using Backend.Entities;
+﻿using System.Data.Common;
+using Backend.Entities;
 
 namespace Backend.LogicEntities.DbTaskRunner;
 
@@ -13,8 +14,9 @@ public class DbTaskProcessLe
     public List<DbTaskItemLe> TaskItems { get; set; }
 
     public BackendDbContext? DbContext { get; set; }
+    public DbConnection? DbConnection { get; set; }
+    public DbTransaction? DbTransaction { get; set; }
 
     public DbTaskItemLe? RunningTaskItem { get; set; }
     public Task? RunningTask { get; set; }
-    public bool IsInTransaction { get; set; }
 }

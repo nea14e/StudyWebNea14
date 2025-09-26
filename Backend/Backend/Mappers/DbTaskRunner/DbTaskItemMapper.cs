@@ -26,7 +26,9 @@ public static class DbTaskItemMapper
         var dto = new DbTaskItemDto(
             le.Sql,
             le.FrontendHtml,
-            le.State.LeToDto()
+            le.State.LeToDto(),
+            le.ExceptionMessage,
+            le.Result
         );
         return dto;
     }

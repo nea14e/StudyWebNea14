@@ -3,7 +3,9 @@
 public enum DbTaskItemTypeLe
 {
     BeginTransaction,
-    Regular,
+    Table,
+    Scalar,
+    NonQuery,
     CommitTransaction,
     RollbackTransaction
 }

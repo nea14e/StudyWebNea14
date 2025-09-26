@@ -16,5 +16,6 @@ public class DbTaskItemLe
 
     public DbTaskItemStateLe State { get; set; } = DbTaskItemStateLe.NotStarted;
 
-    public Exception? Exception { get; set; }
+    public string? ExceptionMessage { get; set; }
+    public List<List<object?>>? Result { get; set; }
 };

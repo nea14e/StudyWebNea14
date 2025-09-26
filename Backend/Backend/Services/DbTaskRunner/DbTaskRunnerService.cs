@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Data;
+using System.Data.Common;
 using Backend.Dtos.DbTaskRunner;
 using Backend.Entities;
 using Backend.IServices.DbTaskRunner;
@@ -77,13 +79,34 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         example.RunningSnippet = snippet;
         foreach (var process in snippet.Processes)
         {
-            process.IsInTransaction = false; // Очищаем старые, т.к. новые могут и не запуститься
+            // Очищаем старые, т.к. новые могут и не запуститься
+            if (process.DbTransaction != null)
+            {
+                await process.DbTransaction.DisposeAsync();
+                process.DbTransaction = null;
+            }
+
+            if (process.DbConnection != null)
+            {
+                if (process.DbConnection.State != ConnectionState.Closed)
+                    await process.DbConnection.CloseAsync();
+                await process.DbConnection.DisposeAsync();
+                process.DbConnection = null;
+            }
+
+            if (process.DbContext != null)
+            {
+                await process.DbContext.DisposeAsync();
+                process.DbContext = null;
+            }
+
             process.RunningTaskItem = null;
             process.RunningTask = null;
             process.TaskItems.ForEach(taskItem =>
             {
                 taskItem.State = DbTaskItemStateLe.NotStarted;
-                taskItem.Exception = null;
+                taskItem.ExceptionMessage = null;
+                taskItem.Result = null;
             });
 
             var firstItem = process.TaskItems
@@ -94,6 +117,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 continue;
             }
 
+            // Запуск
             await _runTaskItem(example, snippet, process, firstItem);
         }
 
@@ -108,62 +132,130 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         DbTaskItemLe taskItem)
     {
         process.DbContext ??= new BackendDbContext();
+        if (process.DbConnection == null)
+        {
+            process.DbConnection = process.DbContext.Database.GetDbConnection();
+            await process.DbConnection.OpenAsync();
+        }
 
         switch (taskItem.Type)
         {
             case DbTaskItemTypeLe.BeginTransaction:
-                if (process.IsInTransaction)
+                if (process.DbTransaction != null)
                     throw new InvalidAsynchronousStateException(
                         $"Процесс {process.Id} уже внутри транзакции! Команда {taskItem.Id}.");
-                await process.DbContext.Database.BeginTransactionAsync();
-                process.IsInTransaction = true;
+                process.DbTransaction = await process.DbConnection.BeginTransactionAsync();
                 taskItem.State = DbTaskItemStateLe.Completed;
-                taskItem.Exception = null;
+                taskItem.ExceptionMessage = null;
+                taskItem.Result = null;
                 await _goToNextTaskItem(example, snippet, process, taskItem);
                 return;
             case DbTaskItemTypeLe.CommitTransaction:
-                if (!process.IsInTransaction)
+                if (process.DbTransaction == null)
                     throw new InvalidAsynchronousStateException(
                         $"Процесс {process.Id} уже вне транзакции! Команда {taskItem.Id}.");
-                await process.DbContext.Database.CommitTransactionAsync();
-                process.IsInTransaction = false;
+                await process.DbTransaction.CommitAsync();
+                await process.DbTransaction.DisposeAsync();
+                process.DbTransaction = null;
                 taskItem.State = DbTaskItemStateLe.Completed;
-                taskItem.Exception = null;
+                taskItem.ExceptionMessage = null;
+                taskItem.Result = null;
                 await _goToNextTaskItem(example, snippet, process, taskItem);
                 return;
             case DbTaskItemTypeLe.RollbackTransaction:
-                if (!process.IsInTransaction)
+                if (process.DbTransaction == null)
                     throw new InvalidAsynchronousStateException(
                         $"Процесс {process.Id} уже вне транзакции! Команда {taskItem.Id}.");
-                await process.DbContext.Database.RollbackTransactionAsync();
-                process.IsInTransaction = false;
+                await process.DbTransaction.RollbackAsync();
+                await process.DbTransaction.DisposeAsync();
+                process.DbTransaction = null;
                 taskItem.State = DbTaskItemStateLe.Completed;
-                taskItem.Exception = null;
+                taskItem.ExceptionMessage = null;
+                taskItem.Result = null;
                 await _goToNextTaskItem(example, snippet, process, taskItem);
                 return;
         }
 
-        // Иначе DbTaskItemTypeLe.Regular:
+        // Иначе DbTaskItemTypeLe.Query / NonQuery:
         if (taskItem.Sql == null)
             throw new InvalidOperationException($"Задача Id = {taskItem.Id}, Type = {taskItem.Type}" +
                                                 $" содержит Sql = null (несовместимая комбинация)!");
 
         taskItem.State = DbTaskItemStateLe.Running;
-        taskItem.Exception = null;
+        taskItem.ExceptionMessage = null;
+        taskItem.Result = null;
         process.RunningTaskItem = taskItem; // Важен порядок строк в коде!
-        process.RunningTask = process.DbContext.Database.ExecuteSqlRawAsync(taskItem.Sql)
-            .ContinueWith(async (task, _) =>
+
+        var command = process.DbConnection.CreateCommand();
+        command.CommandText = taskItem.Sql;
+        Func<Task, Task<List<List<object?>>?>> readResultsFunc = taskItem.Type switch
+        {
+            DbTaskItemTypeLe.Table => async task1 =>
             {
-                taskItem.State = DbTaskItemStateLe.Error;
-                taskItem.Exception = task.Exception;
-                await _completeProcess(example, snippet, process);
-            }, null, TaskContinuationOptions.OnlyOnFaulted)
-            .ContinueWith(async (_, _) =>
+                var task2 = (Task<DbDataReader>)task1;
+                var reader = task2.Result;
+                var table = new List<List<object?>>();
+                while (reader.Read())
+                {
+                    var row = new List<object?>();
+                    for (var i = 0; i < reader.FieldCount; i++)
+                    {
+                        var value = reader[i];
+                        value = value switch
+                        {
+                            DBNull => null,
+                            DateTime value1 => value1.ToString("O"),
+                            DateOnly value2 => value2.ToString("yyyy-MM-dd"),
+                            _ => value
+                        };
+                        row.Add(value);
+                    }
+
+                    table.Add(row);
+                }
+
+                await reader.CloseAsync();
+                await reader.DisposeAsync();
+                return table;
+            },
+            DbTaskItemTypeLe.Scalar => async task1 =>
             {
-                taskItem.State = DbTaskItemStateLe.Completed;
-                taskItem.Exception = null;
-                await _goToNextTaskItem(example, snippet, process, taskItem);
-            }, null, TaskContinuationOptions.NotOnFaulted);
+                var task2 = (Task<object?>)task1;
+                var value = task2.Result;
+                return [[value]];
+            },
+            DbTaskItemTypeLe.NonQuery => async _ => null,
+            _ => throw new InvalidOperationException($"Тип задачи Id = {taskItem.Id}, Type = {taskItem.Type}" +
+                                                     $" не предусмотрен!")
+        };
+
+        process.RunningTask = ((Task)(taskItem.Type switch
+            {
+                DbTaskItemTypeLe.Table => command.ExecuteReaderAsync(),
+                DbTaskItemTypeLe.Scalar => command.ExecuteScalarAsync(),
+                DbTaskItemTypeLe.NonQuery => command.ExecuteNonQueryAsync(),
+                _ => throw new InvalidOperationException($"Тип задачи Id = {taskItem.Id}, Type = {taskItem.Type}" +
+                                                         $" не предусмотрен!")
+            }))
+            .ContinueWith(async (task1, _) =>
+            {
+                if (task1.Status == TaskStatus.RanToCompletion)
+                {
+                    taskItem.State = DbTaskItemStateLe.Completed;
+                    taskItem.ExceptionMessage = null;
+                    taskItem.Result = await readResultsFunc(task1);
+                    await command.DisposeAsync();
+                    await _goToNextTaskItem(example, snippet, process, taskItem);
+                }
+                else
+                {
+                    taskItem.State = DbTaskItemStateLe.Error;
+                    taskItem.ExceptionMessage = task1.Exception?.InnerException?.Message ?? task1.Status.ToString();
+                    taskItem.Result = null;
+                    await command.DisposeAsync();
+                    await _completeProcess(example, snippet, process);
+                }
+            }, null);
     }
 
     private async Task _goToNextTaskItem(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
@@ -187,16 +279,33 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
     {
         process.RunningTaskItem = null;
         process.RunningTask = null;
-        if (process is { IsInTransaction: true, DbContext: not null })
+        if (process.DbTransaction != null)
         {
             try
             {
-                await process.DbContext.Database.CommitTransactionAsync();
+                await process.DbTransaction.CommitAsync();
             }
             catch (Exception)
             {
-                await process.DbContext.Database.RollbackTransactionAsync();
+                await process.DbTransaction.RollbackAsync();
             }
+
+            await process.DbTransaction.DisposeAsync();
+            process.DbTransaction = null;
+        }
+
+        if (process.DbConnection != null)
+        {
+            if (process.DbConnection.State != ConnectionState.Closed)
+                await process.DbConnection.CloseAsync();
+            await process.DbConnection.DisposeAsync();
+            process.DbConnection = null;
+        }
+
+        if (process.DbContext != null)
+        {
+            await process.DbContext.DisposeAsync();
+            process.DbContext = null;
         }
 
         if (snippet.Processes.All(proc => !proc.TaskItems.Any() || proc.RunningTaskItem == null))
