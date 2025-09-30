@@ -95,6 +95,11 @@ export class TooltipDirective {
       left = hostPos.right + this.offset;
     }
 
+    if (left < 0)
+      left = 0;
+    if (top < 0)
+      top = 0;
+
     this.renderer.setStyle(this.tooltip, 'top', `${top + scrollPos}px`);
     this.renderer.setStyle(this.tooltip, 'left', `${left}px`);
   }
