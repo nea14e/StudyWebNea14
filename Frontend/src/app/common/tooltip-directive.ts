@@ -1,5 +1,6 @@
 import {Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
 
+// Class from https://stackoverflow.com/a/63484414/7573844
 @Directive({
   selector: '[tooltip]'
 })
@@ -13,7 +14,7 @@ export class TooltipDirective {
   tooltip: HTMLElement | null = null;
   offset = 10;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {
+  constructor(private el: ElementRef, protected renderer: Renderer2) {
   }
 
   @HostListener('mouseenter')
@@ -30,13 +31,13 @@ export class TooltipDirective {
     }
   }
 
-  show() {
+  private show() {
     this.create();
     this.setPosition();
     this.renderer.addClass(this.tooltip, 'ng-tooltip-show');
   }
 
-  hide() {
+  private hide() {
     this.renderer.removeClass(this.tooltip, 'ng-tooltip-show');
     window.setTimeout(() => {
       this.renderer.removeChild(document.body, this.tooltip);
@@ -44,12 +45,12 @@ export class TooltipDirective {
     }, +this.delay);
   }
 
-  create() {
-    this.tooltip = this.renderer.createElement('span');
+  private create() {
+    this.tooltip = this.renderer.createElement('div');
 
     this.renderer.appendChild(
       this.tooltip,
-      this.renderer.createText(this.tooltipTitle) // Here is your text
+      this.createInnerContent()
     );
 
     this.renderer.appendChild(document.body, this.tooltip);
@@ -62,7 +63,11 @@ export class TooltipDirective {
     this.renderer.setStyle(this.tooltip, 'transition', `opacity ${this.delay}ms`);
   }
 
-  setPosition() {
+  protected createInnerContent() {
+    return this.renderer.createText(this.tooltipTitle); // Here is your text
+  }
+
+  private setPosition() {
     const hostPos = this.el.nativeElement.getBoundingClientRect();
     const tooltipPos = this.tooltip!.getBoundingClientRect();
 

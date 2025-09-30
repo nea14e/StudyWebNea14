@@ -129,7 +129,7 @@ body {
   padding: 0 50px;
 }
 
-.tooltip-example [tooltip] {
+.tooltip-example [db-task-tooltip] {
   display: inline-block;
   margin: 50px 20px;
   width: 180px;
@@ -142,7 +142,6 @@ body {
 
 .ng-tooltip {
   position: absolute;
-  max-width: 150px;
   font-size: 14px;
   text-align: center;
   color: #f8f8f2;
