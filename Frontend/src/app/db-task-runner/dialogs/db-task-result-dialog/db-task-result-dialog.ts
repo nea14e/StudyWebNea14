@@ -24,4 +24,8 @@ export class DbTaskResultDialog implements OnInit {
       throw new Error('Не найден родительский элемент в диалоге результата');
     this.renderer.appendChild(this.resultView.nativeElement, resultHtml);
   }
+
+  onCloseDialog() {
+    this.dialogRef.close();
+  }
 }
