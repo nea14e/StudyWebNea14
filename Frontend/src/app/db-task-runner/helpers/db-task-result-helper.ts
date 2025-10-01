@@ -31,24 +31,49 @@ export class DbTaskResultHelper {
     const stateRow = renderer.createElement('div');
     renderer.addClass(stateRow, 'row');
     {
-      const state = this.getState(task);
-      const stateEl = renderer.createText(state);
-      renderer.appendChild(stateRow, stateEl);
+      let imgSrc: string;
+      let state: string;
+      switch (task.state) {
+        case DbTaskItemState.NotStarted:
+          state = 'Ещё не начато';
+          imgSrc = 'from-bootstrap/progress/empty-image.svg';
+          break;
+        case DbTaskItemState.Running:
+          state = 'Выполняется';
+          imgSrc = 'from-bootstrap/progress/stopwatch-fill.svg';
+          break;
+        case DbTaskItemState.Completed:
+          state = 'Успешно завершено';
+          imgSrc = 'from-bootstrap/progress/check-circle-fill.svg';
+          break;
+        case DbTaskItemState.Error:
+          state = 'Ошибка: ' + task.exceptionMessage;
+          imgSrc = 'from-bootstrap/progress/x-octagon-fill.svg';
+          break;
+      }
+      const stateImgCol = renderer.createElement('div');
+      renderer.addClass(stateImgCol, 'col-auto');
+      renderer.setStyle(stateImgCol, 'padding', '0');
+      {
+        console.log('src', imgSrc);
+        const stateImg = renderer.createElement('img');
+        renderer.setAttribute(stateImg, 'src', imgSrc);
+        renderer.setStyle(stateImg, 'height', '1rem');
+        renderer.setStyle(stateImg, 'margin', '0.3rem');
+        renderer.appendChild(stateImgCol, stateImg);
+      }
+      renderer.appendChild(stateRow, stateImgCol);
+
+      const stateTextCol = renderer.createElement('div');
+      renderer.addClass(stateTextCol, 'col');
+      renderer.setStyle(stateTextCol, 'padding', '0');
+      {
+        const stateText = renderer.createText(state);
+        renderer.appendChild(stateTextCol, stateText);
+      }
+      renderer.appendChild(stateRow, stateTextCol);
     }
     renderer.appendChild(containerEl, stateRow);
-  }
-
-  private getState(task: DbTaskItem) {
-    switch (task.state) {
-      case DbTaskItemState.NotStarted:
-        return 'Ещё не начато';
-      case DbTaskItemState.Running:
-        return 'Выполняется';
-      case DbTaskItemState.Completed:
-        return 'Успешно завершено';
-      case DbTaskItemState.Error:
-        return 'Ошибка: ' + task.exceptionMessage;
-    }
   }
 
   private createResultInfo(task: DbTaskItem, renderer: Renderer2, containerEl: any) {
