@@ -11,6 +11,9 @@ import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
 import {DbTaskItemState} from './models/db-task-item-state';
 import {Subscription, switchMap, timer} from 'rxjs';
 import {DbTaskTooltipDirective} from './directives/db-task-tooltip-directive';
+import {DbTaskItem} from './models/db-task-item';
+import {MatDialog} from '@angular/material/dialog';
+import {DbTaskResultDialog} from './dialogs/db-task-result-dialog/db-task-result-dialog';
 
 @Component({
   selector: 'app-db-task-runner',
@@ -29,6 +32,7 @@ import {DbTaskTooltipDirective} from './directives/db-task-tooltip-directive';
 export class DbTaskRunnerComponent implements OnDestroy {
   example?: DbTaskExample;
   protected service = inject(DbTaskRunnerService);
+  protected dialog = inject(MatDialog);
   protected instanceId = Guid.create();
   protected updateProgressSubscription?: Subscription;
 
@@ -94,5 +98,11 @@ export class DbTaskRunnerComponent implements OnDestroy {
 
   isRunning() {
     return this.example?.runningSnippet !== null;
+  }
+
+  onItemClick(task: DbTaskItem) {
+    const dialogRef = this.dialog.open(DbTaskResultDialog, {
+      data: task
+    });
   }
 }

@@ -54,7 +54,7 @@
                 @for (processIndex of getProcessIndices(snippetIndex); track processIndex) {
                   <td>
                     @let task = getTaskByIndices(snippetIndex, processIndex, taskIndex);
-                    <div class="d-flex">
+                    <div (click)="onItemClick(task)" class="d-flex">
                       @if (task.state === DbTaskItemState.NotStarted) {
                         <img src="from-bootstrap/progress/empty-image.svg"
                              alt="Ещё не начато"
