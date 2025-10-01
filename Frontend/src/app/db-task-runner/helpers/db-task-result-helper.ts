@@ -2,18 +2,28 @@ import {Injectable, Renderer2} from '@angular/core';
 import {DbTaskItem} from '../models/db-task-item';
 import {DbTaskItemState} from '../models/db-task-item-state';
 import {DbTaskItemType} from '../models/db-task-item-type';
+import {CacheHelper} from '../../common/cache-helper';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DbTaskResultHelper {
+  CACHE_REFRESH_INTERVAL = 1000;
+  cacheHelper = new CacheHelper<any>();
+
   createInnerContent(task: DbTaskItem, renderer: Renderer2): any {
+    const cachedResult = this.cacheHelper.tryGetValue();
+    if (!!cachedResult) {
+      return cachedResult;
+    }
+
     const containerEl = renderer.createElement('div');
     renderer.addClass(containerEl, 'container-fluid');
 
     this.createStateInfo(task, renderer, containerEl);
     this.createResultInfo(task, renderer, containerEl);
 
+    this.cacheHelper.setValue(containerEl, this.CACHE_REFRESH_INTERVAL);
     return containerEl;
   }
 
