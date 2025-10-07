@@ -12,7 +12,7 @@ import {DbTaskItemState} from './models/db-task-item-state';
 import {Subscription, switchMap, timer} from 'rxjs';
 import {DbTaskTooltipDirective} from './directives/db-task-tooltip-directive';
 import {DbTaskItem} from './models/db-task-item';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DbTaskResultDialog} from './dialogs/db-task-result-dialog/db-task-result-dialog';
 
 @Component({
@@ -35,6 +35,7 @@ export class DbTaskRunnerComponent implements OnDestroy {
   protected dialog = inject(MatDialog);
   protected instanceId = Guid.create();
   protected updateProgressSubscription?: Subscription;
+  protected resultDialog: MatDialogRef<DbTaskResultDialog> | null = null;
 
   protected readonly DbTaskItemState = DbTaskItemState;
 
@@ -87,6 +88,18 @@ export class DbTaskRunnerComponent implements OnDestroy {
       )
       .subscribe(data => {
         this.example = data;
+        if (!!this.resultDialog) {
+          const dialogInstance = this.resultDialog!.componentInstance;
+          if (!!dialogInstance) {
+            const taskId = dialogInstance.task.id;
+            const updatedTask = data.snippets.flatMap(sn => sn.processes.flatMap(proc => proc.taskItems))
+              .find(item => item.id === taskId);
+            if (!!updatedTask) {
+              dialogInstance.task = updatedTask;
+              dialogInstance.update();
+            }
+          }
+        }
       });
   }
 
@@ -101,7 +114,7 @@ export class DbTaskRunnerComponent implements OnDestroy {
   }
 
   onItemClick(task: DbTaskItem) {
-    const dialogRef = this.dialog.open(DbTaskResultDialog, {
+    this.resultDialog = this.dialog.open(DbTaskResultDialog, {
       data: task
     });
   }

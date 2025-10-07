@@ -13,16 +13,26 @@ export class DbTaskResultDialog implements OnInit {
   dialogRef = inject(MatDialogRef<DbTaskResultDialog>);
   task = inject<DbTaskItem>(MAT_DIALOG_DATA);
   renderer = inject(Renderer2);
+  innerHtml: any = null;
   helper = inject(DbTaskResultHelper);
 
   @ViewChild('resultView', {static: true})
   resultView: ElementRef | null = null;
 
   ngOnInit(): void {
-    const resultHtml = this.helper.createInnerContent(this.task, this.renderer);
+    this.update();
+  }
+
+  update() {
     if (!this.resultView)
       throw new Error('Не найден родительский элемент в диалоге результата');
-    this.renderer.appendChild(this.resultView.nativeElement, resultHtml);
+    const parent = this.resultView.nativeElement;
+    if (!!this.innerHtml) {
+      this.renderer.removeChild(parent, this.innerHtml);
+    }
+    const newHtml = this.helper.createInnerContent(this.task, this.renderer);
+    this.innerHtml = newHtml;
+    this.renderer.appendChild(parent, newHtml);
   }
 
   onCloseDialog() {
