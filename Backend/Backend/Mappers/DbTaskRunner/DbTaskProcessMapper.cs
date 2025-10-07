@@ -21,9 +21,10 @@ public static class DbTaskProcessMapper
 
     public static DbTaskProcessDto LeToDto(this DbTaskProcessLe le)
     {
+        var processStartTime = le.TaskItems.Min(item => item.StartTime);
         var dto = new DbTaskProcessDto(
             le.ProcessNumber,
-            le.TaskItems.Select(item => item.LeToDto()).ToList()
+            le.TaskItems.Select(item => item.LeToDto(processStartTime)).ToList()
         );
         return dto;
     }

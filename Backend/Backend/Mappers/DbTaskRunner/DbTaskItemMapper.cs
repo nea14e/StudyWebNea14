@@ -21,7 +21,7 @@ public static class DbTaskItemMapper
         return le;
     }
 
-    public static DbTaskItemDto LeToDto(this DbTaskItemLe le)
+    public static DbTaskItemDto LeToDto(this DbTaskItemLe le, DateTime? processStartTime)
     {
         var dto = new DbTaskItemDto(
             le.Id,
@@ -30,7 +30,10 @@ public static class DbTaskItemMapper
             le.Type.LeToDto(),
             le.State.LeToDto(),
             le.ExceptionMessage,
-            le.Result
+            le.Result,
+            processStartTime,
+            le.StartTime,
+            le.EndTime
         );
         return dto;
     }

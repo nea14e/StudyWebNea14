@@ -107,6 +107,8 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 taskItem.State = DbTaskItemStateLe.NotStarted;
                 taskItem.ExceptionMessage = null;
                 taskItem.Result = null;
+                taskItem.StartTime = null;
+                taskItem.EndTime = null;
             });
 
             var firstItem = process.TaskItems
@@ -184,6 +186,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         taskItem.State = DbTaskItemStateLe.Running;
         taskItem.ExceptionMessage = null;
         taskItem.Result = null;
+        taskItem.StartTime = DateTime.Now;
         process.RunningTaskItem = taskItem; // Важен порядок строк в коде!
 
         var command = process.DbConnection.CreateCommand();
@@ -244,6 +247,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                     taskItem.State = DbTaskItemStateLe.Completed;
                     taskItem.ExceptionMessage = null;
                     taskItem.Result = await readResultsFunc(task1);
+                    taskItem.EndTime = DateTime.Now;
                     await command.DisposeAsync();
                     await _goToNextTaskItem(example, snippet, process, taskItem);
                 }
@@ -252,6 +256,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                     taskItem.State = DbTaskItemStateLe.Error;
                     taskItem.ExceptionMessage = task1.Exception?.InnerException?.Message ?? task1.Status.ToString();
                     taskItem.Result = null;
+                    taskItem.EndTime = DateTime.Now;
                     await command.DisposeAsync();
                     await _completeProcess(example, snippet, process);
                 }

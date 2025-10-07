@@ -10,4 +10,7 @@ export interface DbTaskItem {
   state: DbTaskItemState;
   exceptionMessage: string | null;
   result: (object | null)[][] | null;
+  processStartTime: string | null;
+  startTime: string | null;
+  endTime: string | null;
 }

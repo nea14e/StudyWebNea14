@@ -18,4 +18,7 @@ public class DbTaskItemLe
 
     public string? ExceptionMessage { get; set; }
     public List<List<object?>>? Result { get; set; }
+
+    public DateTime? StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
 };

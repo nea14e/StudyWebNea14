@@ -7,4 +7,7 @@ public record DbTaskItemDto(
     string Type,
     string State,
     string? ExceptionMessage,
-    List<List<object?>>? Result);
+    List<List<object?>>? Result,
+    DateTime? ProcessStartTime,
+    DateTime? StartTime,
+    DateTime? EndTime);
