@@ -1,22 +1,25 @@
-export class CacheHelper<T> {
-  private value: T | null = null;
-  private validUntil: number | null = null;
+import {Injectable} from '@angular/core';
 
-  tryGetValue() {
+@Injectable({
+  providedIn: 'root'
+})
+export class CacheHelper {
+  private values = new Map<string, object>();
+  private validUntil = new Map<string, number | null>;
+
+  tryGetValue<T>(key: string) {
     const now = Date.now();
-    if (!!this.validUntil && now < this.validUntil) {
-      console.log('CacheHelper: now:', now, 'используем закешированное значение:', this.value);
-      return this.value;
+    const until = this.validUntil.get(key);
+    if (until === null || (!!until && now < until)) {
+      return this.values.get(key) as T;
     } else {
-      console.log('CacheHelper: now:', now, 'значение устарело или не было установлено');
       return null;
     }
   }
 
-  setValue(value: T, timeoutMs: number) {
-    this.value = value;
+  setValue(key: string, value: object, timeoutMs: number) {
+    this.values.set(key, value);
     const now = Date.now();
-    this.validUntil = now + timeoutMs;
-    console.log('CacheHelper: now:', now, 'установлено новое значение:', value);
+    this.validUntil.set(key, now + timeoutMs);
   }
 }

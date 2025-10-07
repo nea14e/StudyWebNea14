@@ -24,6 +24,7 @@ public static class DbTaskItemMapper
     public static DbTaskItemDto LeToDto(this DbTaskItemLe le)
     {
         var dto = new DbTaskItemDto(
+            le.Id,
             le.Sql,
             le.FrontendHtml,
             le.Type.LeToDto(),

@@ -1,7 +1,9 @@
 import {DbTaskItemState} from './db-task-item-state';
 import {DbTaskItemType} from './db-task-item-type';
+import {Guid} from 'guid-typescript';
 
 export interface DbTaskItem {
+  id: Guid;
   sql: string;
   frontendHtml: string;
   type: DbTaskItemType;

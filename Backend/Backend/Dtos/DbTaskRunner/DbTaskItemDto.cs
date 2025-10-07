@@ -1,6 +1,7 @@
 ﻿namespace Backend.Dtos.DbTaskRunner;
 
 public record DbTaskItemDto(
+    Guid Id,
     string? Sql,
     string FrontendHtml,
     string Type,
