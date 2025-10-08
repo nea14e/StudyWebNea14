@@ -34,6 +34,9 @@ export class DbTaskRunnerComponent implements OnDestroy {
   protected service = inject(DbTaskRunnerService);
   protected dialog = inject(MatDialog);
   protected instanceId = Guid.create();
+  protected readonly reloadProgressDataInterval = 1000;
+  protected reloadProgressDataSubscription?: Subscription;
+  protected readonly updateProgressInterval = 70;
   protected updateProgressSubscription?: Subscription;
   protected resultDialog: MatDialogRef<DbTaskResultDialog> | null = null;
 
@@ -79,35 +82,39 @@ export class DbTaskRunnerComponent implements OnDestroy {
   async runSnippet(snippetIndex: number) {
     const snippet = this.example!.snippets[snippetIndex];
     await this.service.runSnippet(this.instanceId, snippet.key);
-    if (!!this.updateProgressSubscription) {
-      this.updateProgressSubscription.unsubscribe();
-    }
-    this.updateProgressSubscription = timer(1000, 1000)
+    this.reloadProgressDataSubscription?.unsubscribe();
+    this.reloadProgressDataSubscription = timer(this.reloadProgressDataInterval, this.reloadProgressDataInterval)
       .pipe(
         switchMap(_ => this.service.getProgress(this.instanceId)),
         takeWhile(data => !!data.runningSnippet || data.runningSnippet !== this.example?.runningSnippet)
       )
       .subscribe(data => {
         this.example = data;
-        if (!!this.resultDialog) {
-          const dialogInstance = this.resultDialog!.componentInstance;
-          if (!!dialogInstance) {
-            const taskId = dialogInstance.task.id;
-            const updatedTask = data.snippets.flatMap(sn => sn.processes.flatMap(proc => proc.taskItems))
-              .find(item => item.id === taskId);
-            if (!!updatedTask) {
-              dialogInstance.task = updatedTask;
-              dialogInstance.update();
-            }
+        const dialogInstance = this.resultDialog?.componentInstance;
+        if (!!dialogInstance) {
+          const taskId = dialogInstance.task.id;
+          const updatedTask = data.snippets.flatMap(sn => sn.processes.flatMap(proc => proc.taskItems))
+            .find(item => item.id === taskId);
+          if (!!updatedTask) {
+            dialogInstance.task = updatedTask;
+            dialogInstance.update();
           }
         }
+      });
+    this.updateProgressSubscription?.unsubscribe();
+    this.updateProgressSubscription = timer(this.updateProgressInterval, this.updateProgressInterval)
+      .pipe(
+        takeWhile(_ => !!this.example?.runningSnippet),
+      )
+      .subscribe(_ => {
+        const dialogInstance = this.resultDialog?.componentInstance;
+        dialogInstance?.update();
       });
   }
 
   ngOnDestroy(): void {
-    if (!!this.updateProgressSubscription) {
-      this.updateProgressSubscription.unsubscribe();
-    }
+    this.reloadProgressDataSubscription?.unsubscribe();
+    this.updateProgressSubscription?.unsubscribe();
   }
 
   isRunning() {
