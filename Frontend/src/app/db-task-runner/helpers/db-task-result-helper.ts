@@ -23,8 +23,9 @@ export class DbTaskResultHelper {
   }
 
   private createStateInfo(task: DbTaskItem, renderer: Renderer2, containerEl: any) {
+    let cachedState = this.cacheHelper.tryGetValue<DbTaskItemState>(task.id + '.state');
     let stateRow = this.cacheHelper.tryGetValue<any>(task.id + '.stateRow');
-    if (!!stateRow) {
+    if (!!stateRow && task.state === cachedState) {
       renderer.appendChild(containerEl, stateRow);
       return;
     }
@@ -75,6 +76,7 @@ export class DbTaskResultHelper {
       renderer.appendChild(stateRow, stateTextCol);
     }
 
+    this.cacheHelper.setValue(task.id + '.state', task.state, null);
     this.cacheHelper.setValue(task.id + '.stateRow', stateRow, this.CACHE_REFRESH_INTERVAL);
     renderer.appendChild(containerEl, stateRow);
   }
@@ -129,8 +131,9 @@ export class DbTaskResultHelper {
     if (task.state !== DbTaskItemState.Completed || !task.result) {
       return;
     }
+    const cachedResult = this.cacheHelper.tryGetValue<string>(task.id + '.result');
     let resultRow = this.cacheHelper.tryGetValue<any>(task.id + '.resultRow');
-    if (!!resultRow) {
+    if (!!resultRow && JSON.stringify(task.result) === cachedResult) {
       renderer.appendChild(containerEl, resultRow);
       return;
     }
@@ -172,6 +175,7 @@ export class DbTaskResultHelper {
       renderer.appendChild(resultRow, stubEl);
     }
 
+    this.cacheHelper.setValue(task.id + '.result', JSON.stringify(task.result), null);
     this.cacheHelper.setValue(task.id + '.resultRow', resultRow, this.CACHE_REFRESH_INTERVAL);
     renderer.appendChild(containerEl, resultRow);
   }

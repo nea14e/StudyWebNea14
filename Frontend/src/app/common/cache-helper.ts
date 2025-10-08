@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class CacheHelper {
-  private values = new Map<string, object>();
+  private values = new Map<string, any>();
   private validUntil = new Map<string, number | null>;
 
   tryGetValue<T>(key: string) {
@@ -17,9 +17,13 @@ export class CacheHelper {
     }
   }
 
-  setValue(key: string, value: object, timeoutMs: number) {
+  setValue(key: string, value: any, timeoutMs: number | null) {
     this.values.set(key, value);
     const now = Date.now();
-    this.validUntil.set(key, now + timeoutMs);
+    if (timeoutMs !== null) {
+      this.validUntil.set(key, now + timeoutMs);
+    } else {
+      this.validUntil.set(key, null);
+    }
   }
 }
