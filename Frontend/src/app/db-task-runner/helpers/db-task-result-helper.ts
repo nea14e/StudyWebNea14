@@ -80,7 +80,7 @@ export class DbTaskResultHelper {
   }
 
   private createTimeInfo(task: DbTaskItem, renderer: Renderer2, containerEl: any) {
-    if (!task.startTime || !task.processStartTime) {
+    if (!task.processStartTime) {
       return;
     }
     // Не кешируем, чтобы миллисекунды обновлялись быстрее
@@ -93,7 +93,9 @@ export class DbTaskResultHelper {
       renderer.setAttribute(startTimeCol, 'title', 'Время начала');
       {
         const processStartTime = new Date(task.processStartTime).valueOf();
-        const startTime = new Date(task.startTime).valueOf();
+        const startTime = task.startTime
+          ? new Date(task.startTime).valueOf()
+          : Date.now();
         const value = (startTime - processStartTime) / 1000;
         const startTimeText = renderer.createText('+' + value + 'сек\t\t');
         renderer.appendChild(startTimeCol, startTimeText);
@@ -105,13 +107,18 @@ export class DbTaskResultHelper {
       renderer.addClass(durationCol, 'col');
       renderer.setAttribute(durationCol, 'title', 'Продолжительность');
       {
-        const startTime = new Date(task.startTime).valueOf();
-        const endTime = task.endTime
-          ? new Date(task.endTime).valueOf()
-          : Date.now();
-        const value = (endTime - startTime) / 1000;
-        const durationText = renderer.createText(value + 'сек');
-        renderer.appendChild(durationCol, durationText);
+        if (!!task.startTime) {
+          const startTime = new Date(task.startTime).valueOf();
+          const endTime = task.endTime
+            ? new Date(task.endTime).valueOf()
+            : Date.now();
+          const value = (endTime - startTime) / 1000;
+          const durationText = renderer.createText(value + 'сек');
+          renderer.appendChild(durationCol, durationText);
+        } else {
+          const durationStub = renderer.createText('-');
+          renderer.appendChild(durationCol, durationStub);
+        }
       }
       renderer.appendChild(timeRow, durationCol);
     }
