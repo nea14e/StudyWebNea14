@@ -85,7 +85,7 @@ export class DbTaskRunnerComponent implements OnDestroy {
     this.updateProgressSubscription = timer(1000, 1000)
       .pipe(
         switchMap(_ => this.service.getProgress(this.instanceId)),
-        takeWhile(data => !!data.runningSnippet)
+        takeWhile(data => !!data.runningSnippet || data.runningSnippet !== this.example?.runningSnippet)
       )
       .subscribe(data => {
         this.example = data;
