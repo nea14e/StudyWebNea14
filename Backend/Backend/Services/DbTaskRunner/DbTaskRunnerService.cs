@@ -140,18 +140,32 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
             await process.DbConnection.OpenAsync();
         }
 
+        if (taskItem.Type is DbTaskItemTypeLe.BeginTransaction or DbTaskItemTypeLe.CommitTransaction
+            or DbTaskItemTypeLe.RollbackTransaction)
+        {
+            await _runTaskItem_Simple(example, snippet, process, taskItem);
+        }
+        else
+        {
+            await _runTaskItem_Regular(example, snippet, process, taskItem);
+        }
+    }
+
+    private async Task _runTaskItem_Simple(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
+        DbTaskItemLe taskItem)
+    {
         switch (taskItem.Type)
         {
             case DbTaskItemTypeLe.BeginTransaction:
                 if (process.DbTransaction != null)
                     throw new InvalidAsynchronousStateException(
                         $"Процесс {process.Id} уже внутри транзакции! Команда {taskItem.Id}.");
-                process.DbTransaction = await process.DbConnection.BeginTransactionAsync();
+                process.DbTransaction = await process.DbConnection!.BeginTransactionAsync();
                 taskItem.State = DbTaskItemStateLe.Completed;
                 taskItem.ExceptionMessage = null;
                 taskItem.Result = null;
                 await _goToNextTaskItem(example, snippet, process, taskItem);
-                return;
+                break;
             case DbTaskItemTypeLe.CommitTransaction:
                 if (process.DbTransaction == null)
                     throw new InvalidAsynchronousStateException(
@@ -163,7 +177,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 taskItem.ExceptionMessage = null;
                 taskItem.Result = null;
                 await _goToNextTaskItem(example, snippet, process, taskItem);
-                return;
+                break;
             case DbTaskItemTypeLe.RollbackTransaction:
                 if (process.DbTransaction == null)
                     throw new InvalidAsynchronousStateException(
@@ -175,10 +189,13 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 taskItem.ExceptionMessage = null;
                 taskItem.Result = null;
                 await _goToNextTaskItem(example, snippet, process, taskItem);
-                return;
+                break;
         }
+    }
 
-        // Иначе DbTaskItemTypeLe.Query / NonQuery:
+    private async Task _runTaskItem_Regular(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
+        DbTaskItemLe taskItem)
+    {
         if (taskItem.Sql == null)
             throw new InvalidOperationException($"Задача Id = {taskItem.Id}, Type = {taskItem.Type}" +
                                                 $" содержит Sql = null (несовместимая комбинация)!");
@@ -189,7 +206,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         taskItem.StartTime = DateTime.Now;
         process.RunningTaskItem = taskItem; // Важен порядок строк в коде!
 
-        var command = process.DbConnection.CreateCommand();
+        var command = process.DbConnection!.CreateCommand();
         command.CommandText = taskItem.Sql;
         Func<Task, Task<List<List<object?>>?>> readResultsFunc = taskItem.Type switch
         {
