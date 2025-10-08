@@ -80,7 +80,10 @@ export class DbTaskRunnerComponent implements OnDestroy {
   }
 
   async runSnippet(snippetIndex: number) {
+    if (!this.example)
+      return;
     const snippet = this.example!.snippets[snippetIndex];
+    this.example.runningSnippet = snippet;
     await this.service.runSnippet(this.instanceId, snippet.key);
     this.reloadProgressDataSubscription?.unsubscribe();
     this.reloadProgressDataSubscription = timer(this.reloadProgressDataInterval, this.reloadProgressDataInterval)
