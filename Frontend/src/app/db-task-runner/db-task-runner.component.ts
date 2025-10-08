@@ -9,7 +9,7 @@ import {getIndicesList, maxInList} from '../common/list-helper';
 import {getPlainTextFromHtml} from '../common/text-helper';
 import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
 import {DbTaskItemState} from './models/db-task-item-state';
-import {Subscription, switchMap, timer} from 'rxjs';
+import {Subscription, switchMap, takeWhile, timer} from 'rxjs';
 import {DbTaskTooltipDirective} from './directives/db-task-tooltip-directive';
 import {DbTaskItem} from './models/db-task-item';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -85,6 +85,7 @@ export class DbTaskRunnerComponent implements OnDestroy {
     this.updateProgressSubscription = timer(1000, 1000)
       .pipe(
         switchMap(_ => this.service.getProgress(this.instanceId)),
+        takeWhile(data => !!data.runningSnippet)
       )
       .subscribe(data => {
         this.example = data;
