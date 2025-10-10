@@ -1,10 +1,12 @@
-﻿insert into db_task_runner.db_task_examples(key, description_html)
-values ('concurrent_update', '<p>Этот пример показывает, как при параллельном выполнении двух UPDATE
+﻿insert into db_task_runner.db_task_examples(key, title, "order", description_html)
+values ('concurrent_update', 'Параллельный UPDATE', 2010, '<p>Этот пример показывает, как при параллельном выполнении двух UPDATE
 одной и той же строки <b>первый UPDATE блокирует строку,</b> так что второй UPDATE ждёт, пока первый закончится 
 (транзакция первого завершится).</p>')
 on conflict on constraint pk_db_task_examples
     do update
-    set description_html = excluded.description_html;
+    set title            = excluded.title,
+        "order"          = excluded."order",
+        description_html = excluded.description_html;
 
 with data(example_key, key, "order", description_html) as (values ('concurrent_update', 'pre', 1,
                                                                    '<p>Сбрасываем значение перед запуском примера:</p>'),

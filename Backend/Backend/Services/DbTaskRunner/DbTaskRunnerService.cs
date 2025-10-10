@@ -14,6 +14,17 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
 {
     private readonly Dictionary<Guid, DbTaskExampleLe> _examples = new();
 
+    public async Task<List<DbTaskExampleListItemDto>> GetExampleList()
+    {
+        var entities = await dbContext.DbTaskExamples
+            .OrderBy(ex => ex.Order)
+            .ToListAsync();
+
+        var dtos = entities.Select(ex => ex.EntityToListItemDto())
+            .ToList();
+        return dtos;
+    }
+
     public async Task LoadExample(Guid instanceId, string exampleKey)
     {
         if (_examples.ContainsKey(instanceId))

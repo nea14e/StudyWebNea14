@@ -7,6 +7,12 @@ create table if not exists db_task_runner.db_task_examples
     description_html varchar NOT NULL
 );
 
+alter table db_task_runner.db_task_examples
+    add column if not exists title varchar;
+
+alter table db_task_runner.db_task_examples
+    add column if not exists "order" int;
+
 create table if not exists db_task_runner.db_task_snippets
 (
     example_key      varchar(20) NOT NULL

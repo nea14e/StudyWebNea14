@@ -3,8 +3,9 @@
     <mat-form-field class="align-self-center mat-field">
       <mat-label>Пример:</mat-label>
       <mat-select (selectionChange)="onExampleChanged($event)">
-        <mat-option value="no_order_pagination">Пагинация без ORDER BY</mat-option>
-        <mat-option value="concurrent_update">Параллельный UPDATE</mat-option>
+        @for (item of examplesList; track item.key) {
+          <mat-option [value]="item.key">{{ item.title }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>

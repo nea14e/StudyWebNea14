@@ -1,6 +1,6 @@
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormField, MatLabel} from '@angular/material/input';
-import {Component, inject, OnDestroy} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {DbTaskRunnerService} from './services/db-task-runner.service';
 import {Guid} from 'guid-typescript';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
@@ -14,6 +14,7 @@ import {DbTaskTooltipDirective} from './directives/db-task-tooltip-directive';
 import {DbTaskItem} from './models/db-task-item';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DbTaskResultDialog} from './dialogs/db-task-result-dialog/db-task-result-dialog';
+import {DbTaskExampleListItem} from './models/db-task-example-list-item';
 
 @Component({
   selector: 'app-db-task-runner',
@@ -29,7 +30,8 @@ import {DbTaskResultDialog} from './dialogs/db-task-result-dialog/db-task-result
   templateUrl: './db-task-runner.component.html',
   styleUrl: './db-task-runner.component.css'
 })
-export class DbTaskRunnerComponent implements OnDestroy {
+export class DbTaskRunnerComponent implements OnInit, OnDestroy {
+  examplesList: DbTaskExampleListItem[] = [];
   example?: DbTaskExample;
   protected service = inject(DbTaskRunnerService);
   protected dialog = inject(MatDialog);
@@ -41,6 +43,12 @@ export class DbTaskRunnerComponent implements OnDestroy {
   protected resultDialog: MatDialogRef<DbTaskResultDialog> | null = null;
 
   protected readonly DbTaskItemState = DbTaskItemState;
+
+  ngOnInit() {
+    this.service.getExampleList().then(data => {
+      this.examplesList = data;
+    });
+  }
 
   async onExampleChanged($event: MatSelectChange<string>) {
     const exampleKey = $event.value;

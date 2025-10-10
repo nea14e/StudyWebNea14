@@ -8,6 +8,13 @@ namespace Backend.ApiControllers.DbTaskRunner;
 [Route("api/db-task-runner/")]
 public class DbTaskRunnerApiController(IDbTaskRunnerService service) : ControllerBase
 {
+    [HttpGet("example-list")]
+    public async Task<List<DbTaskExampleListItemDto>> GetExampleList()
+    {
+        var result = await service.GetExampleList();
+        return result;
+    }
+
     [HttpGet("load-example")]
     public async Task<IActionResult> LoadExample(Guid instanceId, string exampleKey)
     {

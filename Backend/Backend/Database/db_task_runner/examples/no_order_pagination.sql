@@ -1,11 +1,14 @@
-﻿insert into db_task_runner.db_task_examples(key, description_html)
-values ('no_order_pagination', '<p>Если вы забудете ORDER BY в выражении SELECT с пагинацией, ' ||
+﻿insert into db_task_runner.db_task_examples(key, title, "order", description_html)
+values ('no_order_pagination', 'Пагинация без ORDER BY', 1010,
+        '<p>Если вы забудете ORDER BY в выражении SELECT с пагинацией, ' ||
                                'то БД будет сортировать данные как ей угодно или не будет сортировать вообще. ' ||
                                'В последнем случае это означает, что <b>данные будут выдаваться в том порядке, ' ||
                                'как они физически лежат в БД.</b></p>')
 on conflict on constraint pk_db_task_examples
     do update
-    set description_html = excluded.description_html;
+    set title            = excluded.title,
+        "order"          = excluded."order",
+        description_html = excluded.description_html;
 
 with data(example_key, key, "order", description_html) as (values ('no_order_pagination', 'generate_data', 1,
                                                                    '<p>Этот эффект особенно заметен, когда данных в БД чуть больше, ' ||
