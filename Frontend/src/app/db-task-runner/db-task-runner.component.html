@@ -11,12 +11,14 @@
   </div>
   @if (!!example) {
     @if (!!example.descriptionHtml) {
-      <div class="row row-bottom-fix" [innerHTML]="example.descriptionHtml">
+      <div class="row row-bottom-fix">
+        <div class="col" [innerHTML]="example.descriptionHtml"></div>
       </div>
     }
     @for (snippet of example.snippets; let snippetIndex = $index; track snippet.key) {
       @if (!!snippet.descriptionHtml) {
-        <div class="row row-bottom-fix" [innerHTML]="snippet.descriptionHtml">
+        <div class="row row-bottom-fix">
+          <div class="col" [innerHTML]="snippet.descriptionHtml"></div>
         </div>
       }
       <div class="row row-bottom-fix">
