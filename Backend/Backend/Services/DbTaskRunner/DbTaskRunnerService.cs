@@ -208,18 +208,16 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 {
                     taskItem.State = DbTaskItemStateLe.Completed;
                     taskItem.ExceptionMessage = null;
-                    taskItem.Result = null;
-                    taskItem.EndTime = DateTime.Now;
-                    await _goToNextTaskItem(example, snippet, process, taskItem);
                 }
                 else
                 {
                     taskItem.State = DbTaskItemStateLe.Error;
                     taskItem.ExceptionMessage = task1.Exception?.InnerException?.Message ?? task1.Status.ToString();
-                    taskItem.Result = null;
-                    taskItem.EndTime = DateTime.Now;
-                    await _completeProcess(example, snippet, process);
                 }
+
+                taskItem.Result = null;
+                taskItem.EndTime = DateTime.Now;
+                await _goToNextTaskItem(example, snippet, process, taskItem);
             }, null);
     }
 
@@ -294,19 +292,17 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                     taskItem.State = DbTaskItemStateLe.Completed;
                     taskItem.ExceptionMessage = null;
                     taskItem.Result = await readResultsFunc(task1);
-                    taskItem.EndTime = DateTime.Now;
-                    await command.DisposeAsync();
-                    await _goToNextTaskItem(example, snippet, process, taskItem);
                 }
                 else
                 {
                     taskItem.State = DbTaskItemStateLe.Error;
                     taskItem.ExceptionMessage = task1.Exception?.InnerException?.Message ?? task1.Status.ToString();
                     taskItem.Result = null;
-                    taskItem.EndTime = DateTime.Now;
-                    await command.DisposeAsync();
-                    await _completeProcess(example, snippet, process);
                 }
+
+                taskItem.EndTime = DateTime.Now;
+                await command.DisposeAsync();
+                await _goToNextTaskItem(example, snippet, process, taskItem);
             }, null);
     }
 
