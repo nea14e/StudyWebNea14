@@ -141,8 +141,7 @@ export class DbTaskResultHelper {
     resultRow = renderer.createElement('div');
     renderer.addClass(resultRow, 'row');
     if (task.type === DbTaskItemType.Scalar) {
-      const scalarValue = task.result[0][0];
-      const scalarValueEl = renderer.createText(scalarValue?.toString() ?? 'null');
+      const scalarValueEl = this.getValueElement(task.result[0][0], renderer);
       renderer.appendChild(resultRow, scalarValueEl);
     } else if (task.type === DbTaskItemType.Table) {
       const table = renderer.createElement('table');
@@ -158,8 +157,7 @@ export class DbTaskResultHelper {
             for (let j = 0; j < task.result[i].length; j++) {
               const td = renderer.createElement('td');
               {
-                const value = task.result[i][j]?.toString() ?? 'null';
-                const valueEl = renderer.createText(value);
+                const valueEl = this.getValueElement(task.result[i][j], renderer);
                 renderer.appendChild(td, valueEl);
               }
               renderer.appendChild(tr, td);
@@ -178,5 +176,21 @@ export class DbTaskResultHelper {
     this.cacheHelper.setValue(task.id + '.result', JSON.stringify(task.result), null);
     this.cacheHelper.setValue(task.id + '.resultRow', resultRow, this.CACHE_REFRESH_INTERVAL);
     renderer.appendChild(containerEl, resultRow);
+  }
+
+  private getValueElement(value: any, renderer: Renderer2) {
+    if (value === null) {
+      return renderer.createText('null');
+    }
+    if (value === true || value === false) {
+      const checkboxEl = renderer.createElement('input');
+      renderer.setAttribute(checkboxEl, 'type', 'checkbox');
+      renderer.setAttribute(checkboxEl, 'disabled', 'true');
+      if (value === true) {
+        renderer.setAttribute(checkboxEl, 'checked', 'true');
+      }
+      return checkboxEl;
+    }
+    return renderer.createText(value.toString());
   }
 }
