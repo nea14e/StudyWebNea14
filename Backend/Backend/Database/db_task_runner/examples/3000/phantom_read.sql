@@ -1,5 +1,5 @@
 ﻿insert into db_task_runner.db_task_examples(key, title, "order", description_html)
-values ('phantom_read', 'Фантомное чтение', 2030, '<p>На уровне изоляции <b>Read Committed</b> (по умолчанию в Postgres) каждая операция видит все зафиксированные
+values ('phantom_read', 'Фантомное чтение', 3020, '<p>На уровне изоляции <b>Read Committed</b> (по умолчанию в Postgres) каждая операция видит все зафиксированные
         изменения других транзакций.
         Если между двумя операциями успела завершиться другая транзакция, то её изменения становятся видны второй
         операции.
@@ -87,28 +87,20 @@ with data(id, process_id, "order", "type", sql, frontend_html) as
                  ('a98e3922-48e4-46ca-9afc-026da3010102'::uuid,
                   'a98e3922-48e4-46ca-9afc-026da3010100'::uuid,
                   2,
-                  'NonQuery',
+                  'Table',
                   'insert into concurrency.big_data(id, flag)
 select ser.i         as id,
        ser.i % 2 = 0 as flag
-from generate_series(1, 10) ser(i);',
+from generate_series(1, 10) ser(i)
+returning id, flag;',
                   '<span class="sql-keyword">insert into </span>
     <span class="sql-identifier">concurrency</span><span class="sql-sign">.</span><span class="sql-identifier">big_data</span>
     <span class="sql-other">(</span><span class="sql-keyword">id</span><span class="sql-other">, </span><span class="sql-keyword">flag</span><span class="sql-other">)</span><br/>
     <span class="sql-keyword">select ser</span><span class="sql-sign">.</span><span class="sql-keyword">i as </span><span class="sql-alias">id</span><span class="sql-sign">,</span><br/>
     <span class="sql-keyword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ser</span><span class="sql-sign">.</span><span class="sql-keyword">i </span><span class="sql-other">% </span><span class="sql-number">2 </span><span class="sql-other">= </span><span class="sql-number">0 </span><span class="sql-keyword">as </span><span class="sql-alias">flag</span><br/>
     <span class="sql-keyword">from </span><span class="sql-function">generate_series</span><span class="sql-other">(</span><span class="sql-number">1</span><span class="sql-sign">, </span><span class="sql-number">10</span><span class="sql-other">) </span>
-    <span class="sql-keyword">ser</span><span class="sql-other">(</span><span class="sql-keyword">i</span><span class="sql-other">)</span><span class="sql-sign">;</span>'),
-                 ('a98e3922-48e4-46ca-9afc-026da3010103'::uuid,
-                  'a98e3922-48e4-46ca-9afc-026da3010100'::uuid,
-                  3,
-                  'Table',
-                  'select *
-from concurrency.big_data
-order by id;',
-                  '<span class="sql-keyword">select </span><span class="sql-other">*</span><br/>
-    <span class="sql-keyword">from </span><span class="sql-identifier">concurrency</span><span class="sql-sign">.</span><span class="sql-identifier">big_data</span><br/>
-    <span class="sql-keyword">order by id</span><span class="sql-sign">;</span>'),
+    <span class="sql-keyword">ser</span><span class="sql-other">(</span><span class="sql-keyword">i</span><span class="sql-other">)</span><br/>
+    <span class="sql-keyword">returning id</span><span class="sql-sign">, </span><span class="sql-keyword">flag</span><span class="sql-sign">;</span>'),
                  ('a98e3922-48e4-46ca-9afc-026da3020101'::uuid,
                   'a98e3922-48e4-46ca-9afc-026da3020100'::uuid,
                   1,
