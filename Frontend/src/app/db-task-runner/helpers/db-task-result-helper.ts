@@ -140,10 +140,7 @@ export class DbTaskResultHelper {
 
     resultRow = renderer.createElement('div');
     renderer.addClass(resultRow, 'row');
-    if (task.type === DbTaskItemType.Scalar) {
-      const scalarValueEl = this.getValueElement(task.result[0][0], renderer);
-      renderer.appendChild(resultRow, scalarValueEl);
-    } else if (task.type === DbTaskItemType.Table) {
+    if (task.type === DbTaskItemType.Table || task.type === DbTaskItemType.Scalar) {
       const table = renderer.createElement('table');
       renderer.addClass(table, 'table');
       renderer.addClass(table, 'table-bordered');
@@ -168,9 +165,6 @@ export class DbTaskResultHelper {
         renderer.appendChild(table, tbody);
       }
       renderer.appendChild(resultRow, table);
-    } else {
-      const stubEl = renderer.createText('Данный тип задач не возвращает значение.');
-      renderer.appendChild(resultRow, stubEl);
     }
 
     this.cacheHelper.setValue(task.id + '.result', JSON.stringify(task.result), null);
