@@ -57,31 +57,33 @@
                 @for (processIndex of getProcessIndices(snippetIndex); track processIndex) {
                   <td>
                     @let task = getTaskByIndices(snippetIndex, processIndex, taskIndex);
-                    <div (click)="onItemClick(task)" class="d-flex">
-                      @if (task.state === DbTaskItemState.NotStarted) {
-                        <img src="from-bootstrap/progress/empty-image.svg"
-                             alt="Ещё не начато"
-                             title="Ещё не начато"
-                             class="state-img"/>
-                      } @else if (task.state === DbTaskItemState.Running) {
-                        <img src="from-bootstrap/progress/stopwatch-fill.svg"
-                             alt="В процессе"
-                             title="В процессе"
-                             class="state-img"/>
-                      } @else if (task.state === DbTaskItemState.Completed) {
-                        <img src="from-bootstrap/progress/check-circle-fill.svg"
-                             alt="Успешно завершено"
-                             title="Успешно завершено"
-                             class="state-img"/>
-                      } @else if (task.state === DbTaskItemState.Error) {
-                        <img src="from-bootstrap/progress/x-octagon-fill.svg"
-                             alt="Ошибка"
-                             [title]="task.exceptionMessage"
-                             class="state-img"/>
-                      }
-                      <div [innerHtml]="task.frontendHtml" [db-task-tooltip]="task" placement="top"
-                           delay="200"></div>
-                    </div>
+                    @if (!!task) {
+                      <div (click)="onItemClick(task)" class="d-flex">
+                        @if (task.state === DbTaskItemState.NotStarted) {
+                          <img src="from-bootstrap/progress/empty-image.svg"
+                               alt="Ещё не начато"
+                               title="Ещё не начато"
+                               class="state-img"/>
+                        } @else if (task.state === DbTaskItemState.Running) {
+                          <img src="from-bootstrap/progress/stopwatch-fill.svg"
+                               alt="В процессе"
+                               title="В процессе"
+                               class="state-img"/>
+                        } @else if (task.state === DbTaskItemState.Completed) {
+                          <img src="from-bootstrap/progress/check-circle-fill.svg"
+                               alt="Успешно завершено"
+                               title="Успешно завершено"
+                               class="state-img"/>
+                        } @else if (task.state === DbTaskItemState.Error) {
+                          <img src="from-bootstrap/progress/x-octagon-fill.svg"
+                               alt="Ошибка"
+                               [title]="task.exceptionMessage"
+                               class="state-img"/>
+                        }
+                        <div [innerHtml]="task.frontendHtml || ''" [db-task-tooltip]="task" placement="top"
+                             delay="200"></div>
+                      </div>
+                    }
                   </td>
                 }
               </tr>
