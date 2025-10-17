@@ -1,5 +1,5 @@
 ﻿insert into db_task_runner.db_task_examples(key, title, "order", description_html)
-values ('concurrent_update', 'Параллельный UPDATE', 2010, '<p>Этот пример показывает, как при параллельном выполнении двух UPDATE
+values ('concurrent_update', 'Блокировка на уровне строк (параллельный UPDATE)', 2010, '<p>Этот пример показывает, как при параллельном выполнении двух UPDATE
 одной и той же строки <b>первый UPDATE блокирует строку,</b> так что второй UPDATE ждёт, пока первый закончится 
 (транзакция первого завершится).</p>')
 on conflict on constraint pk_db_task_examples
