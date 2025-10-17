@@ -152,7 +152,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         }
 
         if (taskItem.Type is DbTaskItemTypeLe.BeginTransaction or DbTaskItemTypeLe.CommitTransaction
-            or DbTaskItemTypeLe.RollbackTransaction)
+            or DbTaskItemTypeLe.RollbackTransaction or DbTaskItemTypeLe.Empty)
         {
             await _runTaskItem_Simple(example, snippet, process, taskItem);
         }
@@ -190,12 +190,14 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
             await process.DbTransaction.DisposeAsync();
             process.DbTransaction = null;
         };
+        var emptyAction = async () => { await Task.CompletedTask; };
 
         var chosenAction = taskItem.Type switch
         {
             DbTaskItemTypeLe.BeginTransaction => beginTransaction,
             DbTaskItemTypeLe.CommitTransaction => commitTransaction,
             DbTaskItemTypeLe.RollbackTransaction => rollbackTransaction,
+            DbTaskItemTypeLe.Empty => emptyAction,
             _ => throw new InvalidOperationException($"Тип задачи Id = {taskItem.Id}, Type = {taskItem.Type}" +
                                                      $" не предусмотрен!")
         };

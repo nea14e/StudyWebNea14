@@ -26,7 +26,7 @@ public class DbTaskItem
     public string? Sql { get; set; }
 
     [Column("frontend_html")]
-    public string FrontendHtml { get; set; }
+    public string? FrontendHtml { get; set; }
 
     [Column("is_deleted")]
     public bool IsDeleted { get; set; }

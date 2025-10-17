@@ -6,7 +6,6 @@ import {Guid} from 'guid-typescript';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {DbTaskExample} from './models/db-task-example';
 import {getIndicesList, maxInList} from '../common/list-helper';
-import {getPlainTextFromHtml} from '../common/text-helper';
 import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
 import {DbTaskItemState} from './models/db-task-item-state';
 import {Subscription, switchMap, takeWhile, timer} from 'rxjs';
@@ -15,6 +14,7 @@ import {DbTaskItem} from './models/db-task-item';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DbTaskResultDialog} from './dialogs/db-task-result-dialog/db-task-result-dialog';
 import {DbTaskExampleListItem} from './models/db-task-example-list-item';
+import {DbTaskItemType} from './models/db-task-item-type';
 
 @Component({
   selector: 'app-db-task-runner',
@@ -82,9 +82,25 @@ export class DbTaskRunnerComponent implements OnInit, OnDestroy {
   getCodeToCopy(snippetIndex: number, processIndex: number) {
     const snippet = this.example!.snippets[snippetIndex];
     const process = snippet.processes[processIndex];
-    return process.taskItems.map(item => item.frontendHtml)
-      .map(html => getPlainTextFromHtml(html))
+    return process.taskItems.map(item => this.getItemCode(item))
       .join('\n\n');
+  }
+
+  getItemCode(taskItem: DbTaskItem) {
+    switch (taskItem.type) {
+      case DbTaskItemType.BeginTransaction:
+        return 'begin transaction;';
+      case DbTaskItemType.CommitTransaction:
+        return 'commit transaction;';
+      case DbTaskItemType.RollbackTransaction:
+        return 'rollback transaction;';
+      case DbTaskItemType.Empty:
+        return '';
+      default:
+        if (!taskItem.sql)
+          throw new Error(`Элемент id=${taskItem.id}, type=${taskItem.type} имеет sql=null, хотя он должен быть.`);
+        return taskItem.sql;
+    }
   }
 
   async runSnippet(snippetIndex: number) {

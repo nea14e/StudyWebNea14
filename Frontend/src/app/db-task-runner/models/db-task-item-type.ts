@@ -4,5 +4,6 @@ export enum DbTaskItemType {
   Scalar = 'Scalar',
   NonQuery = 'NonQuery',
   CommitTransaction = 'CommitTransaction',
-  RollbackTransaction = 'RollbackTransaction'
+  RollbackTransaction = 'RollbackTransaction',
+  Empty = 'Empty'
 }

@@ -7,5 +7,6 @@ public enum DbTaskItemTypeLe
     Scalar,
     NonQuery,
     CommitTransaction,
-    RollbackTransaction
+    RollbackTransaction,
+    Empty
 }

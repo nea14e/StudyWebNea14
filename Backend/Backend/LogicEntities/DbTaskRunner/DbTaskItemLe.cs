@@ -12,7 +12,7 @@ public class DbTaskItemLe
 
     public string? Sql { get; set; }
 
-    public string FrontendHtml { get; set; }
+    public string? FrontendHtml { get; set; }
 
     public DbTaskItemStateLe State { get; set; } = DbTaskItemStateLe.NotStarted;
 

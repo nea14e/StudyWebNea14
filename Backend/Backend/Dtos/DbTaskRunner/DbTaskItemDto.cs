@@ -3,7 +3,7 @@
 public record DbTaskItemDto(
     Guid Id,
     string? Sql,
-    string FrontendHtml,
+    string? FrontendHtml,
     string Type,
     string State,
     string? ExceptionMessage,

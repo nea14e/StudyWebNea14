@@ -4,8 +4,8 @@ import {Guid} from 'guid-typescript';
 
 export interface DbTaskItem {
   id: Guid;
-  sql: string;
-  frontendHtml: string;
+  sql: string | null;
+  frontendHtml: string | null;
   type: DbTaskItemType;
   state: DbTaskItemState;
   exceptionMessage: string | null;
