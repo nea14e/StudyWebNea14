@@ -15,6 +15,7 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DbTaskResultDialog} from './dialogs/db-task-result-dialog/db-task-result-dialog';
 import {DbTaskExampleListItem} from './models/db-task-example-list-item';
 import {DbTaskItemType} from './models/db-task-item-type';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-db-task-runner',
@@ -34,6 +35,8 @@ export class DbTaskRunnerComponent implements OnInit, OnDestroy {
   examplesList: DbTaskExampleListItem[] = [];
   example?: DbTaskExample;
   protected service = inject(DbTaskRunnerService);
+  protected activatedRoute = inject(ActivatedRoute);
+  protected router = inject(Router);
   protected dialog = inject(MatDialog);
   protected instanceId = Guid.create();
   protected readonly reloadProgressDataInterval = 1000;
@@ -48,13 +51,20 @@ export class DbTaskRunnerComponent implements OnInit, OnDestroy {
     this.service.getExampleList().then(data => {
       this.examplesList = data;
     });
+    this.activatedRoute.queryParamMap.subscribe(async paramMap => {
+      if (paramMap.has('example')) {
+        const exampleKey = paramMap.get('example') as string;
+        await this.service.loadExample(this.instanceId, exampleKey);
+        this.example = await this.service.getProgress(this.instanceId);
+        console.log('Новый пример загружен:', this.example);
+      }
+    });
   }
 
   async onExampleChanged($event: MatSelectChange<string>) {
     const exampleKey = $event.value;
-    await this.service.loadExample(this.instanceId, exampleKey);
-    this.example = await this.service.getProgress(this.instanceId);
-    console.log('new example:', this.example);  // TODO
+    console.log('Выбран пример:', exampleKey);
+    await this.router.navigate(['db-task-runner'], {queryParams: {example: exampleKey}});
   }
 
   getProcessIndices(snippetIndex: number) {
