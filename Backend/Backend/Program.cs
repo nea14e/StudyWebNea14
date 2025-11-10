@@ -1,16 +1,13 @@
-using Backend.Dtos;
 using Backend.Entities;
 using Backend.IServices;
 using Backend.IServices.DbTaskRunner;
 using Backend.Other;
 using Backend.Services;
 using Backend.Services.DbTaskRunner;
+using Backend.SimpleExamples;
 
-var obj1 = new TestRecord(Guid.Empty, "First");
-Console.WriteLine(obj1);
-var obj2 = new TestRecord(Guid.Empty, "First");
-Console.WriteLine(obj2);
-Console.WriteLine(obj1 == obj2); // Объекты имеют разное значение private-поля
+// При сравнении record'ов учитываются все поля, в т.ч. private
+RecordExamples.ComparePrivateFields();
 
 var builder = WebApplication.CreateBuilder(args);
 
