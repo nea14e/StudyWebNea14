@@ -14,6 +14,8 @@ TupleExamples.CompareDifferentStructureTuples();
 TupleExamples.PassingByValue();
 
 // Linq
+LinqExamples.MethodsJoinExample();
+LinqExamples.LeftJoinExample();
 LinqExamples.ZipExample();
 
 var builder = WebApplication.CreateBuilder(args);
