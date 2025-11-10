@@ -30,7 +30,7 @@ public static class LinqExamples
             new { Id = 40, Data = "fourth" }
         };
         var result = from l1 in outerList
-            join l2 in innerList on 10 * l1.Id equals l2.Id into joined
+            join l2 in innerList on 10 * l1.Id equals l2.Id into joined // В joined кладутся данные l2, а не всё вместе
             from j in joined.DefaultIfEmpty()
             select new { l1.Id, l1.Code, j?.Data };
         foreach (var item in result)
