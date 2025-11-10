@@ -9,6 +9,10 @@ using Backend.SimpleExamples;
 // При сравнении record'ов учитываются все поля, в т.ч. private
 RecordExamples.ComparePrivateFields();
 
+// При сравнении кортежей учитывается порядок элементов и не учитываются названия
+TupleExamples.CompareDifferentStructureTuples();
+TupleExamples.PassingByValue();
+
 var builder = WebApplication.CreateBuilder(args);
 
 const string frontendCors = "frontendCors";
