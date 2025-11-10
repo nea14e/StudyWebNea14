@@ -13,6 +13,9 @@ RecordExamples.ComparePrivateFields();
 TupleExamples.CompareDifferentStructureTuples();
 TupleExamples.PassingByValue();
 
+// Linq
+LinqExamples.ZipExample();
+
 var builder = WebApplication.CreateBuilder(args);
 
 const string frontendCors = "frontendCors";
