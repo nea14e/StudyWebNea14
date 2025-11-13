@@ -18,6 +18,11 @@ LinqExamples.MethodsJoinExample();
 LinqExamples.LeftJoinExample();
 LinqExamples.ZipExample();
 
+// Delegates
+DelegateExamples.DelegateExample();
+DelegateExamples.FuncAsDelegateExample();
+DelegateExamples.EventExample();
+
 var builder = WebApplication.CreateBuilder(args);
 
 const string frontendCors = "frontendCors";
