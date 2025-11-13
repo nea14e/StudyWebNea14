@@ -1,9 +1,11 @@
 using Backend.Entities;
 using Backend.IServices;
 using Backend.IServices.DbTaskRunner;
+using Backend.IServices.Iterator;
 using Backend.Other;
 using Backend.Services;
 using Backend.Services.DbTaskRunner;
+using Backend.Services.Iterator;
 using Backend.SimpleExamples;
 
 // При сравнении record'ов учитываются все поля, в т.ч. private
@@ -46,7 +48,8 @@ builder.Services
     .AddSingleton<ICrudExampleService, CrudExampleService>()
     .AddSingleton<IJsonConstructorService, JsonConstructorService>()
     .AddTransient<BackendDbContext>()
-    .AddSingleton<IDbTaskRunnerService, DbTaskRunnerService>();
+    .AddSingleton<IDbTaskRunnerService, DbTaskRunnerService>()
+    .AddSingleton<IIteratorService, IteratorService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

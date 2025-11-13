@@ -1,0 +1,72 @@
+@Backend_HostAddress = http://localhost:5163
+
+GET {{Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/create?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9&from=3&to=5
+Accept: application/json
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == 3, "Iterator is not on '3', actual: '" + response.body + "'");
+    });
+%}
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+Accept: application/json
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == 4, "Iterator is not on '4', actual: '" + response.body + "'");
+    });
+%}
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+Accept: application/json
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == 5, "Iterator is not on '5', actual: '" + response.body + "'");
+    });
+%}
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+Accept: application/json
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == 5, "Iterator is not on '5', actual: '" + response.body + "'");
+    });
+%}
