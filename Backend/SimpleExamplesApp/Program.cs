@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using SimpleExamplesApp.MyExamples.RecursiveCalculator;
 using SimpleExamplesApp.SimpleExamples;
 
 Console.WriteLine("Hello, World!");
@@ -29,3 +30,6 @@ CultureExamples.Run();
 
 // DateTimeExamples
 DateTimeExamples.Run();
+
+// RecursiveCalculator
+RecursiveCalculator.Run();
