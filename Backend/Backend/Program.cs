@@ -28,6 +28,12 @@ DelegateExamples.EventExample();
 // Regex
 RegexExample.RunRegex("a {123bc234de345f}bcd{1bc2de3fgh}");
 
+// CultureExamples
+CultureExamples.Run();
+
+// DateTimeExamples
+DateTimeExamples.Run();
+
 var builder = WebApplication.CreateBuilder(args);
 
 const string frontendCors = "frontendCors";
