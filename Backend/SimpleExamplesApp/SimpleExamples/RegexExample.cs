@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Backend.SimpleExamples;
+namespace SimpleExamplesApp.SimpleExamples;
 
 public static class RegexExample
 {

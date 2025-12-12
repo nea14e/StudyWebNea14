@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Backend.SimpleExamples;
+namespace SimpleExamplesApp.SimpleExamples;
 
 public static class CultureExamples
 {

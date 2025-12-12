@@ -1,4 +1,4 @@
-﻿namespace Backend.SimpleExamples;
+﻿namespace SimpleExamplesApp.SimpleExamples;
 
 public static class LinqExamples
 {
