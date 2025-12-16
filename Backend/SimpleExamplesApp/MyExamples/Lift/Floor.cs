@@ -6,9 +6,9 @@ public class Floor
 {
     public readonly int FloorNumber;
 
-    private readonly LinkedList<Person> _peopleQueue;
+    private readonly List<Person> _peopleQueue;
 
-    public Floor(int floorNumber, LinkedList<Person> peopleQueue)
+    public Floor(int floorNumber, List<Person> peopleQueue)
     {
         FloorNumber = floorNumber;
         _peopleQueue = peopleQueue;
@@ -21,21 +21,18 @@ public class Floor
                 : p.TargetFloor < FloorNumber
         );
 
-    public LinkedList<Person> GetPeople(Direction direction, int maxCount)
+    public List<Person> GetPeople(Direction direction, int maxCount)
     {
-        var resultPeople = new LinkedList<Person>();
-        foreach (var person in _peopleQueue)
+        var resultPeople = _peopleQueue
+            .Where(p => direction == Direction.Up
+                ? p.TargetFloor > FloorNumber
+                : p.TargetFloor < FloorNumber
+            )
+            .Take(maxCount)
+            .ToList();
+        foreach (var person in resultPeople)
         {
-            if ((direction == Direction.Up && person.TargetFloor > FloorNumber) ||
-                (direction == Direction.Down && person.TargetFloor < FloorNumber))
-            {
-                resultPeople.AddLast(person);
-                _peopleQueue.Remove(person);
-                if (resultPeople.Count == maxCount)
-                {
-                    return resultPeople;
-                }
-            }
+            _peopleQueue.Remove(person);
         }
 
         return resultPeople;

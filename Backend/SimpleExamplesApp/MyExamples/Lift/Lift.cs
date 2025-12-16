@@ -2,14 +2,34 @@
 
 namespace SimpleExamplesApp.MyExamples.Lift;
 
-public class Lift(List<Floor> floors, int initialFloor)
+public class Lift(int maxCapacity, List<Floor> floors, int initialFloor)
 {
     private int _currentFloorNumber = initialFloor;
     private Direction _currentDirection = Direction.Up;
     private List<Person> _innerPeople = [];
+    private bool _isStoppedOnCurrentFloor = false;
 
     public void ProceedTick()
     {
+        _isStoppedOnCurrentFloor = false;
+        var currentFloor = floors.First(f => f.FloorNumber == _currentFloorNumber);
+
+        var personsToOut = _innerPeople.Where(p => p.TargetFloor == _currentFloorNumber).ToList();
+        if (personsToOut.Any())
+        {
+            _isStoppedOnCurrentFloor = true;
+            foreach (var person in personsToOut)
+            {
+                _innerPeople.Remove(person);
+            }
+        }
+
+        var personsToEnter = currentFloor.GetPeople(_currentDirection, maxCapacity - _innerPeople.Count);
+        if (personsToEnter.Any())
+        {
+            _isStoppedOnCurrentFloor = true;
+            _innerPeople.AddRange(personsToEnter);
+        }
     }
 
     public string PrintState()
@@ -18,16 +38,18 @@ public class Lift(List<Floor> floors, int initialFloor)
         sb.AppendLine("========================================================");
         foreach (var floor in floors.OrderByDescending(f => f.FloorNumber))
         {
-            sb.Append("|")
+            sb.Append(floor.FloorNumber == _currentFloorNumber && _isStoppedOnCurrentFloor ? "_" : "|")
                 .Append(floor.FloorNumber == _currentFloorNumber ? "L" : " ")
                 .Append(floor.FloorNumber == _currentFloorNumber
                     ? _currentDirection == Direction.Up ? "^" : "v"
                     : " ")
-                .Append("|");
+                .Append(floor.FloorNumber == _currentFloorNumber && _isStoppedOnCurrentFloor ? "_" : "|");
             sb.Append(floor.PrintState());
             sb.AppendLine();
         }
 
+        sb.AppendLine("--------------------------------------------------------");
+        sb.AppendLine("Lift: " + string.Join(" ", _innerPeople.Select(p => p.Print())));
         sb.AppendLine("========================================================");
         sb.AppendLine();
         return sb.ToString();
