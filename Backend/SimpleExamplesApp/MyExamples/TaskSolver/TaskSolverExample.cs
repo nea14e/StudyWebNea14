@@ -1,14 +1,17 @@
-﻿namespace SimpleExamplesApp.MyExamples.TaskSolver;
+﻿using SimpleExamplesApp.MyExamples.TaskSolver.Tasks;
+
+namespace SimpleExamplesApp.MyExamples.TaskSolver;
 
 public static class TaskSolverExample
 {
     public static void Run()
     {
-        var tasks = new List<Task>
+        var tasks = new List<BaseTask>
         {
-            new(3, 1),
-            new(4, 1),
-            new(100, 1)
+            new PlusTask(3, 1),
+            new PlusTask(100, 1),
+            new DivideTask(10, 2),
+            new SquareRootTask(100)
         };
         var conveyor = new Conveyor();
         var results = conveyor.ProcessList(tasks);
