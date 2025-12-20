@@ -4,9 +4,18 @@ public static class TaskSolverExample
 {
     public static void Run()
     {
-        var taskSolver = new TaskSolver();
-        var task = new Task(3, 1);
-        var result = taskSolver.Solve(task);
-        Console.WriteLine($"TaskSolverExample: result = {result}");
+        var tasks = new List<Task>
+        {
+            new(3, 1),
+            new(4, 1),
+            new(100, 1)
+        };
+        var conveyor = new Conveyor();
+        var results = conveyor.ProcessList(tasks);
+
+        foreach (var result in results)
+        {
+            Console.WriteLine($"TaskSolverExample: result = {result}");
+        }
     }
 }
