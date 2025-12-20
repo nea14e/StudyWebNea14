@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using SimpleExamplesApp.MyExamples.Lift;
+using SimpleExamplesApp.MyExamples.TaskSolver;
 using SimpleExamplesApp.SimpleExamples;
 
 Console.WriteLine("Hello, World!");
@@ -36,3 +37,6 @@ DateTimeExamples.Run();
 
 // Lift
 LiftExample.Run();
+
+// TaskSolverExample
+TaskSolverExample.Run();
