@@ -34,13 +34,19 @@ public class Lift(int maxCapacity, List<Floor> floors, int initialFloor)
             {
                 _currentDirection = Direction.Down;
             }
-            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber > _currentFloorNumber))
+            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber > _currentFloorNumber) ||
+                     floors.Any(f => f.HasPeople(Direction.Up) && f.FloorNumber == _currentFloorNumber))
             {
                 _currentDirection = Direction.Up;
             }
-            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber < _currentFloorNumber))
+            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber < _currentFloorNumber) ||
+                     floors.Any(f => f.HasPeople(Direction.Down) && f.FloorNumber == _currentFloorNumber))
             {
                 _currentDirection = Direction.Down;
+            }
+            else if (_innerPeople.Any(p => p.TargetFloor == _currentFloorNumber))
+            {
+                // do nothing
             }
             else
             {
@@ -57,13 +63,19 @@ public class Lift(int maxCapacity, List<Floor> floors, int initialFloor)
             {
                 _currentDirection = Direction.Up;
             }
-            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber < _currentFloorNumber))
+            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber < _currentFloorNumber) ||
+                     floors.Any(f => f.HasPeople(Direction.Down) && f.FloorNumber == _currentFloorNumber))
             {
                 _currentDirection = Direction.Down;
             }
-            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber > _currentFloorNumber))
+            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber > _currentFloorNumber) ||
+                     floors.Any(f => f.HasPeople(Direction.Up) && f.FloorNumber == _currentFloorNumber))
             {
                 _currentDirection = Direction.Up;
+            }
+            else if (_innerPeople.Any(p => p.TargetFloor == _currentFloorNumber))
+            {
+                // do nothing
             }
             else
             {
