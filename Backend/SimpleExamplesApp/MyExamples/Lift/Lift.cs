@@ -9,7 +9,72 @@ public class Lift(int maxCapacity, List<Floor> floors, int initialFloor)
     private List<Person> _innerPeople = [];
     private bool _isStoppedOnCurrentFloor = false;
 
-    public void ProceedTick()
+    public bool ProceedTick(bool isFirstTick)
+    {
+        if (!isFirstTick)
+            _move();
+        _proceedStop();
+        return _hasPendingWork();
+    }
+
+    private void _move()
+    {
+        if (_currentDirection == Direction.Up)
+        {
+            if (_innerPeople.Any(p => p.TargetFloor > _currentFloorNumber))
+            {
+                _currentDirection = Direction.Up;
+            }
+            else if (_innerPeople.Any(p => p.TargetFloor < _currentFloorNumber))
+            {
+                _currentDirection = Direction.Down;
+            }
+            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber > _currentFloorNumber))
+            {
+                _currentDirection = Direction.Up;
+            }
+            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber < _currentFloorNumber))
+            {
+                _currentDirection = Direction.Down;
+            }
+            else
+            {
+                throw new InvalidOperationException("Do NOT call ProceedTick() if previous one returned false!");
+            }
+        }
+        else
+        {
+            if (_innerPeople.Any(p => p.TargetFloor < _currentFloorNumber))
+            {
+                _currentDirection = Direction.Down;
+            }
+            else if (_innerPeople.Any(p => p.TargetFloor > _currentFloorNumber))
+            {
+                _currentDirection = Direction.Up;
+            }
+            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber < _currentFloorNumber))
+            {
+                _currentDirection = Direction.Down;
+            }
+            else if (floors.Any(f => f.HasPeople(null) && f.FloorNumber > _currentFloorNumber))
+            {
+                _currentDirection = Direction.Up;
+            }
+            else
+            {
+                throw new InvalidOperationException("Do NOT call ProceedTick() if previous one returned false!");
+            }
+        }
+
+        _currentFloorNumber += (int)_currentDirection;
+
+        if (floors.Any(f => f.FloorNumber == _currentFloorNumber) == false)
+        {
+            throw new InvalidDataException($"Floor does not exist: {_currentFloorNumber}");
+        }
+    }
+
+    private void _proceedStop()
     {
         _isStoppedOnCurrentFloor = false;
         var currentFloor = floors.First(f => f.FloorNumber == _currentFloorNumber);
@@ -30,6 +95,11 @@ public class Lift(int maxCapacity, List<Floor> floors, int initialFloor)
             _isStoppedOnCurrentFloor = true;
             _innerPeople.AddRange(personsToEnter);
         }
+    }
+
+    private bool _hasPendingWork()
+    {
+        return _innerPeople.Any() || floors.Any(f => f.HasPeople(null));
     }
 
     public string PrintState()

@@ -14,12 +14,14 @@ public class Floor
         _peopleQueue = peopleQueue;
     }
 
-    public bool HasPeople(Direction direction) =>
-        _peopleQueue.Any(p =>
-            direction == Direction.Up
-                ? p.TargetFloor > FloorNumber
-                : p.TargetFloor < FloorNumber
-        );
+    public bool HasPeople(Direction? direction)
+    {
+        if (direction == Direction.Up)
+            return _peopleQueue.Any(p => p.TargetFloor > FloorNumber);
+        if (direction == Direction.Down)
+            return _peopleQueue.Any(p => p.TargetFloor < FloorNumber);
+        return _peopleQueue.Any();
+    }
 
     public List<Person> GetPeople(Direction direction, int maxCount)
     {
