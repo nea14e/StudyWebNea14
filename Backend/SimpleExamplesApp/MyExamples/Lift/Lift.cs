@@ -12,12 +12,17 @@ public class Lift(int maxCapacity, List<Floor> floors, int initialFloor)
     public bool ProceedTick(bool isFirstTick)
     {
         if (!isFirstTick)
+        {
+            _changeDirection();
             _move();
+        }
+
+        _changeDirection(); // При остановке на этаже лифт может сменить направление
         _proceedStop();
         return _hasPendingWork();
     }
 
-    private void _move()
+    private void _changeDirection()
     {
         if (_currentDirection == Direction.Up)
         {
@@ -65,7 +70,10 @@ public class Lift(int maxCapacity, List<Floor> floors, int initialFloor)
                 throw new InvalidOperationException("Do NOT call ProceedTick() if previous one returned false!");
             }
         }
+    }
 
+    private void _move()
+    {
         _currentFloorNumber += (int)_currentDirection;
 
         if (floors.Any(f => f.FloorNumber == _currentFloorNumber) == false)
