@@ -15,10 +15,6 @@ public static class TaskSolverExample
         };
         var conveyor = new Conveyor();
         var results = conveyor.ProcessList(tasks);
-
-        foreach (var result in results)
-        {
-            Console.WriteLine($"TaskSolverExample: result = {result}");
-        }
+        ResultPrinter.PrintResults(results);
     }
 }
