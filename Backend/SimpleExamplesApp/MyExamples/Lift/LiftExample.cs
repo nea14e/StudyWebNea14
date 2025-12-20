@@ -9,11 +9,11 @@ public static class LiftExample
             [
                 new Floor(
                     3,
-                    [new Person(1), new Person(1), new Person(1)]
+                    [new Person(1), new Person(1), new Person(1), new Person(1)]
                 ),
                 new Floor(
                     2,
-                    [new Person(1), new Person(1), new Person(3)]
+                    [new Person(1), new Person(1), new Person(1), new Person(3)]
                 ),
                 new Floor(
                     1,
