@@ -103,7 +103,7 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
     return form;
   }
 
-  private getListForm(data: TableOfContentsItem[]): FormArray {
+  private getListForm(data: TableOfContentsItem[], isRoot: boolean): FormArray {
     return this.formBuilder.array(
       data.map(item => this.formBuilder.group({
           id: [item.id],
@@ -111,24 +111,28 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
         queryParams: [item.queryParams],
           title: [item.title],
           description: [item.description],
-        childes: this.getListForm(!!item.childes ? item.childes : []),
+        childes: this.getListForm(!!item.childes ? item.childes : [], false),
           isExpanded: [item.isExpanded]
         })
       )
-        .concat(this.dbTaskRunnerExamples.map(item => this.formBuilder.group({
-          id: [item.key],
-          path: ['db-task-runner' as (string | undefined)],
-          queryParams: [{example: item.key} as (object | undefined)],
-          title: [!!item.title ? item.title : ''],
-          description: [''],  // TODO description
-          childes: this.formBuilder.array([]),
-          isExpanded: [undefined as (boolean | undefined)]
-        })))
+        .concat(
+          isRoot ?
+            this.dbTaskRunnerExamples.map(item => this.formBuilder.group({
+              id: [item.key],
+              path: ['db-task-runner' as (string | undefined)],
+              queryParams: [{example: item.key} as (object | undefined)],
+              title: [!!item.title ? item.title : ''],
+              description: [''],  // TODO description
+              childes: this.formBuilder.array([]),
+              isExpanded: [undefined as (boolean | undefined)]
+            })) :
+            []
+        )
     );
   }
 
   private updateForm(data: TableOfContentsItem[]) {
-    const listForm = this.getListForm(data);
+    const listForm = this.getListForm(data, true);
     this.form.setControl('listItems', listForm);
     console.log('updateForm: data:', data, 'form:', this.form);
 
