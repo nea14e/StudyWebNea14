@@ -129,6 +129,7 @@ export const tableOfContents: TableOfContentsItem[] = [
 export interface TableOfContentsItem {
   id: string;
   path?: string;
+  queryParams?: object;
   title: string;
   description: string;
   childes?: TableOfContentsItem[];

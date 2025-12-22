@@ -6,6 +6,8 @@ import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/f
 import {debounceTime, distinctUntilChanged, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {TableOfContentsListComponent} from './table-of-contents-list/table-of-contents-list.component';
+import {DbTaskRunnerService} from '../db-task-runner/services/db-task-runner.service';
+import {DbTaskExampleListItem} from '../db-task-runner/models/db-task-example-list-item';
 
 @Component({
   selector: 'app-table-of-contents',
@@ -20,6 +22,8 @@ import {TableOfContentsListComponent} from './table-of-contents-list/table-of-co
 export class TableOfContentsComponent implements OnInit, OnDestroy {
   form: FormGroup;
   selectedItem?: TableOfContentsItem;
+  private dbTaskRunnerExamples: DbTaskExampleListItem[] = [];
+  private dbTaskRunnerService = inject(DbTaskRunnerService);
   private service = inject(TableOfContentsService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
@@ -47,6 +51,11 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.push(isShowFullDescriptionSubscription);
 
+    this.dbTaskRunnerService.getExampleList().then(data => {
+      this.dbTaskRunnerExamples = data;
+      this.load();
+    });
+
     this.load();
   }
 
@@ -54,12 +63,12 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
     const query = this.form.get('query')!.value;
     console.log('load: query:', query);
     if (!query) {
-      this.service.getEntireList().then(data => {
+      this.service.getEntireList(this.dbTaskRunnerExamples).then(data => {
         console.log('load: entire list:', data);
         this.updateForm(data);
       });
     } else {
-      this.service.applyFilter(query).then(data => {
+      this.service.applyFilter(query, this.dbTaskRunnerExamples).then(data => {
         console.log('load: apply filter:', data);
         this.updateForm(data);
       });
@@ -71,10 +80,17 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
   }
 
   goToPage(item: TableOfContentsItem) {
+    console.log('Переход на страницу1: path:', item.path, 'queryParams:', item.queryParams);
     const path = item.path;
     if (!path)
       return;
-    this.router.navigate([path]).then();
+    if (!!item.queryParams) {
+      console.log('Переход на страницу: path:', path, 'queryParams:', item.queryParams);
+      this.router.navigate([path], {queryParams: item.queryParams}).then();
+    } else {
+      console.log('Переход на страницу: path:', path);
+      this.router.navigate([path]).then();
+    }
   }
 
   private buildEmptyForm() {
@@ -92,12 +108,23 @@ export class TableOfContentsComponent implements OnInit, OnDestroy {
       data.map(item => this.formBuilder.group({
           id: [item.id],
           path: [item.path],
+        queryParams: [item.queryParams],
           title: [item.title],
           description: [item.description],
         childes: this.getListForm(!!item.childes ? item.childes : []),
           isExpanded: [item.isExpanded]
         })
-      ));
+      )
+        .concat(this.dbTaskRunnerExamples.map(item => this.formBuilder.group({
+          id: [item.key],
+          path: ['db-task-runner' as (string | undefined)],
+          queryParams: [{example: item.key} as (object | undefined)],
+          title: [!!item.title ? item.title : ''],
+          description: [''],  // TODO description
+          childes: this.formBuilder.array([]),
+          isExpanded: [undefined as (boolean | undefined)]
+        })))
+    );
   }
 
   private updateForm(data: TableOfContentsItem[]) {
