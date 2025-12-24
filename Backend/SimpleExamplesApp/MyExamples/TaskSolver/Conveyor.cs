@@ -1,5 +1,4 @@
-﻿using SimpleExamplesApp.MyExamples.TaskSolver.Solvers;
-using SimpleExamplesApp.MyExamples.TaskSolver.Tasks;
+﻿using SimpleExamplesApp.MyExamples.TaskSolver.Tasks;
 
 namespace SimpleExamplesApp.MyExamples.TaskSolver;
 
@@ -7,18 +6,34 @@ public class Conveyor
 {
     public List<BaseTask> ProcessList(List<BaseTask> tasks)
     {
-        var plusSolver = new PlusSolver();
-        var divideSolver = new DivideSolver();
-        var squareRootSolver = new SquareRootSolver();
+        var solverFactory = new SolverFactory();
         foreach (var task in tasks)
         {
-            var result = task switch
+            decimal result;
+            switch (task)
             {
-                PlusTask plusTask => plusSolver.Solve(plusTask),
-                DivideTask divideTask => divideSolver.Solve(divideTask),
-                SquareRootTask squareRootTask => squareRootSolver.Solve(squareRootTask),
-                _ => throw new InvalidOperationException($"{task.GetType()} is not supported!")
-            };
+                case PlusTask plusTask:
+                {
+                    var solver = solverFactory.GetSolver<PlusTask>();
+                    result = solver.Solve(plusTask);
+                    break;
+                }
+                case DivideTask divideTask:
+                {
+                    var solver = solverFactory.GetSolver<DivideTask>();
+                    result = solver.Solve(divideTask);
+                    break;
+                }
+                case SquareRootTask squareRootTask:
+                {
+                    var solver = solverFactory.GetSolver<SquareRootTask>();
+                    result = solver.Solve(squareRootTask);
+                    break;
+                }
+                default:
+                    throw new NotImplementedException($"Solver for task {task.GetType().Name} is not implemented");
+            }
+
             task.Result = result;
         }
 
