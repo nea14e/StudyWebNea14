@@ -25,6 +25,6 @@ public static class PatternMatchingExamples
 
     private class MyClass
     {
-        public required int MyField;
+        public required int MyField { get; init; }
     }
 }
