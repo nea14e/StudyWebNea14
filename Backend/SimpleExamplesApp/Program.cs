@@ -35,6 +35,9 @@ DateTimeExamples.Run();
 // RecursiveCalculator
 // RecursiveCalculator.Run();
 
+// PatternMatchingExamples
+PatternMatchingExamples.Run();
+
 // Lift
 LiftExample.Run();
 
