@@ -1,37 +1,46 @@
 @Backend_HostAddress = http://localhost:5163
+@Session1 = 808189eb-06c3-42ba-822a-8ac069d340e9
+@Session2 = 7a73b7ab-21d8-46fa-8f90-399b51e5a94c
 
 GET {{Backend_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
 
-GET {{Backend_HostAddress}}/api/iterator/create?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9&from=3&to=5
+GET {{Backend_HostAddress}}/api/iterator/create?sessionId={{Session1}}&from=3&to=5
 Accept: application/json
 
 ###
 
-GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId={{Session1}}
 Accept: application/json
 
 > {%
-    client.test("Request executed successfully", function () {
+    client.test("Init position of iterator", function () {
         client.assert(response.status === 200, "Response status is not 200");
-        client.assert(response.body == 3, "Iterator is not on '3', actual: '" + response.body + "'");
+        client.assert(response.body == 3, "Iterator is not on init position '3', actual: '" + response.body + "'");
     });
 %}
 
 ###
 
-GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
-Accept: application/json
-
-###
-
-GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId={{Session1}}
 Accept: application/json
 
 > {%
-    client.test("Request executed successfully", function () {
+    client.test("Move next iterator #1", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == true, "Can't move the iterator");
+    });
+%}
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId={{Session1}}
+Accept: application/json
+
+> {%
+    client.test("Iterator #1 must be on 4", function () {
         client.assert(response.status === 200, "Response status is not 200");
         client.assert(response.body == 4, "Iterator is not on '4', actual: '" + response.body + "'");
     });
@@ -39,16 +48,45 @@ Accept: application/json
 
 ###
 
-GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+GET {{Backend_HostAddress}}/api/iterator/create?sessionId={{Session2}}&from=3&to=6
 Accept: application/json
 
 ###
 
-GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId={{Session2}}
 Accept: application/json
 
 > {%
-    client.test("Request executed successfully", function () {
+    client.test("Move next iterator #2", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == true, "Can't move the iterator #2");
+    });
+%}
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId={{Session2}}
+Accept: application/json
+
+> {%
+    client.test("Iterator #2 must be on 4", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == 4, "Iterator #2 is not on '4', actual: '" + response.body + "'");
+    });
+%}
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId={{Session1}}
+Accept: application/json
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId={{Session1}}
+Accept: application/json
+
+> {%
+    client.test("Iterator #1 must be on 5", function () {
         client.assert(response.status === 200, "Response status is not 200");
         client.assert(response.body == 5, "Iterator is not on '5', actual: '" + response.body + "'");
     });
@@ -56,17 +94,38 @@ Accept: application/json
 
 ###
 
-GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
-Accept: application/json
-
-###
-
-GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId=808189eb-06c3-42ba-822a-8ac069d340e9
+GET {{Backend_HostAddress}}/api/iterator/move-next?sessionId={{Session1}}
 Accept: application/json
 
 > {%
-    client.test("Request executed successfully", function () {
+    client.test("Move next beyond the upper bound", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == false, "Iterator can't be moved beyond the upper bound");
+    });
+%}
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId={{Session1}}
+Accept: application/json
+
+> {%
+    client.test("Iterator #1 must be on 5", function () {
         client.assert(response.status === 200, "Response status is not 200");
         client.assert(response.body == 5, "Iterator is not on '5', actual: '" + response.body + "'");
     });
 %}
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId={{Session2}}
+Accept: application/json
+
+> {%
+    client.test("Iterator #2 must be on 4", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == 4, "Iterator #2 is not on '4', actual: '" + response.body + "'");
+    });
+%}
+
+###
