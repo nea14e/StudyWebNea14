@@ -129,3 +129,20 @@ Accept: application/json
 %}
 
 ###
+
+GET {{Backend_HostAddress}}/api/iterator/reset?sessionId={{Session1}}
+Accept: application/json
+
+###
+
+GET {{Backend_HostAddress}}/api/iterator/get-current?sessionId={{Session1}}
+Accept: application/json
+
+> {%
+    client.test("Iterator #1 after reset", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body == 3, "Iterator is not on '3', actual: '" + response.body + "'");
+    });
+%}
+
+###
