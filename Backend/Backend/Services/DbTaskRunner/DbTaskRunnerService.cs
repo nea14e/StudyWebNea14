@@ -35,34 +35,23 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
 
         var example = await dbContext.DbTaskExamples
             .Where(ex => ex.Key == exampleKey)
-            .Include(ex => ex.Snippets)
-            .ThenInclude(sn => sn.Processes)
-            .ThenInclude(proc => proc.TaskItems)
+            .Include(ex => ex.Snippets
+                .Where(sn => sn.IsDeleted == false)
+                .OrderBy(sn => sn.Order)
+            )
+            .ThenInclude(sn => sn.Processes
+                .Where(proc => proc.IsDeleted == false)
+                .OrderBy(proc => proc.ProcessNumber)
+            )
+            .ThenInclude(proc => proc.TaskItems
+                .Where(item => item.IsDeleted == false)
+                .OrderBy(item => item.Order)
+            )
             .FirstOrDefaultAsync();
 
         if (example == null)
         {
             throw new ArgumentOutOfRangeException(nameof(exampleKey), exampleKey, "В БД нет примера с данным ключом.");
-        }
-
-        // TODO переделать на уровне настроек БД
-        example.Snippets = example.Snippets
-            .Where(sn => sn.IsDeleted == false)
-            .OrderBy(sn => sn.Order)
-            .ToList();
-        foreach (var snippet in example.Snippets)
-        {
-            snippet.Processes = snippet.Processes
-                .Where(proc => proc.IsDeleted == false)
-                .OrderBy(proc => proc.ProcessNumber)
-                .ToList();
-            foreach (var process in snippet.Processes)
-            {
-                process.TaskItems = process.TaskItems
-                    .Where(item => item.IsDeleted == false)
-                    .OrderBy(item => item.Order)
-                    .ToList();
-            }
         }
 
         var exampleLe = example.EntityToLe();
