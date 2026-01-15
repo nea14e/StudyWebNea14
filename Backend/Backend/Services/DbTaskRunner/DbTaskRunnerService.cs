@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using Backend.Dtos.DbTaskRunner;
 using Backend.Entities;
 using Backend.IServices.DbTaskRunner;
@@ -90,7 +91,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         example.RunningSnippet = snippet;
         foreach (var process in snippet.Processes)
         {
-            // Очищаем старые, т.к. новые могут и не запуститься
+            // Очищаем старые, так как новые могут и не запуститься
             if (process.DbTransaction != null)
             {
                 await process.DbTransaction.DisposeAsync();
@@ -162,6 +163,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
         }
     }
 
+    [SuppressMessage("ReSharper", "ConvertToLocalFunction")]
     private async Task _runTaskItem_Simple(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
         DbTaskItemLe taskItem)
     {
@@ -221,6 +223,8 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 taskItem.EndTime = DateTime.Now;
                 await _goToNextTaskItem(example, snippet, process, taskItem);
             }, null);
+
+        await Task.CompletedTask;
     }
 
     private async Task _runTaskItem_Regular(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
@@ -245,7 +249,7 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 var task2 = (Task<DbDataReader>)task1;
                 var reader = task2.Result;
                 var table = new List<List<object?>>();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     var row = new List<object?>();
                     for (var i = 0; i < reader.FieldCount; i++)
@@ -272,9 +276,9 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
             {
                 var task2 = (Task<object?>)task1;
                 var value = task2.Result;
-                return [[value]];
+                return await Task.FromResult<List<List<object?>>?>([[value]]);
             },
-            DbTaskItemTypeLe.NonQuery => async _ => null,
+            DbTaskItemTypeLe.NonQuery => async _ => await Task.FromResult<List<List<object?>>?>(null),
             _ => throw new InvalidOperationException($"Тип задачи Id = {taskItem.Id}, Type = {taskItem.Type}" +
                                                      $" не предусмотрен!")
         };
@@ -306,6 +310,8 @@ public class DbTaskRunnerService(BackendDbContext dbContext) : IDbTaskRunnerServ
                 await command.DisposeAsync();
                 await _goToNextTaskItem(example, snippet, process, taskItem);
             }, null);
+
+        await Task.CompletedTask;
     }
 
     private async Task _goToNextTaskItem(DbTaskExampleLe example, DbTaskSnippetLe snippet, DbTaskProcessLe process,
