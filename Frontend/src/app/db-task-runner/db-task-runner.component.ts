@@ -50,14 +50,15 @@ export class DbTaskRunnerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.service.getExampleList().then(data => {
       this.examplesList = data;
-    });
-    this.activatedRoute.queryParamMap.subscribe(async paramMap => {
-      if (paramMap.has('example')) {
-        const exampleKey = paramMap.get('example') as string;
-        await this.service.loadExample(this.instanceId, exampleKey);
-        this.example = await this.service.getProgress(this.instanceId);
-        console.log('Новый пример загружен:', this.example);
-      }
+      // Чтобы избегать двух параллельных запросов (трудности с DbContext на бэкенде), делать после getExampleList():
+      this.activatedRoute.queryParamMap.subscribe(async paramMap => {
+        if (paramMap.has('example')) {
+          const exampleKey = paramMap.get('example') as string;
+          await this.service.loadExample(this.instanceId, exampleKey);
+          this.example = await this.service.getProgress(this.instanceId);
+          console.log('Новый пример загружен:', this.example);
+        }
+      });
     });
   }
 
