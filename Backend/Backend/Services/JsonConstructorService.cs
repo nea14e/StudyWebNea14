@@ -12,7 +12,7 @@ public class JsonConstructorService(BackendDbContext dbContext) : IJsonConstruct
     {
         var query = dbContext.Database.SqlQueryRaw<string>(
             // Для скалярных значений EF Core требует, чтобы значение было в колонке s.Value
-            "SELECT s.\"Value\" FROM (SELECT jsonb_pretty({0}::jsonb)) s(\"Value\")",
+            """SELECT s."Value" FROM (SELECT jsonb_pretty({0}::jsonb)) s("Value")""",
             json
         );
         var result = await query.FirstAsync();
