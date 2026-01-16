@@ -1,5 +1,10 @@
 <div class="container" xmlns="http://www.w3.org/1999/html">
   <app-title title="Конструктор JSON"></app-title>
+  @if (isLoading) {
+    <mat-progress-spinner class="center-screen"
+                          mode="indeterminate">
+    </mat-progress-spinner>
+  }
   <div class="row">
     <i>
       <p>
@@ -24,5 +29,10 @@
       </p>
     </i>
   </div>
-  <app-json-field [isRoot]="true" [nestingLevel]="0" [hasName]="false"></app-json-field>
+  <app-json-field [isRoot]="true"
+                  [nestingLevel]="0"
+                  [hasName]="false"
+                  (onBeginLoading)="beginLoading()"
+                  (onEndLoading)="endLoading()">
+  </app-json-field>
 </div>

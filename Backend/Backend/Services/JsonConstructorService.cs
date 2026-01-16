@@ -6,6 +6,8 @@ namespace Backend.Services;
 
 public class JsonConstructorService(BackendDbContext dbContext) : IJsonConstructorService
 {
+    private const int Delay = 1000;
+
     public async Task<string> PrettifyJsonAsync(string json)
     {
         var query = dbContext.Database.SqlQueryRaw<string>(
@@ -14,6 +16,7 @@ public class JsonConstructorService(BackendDbContext dbContext) : IJsonConstruct
             json
         );
         var result = await query.FirstAsync();
+        Thread.Sleep(Delay);
         return result;
     }
 }

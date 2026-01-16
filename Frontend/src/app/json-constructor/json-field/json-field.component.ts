@@ -41,6 +41,8 @@ export class JsonFieldComponent {
   private dialog = inject(MatDialog);
 
   onDeleteField = output<void>();
+  onBeginLoading = output<void>();
+  onEndLoading = output<void>();
 
   readonly FieldType = FieldType;
   readonly Object = Object;
@@ -106,6 +108,7 @@ export class JsonFieldComponent {
   }
 
   async onEyeClick() {
+    this.onBeginLoading.emit();
     const totalValue = this.getTotalValue(this.form());
     console.log('totalValue:', totalValue);
     const jsonValue = JSON.stringify(totalValue);
@@ -114,6 +117,7 @@ export class JsonFieldComponent {
     this.dialog.open(ViewJsonDialog, {
       data: formattedJsonValue
     });
+    this.onEndLoading.emit();
   }
 
   getTotalValue(form: FormGroup) {
@@ -169,5 +173,13 @@ export class JsonFieldComponent {
 
     const formArray = this.form().get('fieldValue')! as FormArray;
     formArray.controls.push(this.buildForm(newFieldName, this.NEW_FIELD_TYPE, newFieldValue))
+  }
+
+  beginLoading() {
+    this.onBeginLoading.emit();
+  }
+
+  endLoading() {
+    this.onEndLoading.emit();
   }
 }

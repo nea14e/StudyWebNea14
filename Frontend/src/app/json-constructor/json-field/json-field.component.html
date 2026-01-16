@@ -65,7 +65,9 @@
                           [nestingLevel]="nestingLevel() + 1"
                           [form]="innerField"
                           [hasName]="fieldType === FieldType.object"
-                          (onDeleteField)="deleteInnerField(i)">
+                          (onDeleteField)="deleteInnerField(i)"
+                          (onBeginLoading)="beginLoading()"
+                          (onEndLoading)="endLoading()">
           </app-json-field>
         }
       }
