@@ -4,3 +4,14 @@
   top: 50%;
   z-index: 9999;
 }
+
+.gray-screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9998;
+  background-color: black;
+  opacity: 0.3;
+}
