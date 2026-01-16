@@ -52,13 +52,13 @@ export class JsonFieldComponent {
       let newControl: AbstractControl;
       switch (newType) {
         case FieldType.boolean:
-          newControl = new FormControl(true);
+          newControl = new FormControl(true, Validators.required);
           break;
         case FieldType.number:
-          newControl = new FormControl(123.45);
+          newControl = new FormControl(123.45, Validators.required);
           break;
         case FieldType.string:
-          newControl = new FormControl('Qwerty');
+          newControl = new FormControl('Qwerty', Validators.required);
           break;
         case FieldType.null:
           newControl = new FormControl({value: null, disabled: true});
