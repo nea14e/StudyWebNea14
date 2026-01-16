@@ -1,0 +1,8 @@
+.dialog-container {
+  padding: 1rem 2rem;
+}
+
+.big-text-area {
+  width: inherit;
+  height: 70vh;
+}

@@ -1,0 +1,24 @@
+<div class="container-fluid dialog-container">
+  <div class="row row-bottom-fix">
+    <div class="col">
+      <h3>Просмотр отформатированного JSON</h3>
+    </div>
+    <div class="col-auto"
+         (click)="onCloseDialog()"
+         title="Закрыть">
+      <img src="from-bootstrap/x-lg.svg" alt="Закрыть" class="btn-img"/>
+    </div>
+  </div>
+  <div class="row row-bottom-fix">
+    <div class="col-12">
+      <textarea [ngModel]="data" readonly class="big-text-area"></textarea>
+    </div>
+  </div>
+  <div class="row justify-content-end">
+    <div class="btn col-auto"
+         (click)="onCloseDialog()">
+      <img src="from-bootstrap/x-lg.svg" alt="Закрыть" class="btn-img"/>
+      Закрыть
+    </div>
+  </div>
+</div>

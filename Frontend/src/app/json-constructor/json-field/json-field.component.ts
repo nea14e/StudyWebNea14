@@ -12,6 +12,8 @@ import {FieldType} from './models/json-field-type';
 import {MatFormField, MatInput} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {JsonConstructorService} from '../services/json-constructor.service';
+import {ViewJsonDialog} from './dialogs/view-json-dialog/view-json-dialog';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-json-field',
@@ -36,6 +38,7 @@ export class JsonFieldComponent {
   form = input<FormGroup>(this.buildForm());
   hasName = input<boolean>(true);
   private service = inject(JsonConstructorService);
+  private dialog = inject(MatDialog);
 
   onDeleteField = output<void>();
 
@@ -104,6 +107,9 @@ export class JsonFieldComponent {
     const jsonValue = JSON.stringify(totalValue);
     const formattedJsonValue = await this.service.prettify(jsonValue);
     console.log('formattedJsonValue:', formattedJsonValue);
+    this.dialog.open(ViewJsonDialog, {
+      data: formattedJsonValue
+    });
   }
 
   getTotalValue(form: FormGroup) {
