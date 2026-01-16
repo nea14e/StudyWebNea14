@@ -92,6 +92,10 @@ export class JsonFieldComponent {
     return `&nbsp;`.repeat(5 * this.nestingLevel());
   }
 
+  get innerTabs() {
+    return `&nbsp;`.repeat(5 * (this.nestingLevel() + 1));
+  }
+
   get fieldType() {
     return this.form().get('fieldType')?.value as FieldType;
   }
