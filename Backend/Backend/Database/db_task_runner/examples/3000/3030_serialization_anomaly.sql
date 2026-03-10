@@ -15,7 +15,9 @@ with data(example_key, key, "order", description_html) as (values ('serializatio
                                                                   ('serialization_anomaly', 'main', 2,
                                                                    '<b>Собственно пример. Подсчитаем сумму первой группы и положим её во вторую группу, и наоборот, сумму второй группы положим в первую:</b>'),
                                                                   ('serialization_anomaly', 'check', 3,
-                                                                   '<p>Проверяем результат:<p>'))
+                                                                   '<p>Проверяем результат. От запуска к запуску суммы будут различаться. 
+        Могут быть как суммы первой и второй групп 30 и 300 (то есть, параллельное выполнение транзакций),
+        так и суммы уже модифицированных групп 330 (то есть, последовательное выполнение):<p>'))
 insert
 into db_task_runner.db_task_snippets (example_key, key, "order", description_html)
 select *
@@ -100,6 +102,12 @@ order by group_key, value;',
                   '7a73b7ab-21d8-46fa-8f90-399b54020100'::uuid,
                   2,
                   'NonQuery',
+                  'select pg_sleep(5);',
+                  '<span class="sql-keyword">select </span><span class="sql-function">pg_sleep</span><span class="sql-sign">(</span><span class="sql-number">5</span><span class="sql-sign">);</span>'),
+                 ('7a73b7ab-21d8-46fa-8f90-399b54020103'::uuid,
+                  '7a73b7ab-21d8-46fa-8f90-399b54020100'::uuid,
+                  3,
+                  'NonQuery',
                   'insert into concurrency.groups(group_key, value)
 select 2, sum(value)
 from concurrency.groups
@@ -109,15 +117,15 @@ where group_key = 1;',
     <span class="sql-keyword">select </span><span class="sql-number">2</span><span class="sql-sign">, </span><span class="sql-function">sum</span><span class="sql-sign">(</span><span class="sql-identifier">value</span><span class="sql-sign">)</span><br/>
     <span class="sql-keyword">from </span><span class="sql-identifier">concurrency</span><span class="sql-sign">.</span><span class="sql-identifier">groups</span><br/>
     <span class="sql-keyword">where </span><span class="sql-identifier">group_key </span><span class="sql-sign">= </span><span class="sql-number">1</span><span class="sql-sign"></span>'),
-                 ('7a73b7ab-21d8-46fa-8f90-399b54020103'::uuid,
-                  '7a73b7ab-21d8-46fa-8f90-399b54020100'::uuid,
-                  3,
-                  'NonQuery',
-                  'select pg_sleep(10);',
-                  '<span class="sql-keyword">select </span><span class="sql-function">pg_sleep</span><span class="sql-sign">(</span><span class="sql-number">10</span><span class="sql-sign">);</span>'),
                  ('7a73b7ab-21d8-46fa-8f90-399b54020104'::uuid,
                   '7a73b7ab-21d8-46fa-8f90-399b54020100'::uuid,
                   4,
+                  'NonQuery',
+                  'select pg_sleep(10);',
+                  '<span class="sql-keyword">select </span><span class="sql-function">pg_sleep</span><span class="sql-sign">(</span><span class="sql-number">10</span><span class="sql-sign">);</span>'),
+                 ('7a73b7ab-21d8-46fa-8f90-399b54020105'::uuid,
+                  '7a73b7ab-21d8-46fa-8f90-399b54020100'::uuid,
+                  5,
                   'CommitTransaction',
                   null,
                   '<span class="sql-keyword">commit transaction</span><span class="sql-sign">;</span>'),
@@ -131,11 +139,17 @@ where group_key = 1;',
                   '7a73b7ab-21d8-46fa-8f90-399b54020200'::uuid,
                   2,
                   'NonQuery',
-                  'select pg_sleep(10);',
-                  '<span class="sql-keyword">select </span><span class="sql-function">pg_sleep</span><span class="sql-sign">(</span><span class="sql-number">10</span><span class="sql-sign">);</span>'),
+                  'select pg_sleep(5);',
+                  '<span class="sql-keyword">select </span><span class="sql-function">pg_sleep</span><span class="sql-sign">(</span><span class="sql-number">5</span><span class="sql-sign">);</span>'),
                  ('7a73b7ab-21d8-46fa-8f90-399b54020203'::uuid,
                   '7a73b7ab-21d8-46fa-8f90-399b54020200'::uuid,
                   3,
+                  'NonQuery',
+                  'select pg_sleep(10);',
+                  '<span class="sql-keyword">select </span><span class="sql-function">pg_sleep</span><span class="sql-sign">(</span><span class="sql-number">10</span><span class="sql-sign">);</span>'),
+                 ('7a73b7ab-21d8-46fa-8f90-399b54020204'::uuid,
+                  '7a73b7ab-21d8-46fa-8f90-399b54020200'::uuid,
+                  4,
                   'NonQuery',
                   'insert into concurrency.groups(group_key, value)
 select 1, sum(value)
@@ -146,9 +160,9 @@ where group_key = 2;',
     <span class="sql-keyword">select </span><span class="sql-number">1</span><span class="sql-sign">, </span><span class="sql-function">sum</span><span class="sql-sign">(</span><span class="sql-identifier">value</span><span class="sql-sign">)</span><br/>
     <span class="sql-keyword">from </span><span class="sql-identifier">concurrency</span><span class="sql-sign">.</span><span class="sql-identifier">groups</span><br/>
     <span class="sql-keyword">where </span><span class="sql-identifier">group_key </span><span class="sql-sign">= </span><span class="sql-number">2</span><span class="sql-sign"></span>'),
-                 ('7a73b7ab-21d8-46fa-8f90-399b54020204'::uuid,
+                 ('7a73b7ab-21d8-46fa-8f90-399b54020205'::uuid,
                   '7a73b7ab-21d8-46fa-8f90-399b54020200'::uuid,
-                  4,
+                  5,
                   'CommitTransaction',
                   null,
                   '<span class="sql-keyword">commit transaction</span><span class="sql-sign">;</span>'),
