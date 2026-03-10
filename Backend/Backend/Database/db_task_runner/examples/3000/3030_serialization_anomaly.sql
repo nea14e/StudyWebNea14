@@ -116,7 +116,7 @@ where group_key = 1;',
     <span class="sql-sign">(</span><span class="sql-identifier">group_key</span><span class="sql-sign">, </span><span class="sql-identifier">value</span><span class="sql-sign">)</span><br/>
     <span class="sql-keyword">select </span><span class="sql-number">2</span><span class="sql-sign">, </span><span class="sql-function">sum</span><span class="sql-sign">(</span><span class="sql-identifier">value</span><span class="sql-sign">)</span><br/>
     <span class="sql-keyword">from </span><span class="sql-identifier">concurrency</span><span class="sql-sign">.</span><span class="sql-identifier">groups</span><br/>
-    <span class="sql-keyword">where </span><span class="sql-identifier">group_key </span><span class="sql-sign">= </span><span class="sql-number">1</span><span class="sql-sign"></span>'),
+    <span class="sql-keyword">where </span><span class="sql-identifier">group_key </span><span class="sql-sign">= </span><span class="sql-number">1</span><span class="sql-sign">;</span>'),
                  ('7a73b7ab-21d8-46fa-8f90-399b54020104'::uuid,
                   '7a73b7ab-21d8-46fa-8f90-399b54020100'::uuid,
                   4,
@@ -159,7 +159,7 @@ where group_key = 2;',
     <span class="sql-sign">(</span><span class="sql-identifier">group_key</span><span class="sql-sign">, </span><span class="sql-identifier">value</span><span class="sql-sign">)</span><br/>
     <span class="sql-keyword">select </span><span class="sql-number">1</span><span class="sql-sign">, </span><span class="sql-function">sum</span><span class="sql-sign">(</span><span class="sql-identifier">value</span><span class="sql-sign">)</span><br/>
     <span class="sql-keyword">from </span><span class="sql-identifier">concurrency</span><span class="sql-sign">.</span><span class="sql-identifier">groups</span><br/>
-    <span class="sql-keyword">where </span><span class="sql-identifier">group_key </span><span class="sql-sign">= </span><span class="sql-number">2</span><span class="sql-sign"></span>'),
+    <span class="sql-keyword">where </span><span class="sql-identifier">group_key </span><span class="sql-sign">= </span><span class="sql-number">2</span><span class="sql-sign">;</span>'),
                  ('7a73b7ab-21d8-46fa-8f90-399b54020205'::uuid,
                   '7a73b7ab-21d8-46fa-8f90-399b54020200'::uuid,
                   5,
