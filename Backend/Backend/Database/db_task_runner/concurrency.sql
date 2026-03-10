@@ -20,6 +20,12 @@ create table if not exists concurrency.big_data
     flag bool NOT NULL
 );
 
+create table if not exists concurrency.groups
+(
+    group_key int NOT NULL,
+    "value"   int NOT NULL
+);
+
 create or replace function concurrency.lag(seconds double precision)
     returns boolean
     volatile
